@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Transaction, FormMode } from "@/types";
-import { comma } from "postcss/lib/list";
 import { computed, defineEmits, ref, toRaw, watch } from "vue";
 
 const emit = defineEmits<{
@@ -19,29 +18,43 @@ const localTransaction = ref<Transaction>(
 const header = computed(() => {
   return props.mode === "edit" ? "Edit Transaction" : "Add Transaction";
 });
-const formattedProfit = computed(() =>
-  localTransaction.value.profit === null
-    ? "$"
-    : `${localTransaction.value.profit}$`
+
+// Convert all user inputs to numbers for consistent calculations
+const quantity = computed(() => Number(localTransaction.value.quantity));
+const priceBought = computed(() =>
+  Number(localTransaction.value.pricePerCoinBought)
 );
+const priceSold = computed(() =>
+  Number(localTransaction.value.pricePerCoinSold)
+);
+const fees = computed(() => Number(localTransaction.value.fees));
 
-watch(
-  [
-    () => localTransaction.value.quantity,
-    () => localTransaction.value.pricePerCoinBought,
-    () => localTransaction.value.pricePerCoinSold,
-    () => localTransaction.value.fees,
-  ],
-  ([quantity, priceBought, priceSold, fee]) => {
-    if (!quantity && !priceBought && !priceSold) return;
-
-    const profit = priceSold * quantity - quantity * priceBought - fee;
-
-    localTransaction.value.profit = Number(profit.toFixed(2));
-
-    console.log(localTransaction.value);
+// Обчислюємо totalSpent. Залежить від quantity та priceBought, повинно бути > 0
+const totalSpent = computed(() => {
+  if (quantity.value > 0 && priceBought.value > 0) {
+    return Number((quantity.value * priceBought.value).toFixed(2));
   }
-);
+  return null;
+});
+
+// Обчислюємо profit. Залежить від totalSpent !== null та priceSold, повинно бути > 0
+const profit = computed(() => {
+  const convertedFee = Math.max(0, fees.value);
+
+  if (totalSpent.value !== null && priceSold.value > 0) {
+    const profitValue =
+      priceSold.value * quantity.value - totalSpent.value - convertedFee;
+    return Number(profitValue.toFixed(2));
+  }
+  return null;
+});
+
+// Watch для побічного ефекту: оновлюємо поля localTransaction
+// Computed-властивості лише для читання, тому використовуємо watch для запису
+watch([totalSpent, profit], ([newTotalSpent, newProfit]) => {
+  localTransaction.value.totalSpent = newTotalSpent;
+  localTransaction.value.profit = newProfit;
+});
 </script>
 
 <template>
@@ -67,6 +80,7 @@ watch(
             v-model.number.lazy="localTransaction.quantity"
             class="inputMain border"
             type="number"
+            placeholder="$"
           />
         </div>
         <div class="">
@@ -114,9 +128,13 @@ watch(
           </div>
           <div class="grid_Profit flex-1">
             <p class="mb-[2px]">Profit</p>
-            <span class="w-full inline-block border inputMain">{{
-              formattedProfit
-            }}</span>
+            <span class="w-full inline-block border inputMain">
+              {{
+                localTransaction.profit !== null
+                  ? `${localTransaction.profit}$`
+                  : "$"
+              }}
+            </span>
           </div>
         </div>
         <div class="grid_Button mt-2">
