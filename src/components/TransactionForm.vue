@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Transaction, FormMode } from "@/types";
+import type { Transaction, FormMode } from "../types/index";
 import { computed, defineEmits, ref, toRaw, watch } from "vue";
 
 const emit = defineEmits<{

@@ -7,7 +7,7 @@ const coin = computed(() => route.params.coin);
 </script>
 
 <template>
-  <section class="mainBorder py-0 flex-1" :class="!coin ? 'emptyList' : ''">
+  <section class="mainBorder py-0 flex-1" :class="{ emptyList: !coin }">
     <router-view />
   </section>
 </template>

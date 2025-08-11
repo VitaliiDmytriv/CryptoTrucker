@@ -4,7 +4,7 @@ export interface Transaction {
   quantity: number;
   pricePerCoinBought: number;
   fees: number;
-  totalSpent: number;
+  totalSpent: number|null;
   pricePerCoinSold: null | number;
   profit: null | number;
   isActive: boolean;

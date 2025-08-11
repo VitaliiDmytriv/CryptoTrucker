@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { ref, provide, computed } from "vue";
+import { ref, provide, computed, onMounted } from "vue";
 import DataBlock from "./components/DataBlock.vue";
 import CoinBlock from "./components/CoinBlock.vue";
 import TransactionList from "./components/TransactionList.vue";
-import { CoinsRecord } from "./types/index";
+import { useCoinsStore } from "./stores/coinsStore";
 
-const coins = ref<CoinsRecord[]>([]);
-provide("coins", coins);
+const store = useCoinsStore();
 
-fetch("api/user")
-  .then((res) => res.json())
-  .then((data) => {
-    coins.value = data.coins;
-  });
+onMounted(() => {
+  store.fetchCoinsList();
+});
 </script>
 
 <template>
@@ -22,27 +19,17 @@ fetch("api/user")
     </header>
 
     <section class="flex gap-4">
-      <DataBlock>
-        <template #header>
-          <div>Invested</div>
-        </template>
-        <template #stats>
-          <div><span>100</span> $</div>
-        </template>
-      </DataBlock>
-      <DataBlock>
-        <template #header>
-          <div>Profit</div>
-        </template>
-        <template #stats>
-          <div><span>4</span> $</div>
-        </template>
-      </DataBlock>
+      <DataBlock> </DataBlock>
+      <DataBlock> </DataBlock>
     </section>
 
-    <div class="flex gap-2">
-      <CoinBlock v-for="coin in Object.keys(coins)" :key="coin" :coin="coin" />
-    </div>
+    <section>
+      <div v-if="store.loading">Loading...</div>
+      <div v-if="store.error">Error:{{ store.error }}</div>
+      <div v-else class="flex gap-2">
+        <CoinBlock v-for="coin in store.coinsList" :key="coin" :coin="coin" />
+      </div>
+    </section>
     <TransactionList />
   </section>
 </template>

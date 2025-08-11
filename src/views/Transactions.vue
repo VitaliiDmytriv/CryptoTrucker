@@ -1,38 +1,55 @@
 <script setup lang="ts">
-import { inject, Ref, computed, ref } from "vue";
+import { inject, Ref, computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { CoinsRecord, Transaction } from "../types/index";
+import { CoinData, Transaction } from "../types/index";
 import TransactionForm from "../components/TransactionForm.vue";
 import Modal from "@/components/Modal.vue";
+import { useCoinsStore } from "../stores/coinsStore";
 
 const route = useRoute();
-const coins = inject<Ref<CoinsRecord>>("coins");
-const activeTransaction = ref<null | Transaction>(null);
+const store = useCoinsStore();
+const coin = ref<null | CoinData>(null);
 
-const filteredCoin = computed(() => {
-  return coins.value[route.params.coin as string];
-});
+watch(
+  () => route.params.coin,
+  async (newSymbol) => {
+    if (typeof newSymbol === "string") {
+      coin.value = await store.fetchCoinData(newSymbol);
+    } else {
+      coin.value = null;
+    }
+  },
+  { immediate: true }
+);
 
-function closeEdit() {
-  activeTransaction.value = null;
-}
+// const route = useRoute();
+// const coins = inject<Ref<CoinsRecord>>("coins");
+// const activeTransaction = ref<null | Transaction>(null);
 
-function openTransactionEditor(id: number) {
-  const transaction = filteredCoin.value?.transactions.find(
-    (el) => el.id === id
-  );
-  activeTransaction.value = transaction;
-}
+// const filteredCoin = computed(() => {
+//   return coins.value[route.params.coin as string];
+// });
+
+// function closeEdit() {
+//   activeTransaction.value = null;
+// }
+
+// function openTransactionEditor(id: number) {
+//   const transaction = filteredCoin.value?.transactions.find(
+//     (el) => el.id === id
+//   );
+//   activeTransaction.value = transaction;
+// }
 </script>
 
 <template>
-  <Modal v-if="activeTransaction" @close="closeEdit">
+  <!-- <Modal v-if="activeTransaction" @close="closeEdit">
     <TransactionForm
       mode="edit"
       @close="closeEdit"
       :transaction="activeTransaction"
     />
-  </Modal>
+  </Modal> -->
 
   <div>
     <table>
@@ -47,11 +64,9 @@ function openTransactionEditor(id: number) {
         </tr>
       </thead>
 
-      <tbody v-if="filteredCoin">
-        <tr
-          @click="openTransactionEditor(transaction.id)"
-          v-for="transaction in filteredCoin.transactions"
-        >
+      <tbody v-if="coin">
+        <!-- @click="openTransactionEditor(transaction.id)" -->
+        <tr v-for="transaction in coin.transactions">
           <td>{{ transaction.name }}</td>
           <td>{{ transaction.quantity }}</td>
           <td>${{ transaction.pricePerCoinBought }}</td>
