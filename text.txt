@@ -43,40 +43,9 @@
 }
 
 
-watch(
-  [
-    () => localTransaction.value.quantity,
-    () => localTransaction.value.pricePerCoinBought,
-    () => localTransaction.value.pricePerCoinSold,
-    () => localTransaction.value.fees,
-  ],
-  ([quantity, priceBought, priceSold, fee]) => {
-    quantity = Number(quantity);
-    priceBought = Number(priceBought);
-    priceSold = Number(priceSold);
-    fee = Number(fee);
+Модалка для помилок - зроблено для Transaction,
+Скелетон для загрузок 
+Додавання нової транзакціїї 
+Обновлення/видалення транзакціїї
 
-    let isSpentOk = false;
-
-    if (quantity && quantity > 0 && priceBought && priceBought > 0) {
-      localTransaction.value.totalSpent = Number(
-        (quantity * priceBought).toFixed(2)
-      );
-      isSpentOk = true;
-    }
-
-    if (!isSpentOk) {
-      localTransaction.value.totalSpent = null;
-    }
-
-    if (isSpentOk && priceSold && priceSold > 0) {
-      const convertedFee = fee && fee > 0 ? fee : 0;
-      const profit =
-        priceSold * quantity - quantity * priceBought - convertedFee;
-      localTransaction.value.profit = Number(profit.toFixed(2));
-      return;
-    }
-
-    localTransaction.value.profit = null;
-  }
-);
+Якщо декілька retry не проходять, то робити перезапуск застосунку

@@ -30,20 +30,25 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:coin", (req, res) => {
-  const { coin } = req.params;
   try {
+    const { coin } = req.params;
     const db = readDB();
-    if (checkDB(db)) {
-      return res.status(500).json({ error: "Invalid DB structure" });
-    }
-    const data = db.user.coins[coin];
+
+    const data = db?.user?.coins?.[coin];
+
     if (!data) {
-      return res.status(404).json({ error: `Coin '${coin}' not found` });
+      return res.status(404).json({
+        error: `Coin '${coin}' not found`,
+        code: "not-found",
+      });
     }
     res.json(data);
   } catch (error) {
     console.error("Error reading DB:", error);
-    res.status(500).json({ error: "Failed to read database" });
+    res.status(500).json({
+      error: "Failed to get data",
+      code: "server-error",
+    });
   }
 });
 

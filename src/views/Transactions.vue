@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { inject, Ref, computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { CoinData, Transaction } from "../types/index";
+import type { CoinData, Transaction } from "../types/index";
 import TransactionForm from "../components/TransactionForm.vue";
 import Modal from "@/components/Modal.vue";
-import { useCoinsStore } from "../stores/coinsStore";
+import { useCoinsCacheStore } from "../stores/coinsCacheStore";
+import Error from "../components/Error.vue";
+import router from "@/router/router";
 
 const route = useRoute();
-const store = useCoinsStore();
+const store = useCoinsCacheStore();
 const coin = ref<null | CoinData>(null);
+const activeTransaction = ref<undefined | Transaction>(undefined);
 
 watch(
   () => route.params.coin,
@@ -22,34 +25,69 @@ watch(
   { immediate: true }
 );
 
-// const route = useRoute();
-// const coins = inject<Ref<CoinsRecord>>("coins");
-// const activeTransaction = ref<null | Transaction>(null);
+// Handle Edit Form ==
+function closeEdit() {
+  activeTransaction.value = undefined;
+}
 
-// const filteredCoin = computed(() => {
-//   return coins.value[route.params.coin as string];
-// });
+function openTransactionEditor(id: number) {
+  const transaction = coin.value?.transactions.find((el) => el.id === id);
+  activeTransaction.value = transaction;
+}
 
-// function closeEdit() {
-//   activeTransaction.value = null;
-// }
+// Handle Errors ===
+const errorButtonText = computed(() => {
+  if (!store.error) return "Go back";
+  switch (store.error.code) {
+    case "not-found":
+      return "Go back";
+    case "server-error":
+      return "Try again";
+    case "network":
+      return "Check connection";
+    default:
+      return "Go back";
+  }
+});
 
-// function openTransactionEditor(id: number) {
-//   const transaction = filteredCoin.value?.transactions.find(
-//     (el) => el.id === id
-//   );
-//   activeTransaction.value = transaction;
-// }
+function handleErrorRetry() {
+  if (!store.error) return;
+
+  switch (store.error.code) {
+    case "server-error":
+      store.resetError();
+      if (typeof route.params.coin === "string") {
+        (async () =>
+          (coin.value = await store.fetchCoinData(
+            route.params.coin as string
+          )))();
+      }
+      break;
+    default:
+      // Reset error and navigate to home
+      store.resetError();
+      router.push("/");
+      break;
+  }
+}
 </script>
 
 <template>
-  <!-- <Modal v-if="activeTransaction" @close="closeEdit">
+  <Modal v-if="activeTransaction" @close="closeEdit">
     <TransactionForm
       mode="edit"
       @close="closeEdit"
       :transaction="activeTransaction"
     />
-  </Modal> -->
+  </Modal>
+
+  <Modal v-if="store.error">
+    <Error
+      @retry="handleErrorRetry"
+      :message="store.error.message"
+      :button-txt="errorButtonText"
+    />
+  </Modal>
 
   <div>
     <table>
@@ -65,8 +103,10 @@ watch(
       </thead>
 
       <tbody v-if="coin">
-        <!-- @click="openTransactionEditor(transaction.id)" -->
-        <tr v-for="transaction in coin.transactions">
+        <tr
+          @click="openTransactionEditor(transaction.id)"
+          v-for="transaction in coin.transactions"
+        >
           <td>{{ transaction.name }}</td>
           <td>{{ transaction.quantity }}</td>
           <td>${{ transaction.pricePerCoinBought }}</td>

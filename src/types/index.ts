@@ -4,7 +4,7 @@ export interface Transaction {
   quantity: number;
   pricePerCoinBought: number;
   fees: number;
-  totalSpent: number|null;
+  totalSpent: number | null;
   pricePerCoinSold: null | number;
   profit: null | number;
   isActive: boolean;
@@ -20,4 +20,10 @@ export interface CoinsRecord {
   [coinSymbol: string]: CoinData;
 }
 
-export type FormMode = 'add'|'edit'
+export type FormMode = "add" | "edit";
+
+export interface ErrorResponse {
+  message: string;
+  code?: "not-found" | "server-error" | "network";
+  status?: number;
+}
