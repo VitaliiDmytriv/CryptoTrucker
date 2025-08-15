@@ -6,6 +6,7 @@ import TransactionList from "./components/TransactionList.vue";
 import { useCoinsStore } from "./stores/coinsListStore";
 import Modal from "./components/Modal.vue";
 import Error from "./components/Error.vue";
+import Sceleton from "./components/Sceleton.vue";
 
 const store = useCoinsStore();
 
@@ -37,7 +38,16 @@ function handleError() {
     </section>
 
     <section>
-      <div v-if="store.loading">Loading...</div>
+      <div v-if="store.loading" class="flex gap-2">
+        <!-- <div v-if="true" class="flex gap-2"> -->
+        <Sceleton
+          v-for="scelet in 4"
+          :key="scelet"
+          class="borderRadius"
+          width="3.5rem"
+          height="2.4rem"
+        />
+      </div>
       <div v-if="store.error">Error:{{ store.error }}</div>
       <div v-else class="flex gap-2">
         <CoinBlock v-for="coin in store.coinsList" :key="coin" :coin="coin" />

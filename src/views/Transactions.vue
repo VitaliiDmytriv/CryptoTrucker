@@ -7,6 +7,7 @@ import Modal from "@/components/Modal.vue";
 import { useCoinsCacheStore } from "../stores/coinsCacheStore";
 import Error from "../components/Error.vue";
 import router from "@/router/router";
+import Sceleton from "@/components/Sceleton.vue";
 
 const route = useRoute();
 const store = useCoinsCacheStore();
@@ -17,6 +18,7 @@ watch(
   () => route.params.coin,
   async (newSymbol) => {
     if (typeof newSymbol === "string") {
+      coin.value = null;
       coin.value = await store.fetchCoinData(newSymbol);
     } else {
       coin.value = null;
@@ -102,6 +104,14 @@ function handleErrorRetry() {
         </tr>
       </thead>
 
+      <tbody v-if="store.loading" class="sceletForFetch">
+        <tr v-for="scelet in 5" :key="scelet">
+          <td :colspan="6">
+            <Sceleton height="1.8rem" width="100%" />
+          </td>
+        </tr>
+      </tbody>
+
       <tbody v-if="coin">
         <tr
           @click="openTransactionEditor(transaction.id)"
@@ -151,5 +161,13 @@ tbody tr:hover {
 
 td {
   padding: 0.25rem;
+}
+
+.sceletForFetch tr {
+  border-bottom: initial;
+}
+
+.sceletForFetch tr:hover {
+  background-color: initial;
 }
 </style>

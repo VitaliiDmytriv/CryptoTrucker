@@ -100,14 +100,3 @@ input {
 .transactionRow:hover {
   background-color: var(--transactionHover);
 }
-
-.coinBlock {
-  user-select: none;
-  text-align: center;
-  min-width: 3.5rem;
-}
-
-.coinBlockActive {
-  background-color: var(--coinBlockBgActive);
-  overflow: hidden;
-}
