@@ -8,26 +8,15 @@ const coin = computed(() => route.params.coin);
 
 <template>
   <section
-    class="transactionLsit mainBorder py-0 flex-1"
-    :class="{ emptyList: !coin }"
+    class="relative card-border py-0 flex-1"
+    :class="{ 'flex justify-center': !coin }"
   >
-    <div class="transactionLsit_tooltip" v-if="!coin">Chose coin</div>
+    <div class="absolute top-[10%]" v-if="!coin">Chose coin</div>
     <router-view />
   </section>
 </template>
 
 <style scoped>
-.transactionLsit {
-  position: relative;
-}
-
-.transactionLsit_tooltip {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 .emptyList {
   display: flex;
   justify-content: center;

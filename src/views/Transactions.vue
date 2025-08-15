@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { inject, Ref, computed, ref, onMounted, watch } from "vue";
+import { useWindowSize } from "@vueuse/core";
 import { useRoute } from "vue-router";
 import type { CoinData, Transaction } from "../types/index";
 import TransactionForm from "../components/TransactionForm.vue";
@@ -13,6 +14,8 @@ const route = useRoute();
 const store = useCoinsCacheStore();
 const coin = ref<null | CoinData>(null);
 const activeTransaction = ref<undefined | Transaction>(undefined);
+const { width } = useWindowSize();
+const colspan = computed(() => (width.value > 480 ? 6 : 4));
 
 watch(
   () => route.params.coin,
@@ -95,19 +98,19 @@ function handleErrorRetry() {
     <table>
       <thead>
         <tr>
-          <th>Name</th>
+          <th class="hidden sm:table-cell">Name</th>
           <th>Coins</th>
           <th>Bought</th>
           <th>Sold</th>
-          <th>Fee</th>
+          <th class="hidden sm:table-cell">Fee</th>
           <th>Profit</th>
         </tr>
       </thead>
 
       <tbody v-if="store.loading" class="sceletForFetch">
         <tr v-for="scelet in 5" :key="scelet">
-          <td :colspan="6">
-            <Sceleton height="1.8rem" width="100%" />
+          <td :colspan="colspan">
+            <Sceleton>asd</Sceleton>
           </td>
         </tr>
       </tbody>
@@ -117,7 +120,7 @@ function handleErrorRetry() {
           @click="openTransactionEditor(transaction.id)"
           v-for="transaction in coin.transactions"
         >
-          <td>{{ transaction.name }}</td>
+          <td class="hidden sm:table-cell">{{ transaction.name }}</td>
           <td>{{ transaction.quantity }}</td>
           <td>${{ transaction.pricePerCoinBought }}</td>
           <td>
@@ -127,7 +130,7 @@ function handleErrorRetry() {
                 : "-"
             }}
           </td>
-          <td>
+          <td class="hidden sm:table-cell">
             {{ transaction.fees ? `$${transaction.fees}` : "-" }}
           </td>
           <td>

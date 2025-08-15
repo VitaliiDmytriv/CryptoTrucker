@@ -11,7 +11,7 @@ const props = defineProps<{
   <RouterLink
     :to="{ name: 'coin', params: { coin: props.coin } }"
     :class="{ coinBlockActive: route.params.coin === props.coin }"
-    class="mainBorder coinBlock"
+    class="card-border container-border select-none text-center min-w-[2.25rem] sm:min-w-[3rem]"
     aria-label="check transactions"
   >
     {{ props.coin }}
@@ -20,7 +20,6 @@ const props = defineProps<{
 
 <style>
 .coinBlock {
-  font-size: 1rem;
   user-select: none;
   text-align: center;
   min-width: 3.5rem;

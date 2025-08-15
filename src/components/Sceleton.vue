@@ -2,30 +2,29 @@
 const props = defineProps<{
   width?: string;
   height?: string;
-  borderRadius?: string;
   shape?: "rect" | "circle";
 }>();
 
 const width = props.width ?? "100%";
-const height = props.height ?? "1rem";
-const borderRadius =
-  props.shape === "circle" ? "50%" : props.borderRadius ?? "0.25rem";
+const height = props.height ?? "initial";
 </script>
 
 <template>
   <div
-    class="skeleton"
+    class="skeleton rounded-sm md:rounded-md select-none"
     :class="shape"
     :style="{
       width,
       height,
-      borderRadius,
     }"
-  ></div>
+  >
+    <slot></slot>
+  </div>
 </template>
 
 <style scoped>
 .skeleton {
+  color: transparent;
   background: linear-gradient(
     90deg,
     var(--skeleton-base, #ccc) 25%,

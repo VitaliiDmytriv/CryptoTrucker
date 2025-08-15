@@ -27,3 +27,9 @@ export interface ErrorResponse {
   code?: "not-found" | "server-error" | "network";
   status?: number;
 }
+
+export interface Portfolio {
+  totalProfit: number;
+  activeInvestment: number;
+  coins: string[];
+}

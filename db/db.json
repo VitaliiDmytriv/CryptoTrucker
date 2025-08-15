@@ -1,6 +1,7 @@
 {
   "user": {
-    "totalProfit": 0,
+    "totalProfit": 19.11,
+    "activeInvestment": 222.76,
     "coins": {
       "ADA": {
         "coinFullName": "Cardano",

@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import type { Portfolio } from "../types/index";
 
-export const useCoinsStore = defineStore("coins", () => {
-  const coinsList = ref<string[]>([]);
+export const usePortfolioStore = defineStore("portfolio", () => {
+  const portfolio = ref<Portfolio | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  async function fetchCoinsList() {
-    if (coinsList.value.length) return;
+  async function fetchPortfolioData() {
     loading.value = true;
     error.value = null;
     try {
@@ -16,7 +16,7 @@ export const useCoinsStore = defineStore("coins", () => {
       if (!res.ok) {
         throw new Error(data.error || `HTTP ${res.status}`);
       }
-      coinsList.value = data;
+      portfolio.value = data;
     } catch (err) {
       if (err instanceof Error) {
         error.value = err.message;
@@ -29,9 +29,9 @@ export const useCoinsStore = defineStore("coins", () => {
   }
 
   return {
-    coinsList,
+    portfolio,
     loading,
     error,
-    fetchCoinsList,
+    fetchPortfolioData,
   };
 });

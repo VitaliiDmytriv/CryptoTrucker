@@ -22,8 +22,11 @@ app.get("/", (req, res) => {
     if (checkDB(db)) {
       return res.status(500).json({ error: "Invalid DB structure" });
     }
-    const coinsKeys = Object.keys(db.user.coins);
-    res.json(coinsKeys);
+    const coins = Object.keys(db.user.coins);
+    const totalProfit = db.user.totalProfit;
+    const activeInvestment = db.user.activeInvestment;
+
+    res.json({ coins, totalProfit, activeInvestment });
   } catch (error) {
     res.status(500).json({ error: "Failed to read database" });
   }
