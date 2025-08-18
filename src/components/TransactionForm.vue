@@ -55,151 +55,146 @@ watch([totalSpent, profit], ([newTotalSpent, newProfit]) => {
   localTransaction.value.totalSpent = newTotalSpent;
   localTransaction.value.profit = newProfit;
 });
+
+function editTransaction() {
+  console.log(localTransaction.value);
+}
 </script>
 
 <template>
   <section>
-    <div class="editTransaction border">
+    <div
+      class="bg-[var(--bodyColor)] rounded-md px-2 py-3 min-w-[70vw] sm:min-w-[16rem] max-w-[80vw] sm:max-w-lg md:px-4 md:py-6"
+    >
       <!--  -->
-      <div class="flex justify-between">
+      <div class="flex justify-between xs:text-sm md:text-base mb-2">
         <h2>{{ header }}</h2>
         <button @click="emit('close')" class="mr-2">X</button>
       </div>
+
       <!--  -->
-      <select v-if="mode === 'add'" v-model="localTransaction.name">
-        <option value="ADA">ADA</option>
-        <option value="ETH">ETH</option>
-        <option value="UNI">UNI</option>
-      </select>
-      <!--  -->
-      <div class="editTransaction_grid">
+      <form
+        @submit.prevent="editTransaction"
+        class="text-xs grid gap-1 grid-cols-1 xs:grid-cols-2 xs:gap-2 md:text-sm"
+      >
+        <!--  -->
+        <div v-if="mode === 'add'">
+          <select v-if="mode === 'add'" v-model="localTransaction.name">
+            <option value="ADA">ADA</option>
+            <option value="ETH">ETH</option>
+            <option value="UNI">UNI</option>
+          </select>
+        </div>
         <div class="">
-          <p class="mb-[2px]">Quantity</p>
+          <label for="quantity" class="mb-[2px]">Quantity</label>
           <input
+            id="quantity"
             required
-            v-model.number.lazy="localTransaction.quantity"
-            class="inputMain border"
+            v-model.lazy="localTransaction.quantity"
+            class="input-primary border"
             type="number"
             placeholder="$"
+            step="any"
+            inputmode="decimal"
           />
         </div>
         <div class="">
-          <p class="mb-[2px]">Price Per Coin</p>
+          <label for="price-per-coin" class="mb-[2px]">Price Per Coin</label>
           <input
+            id="price-per-coin"
             required
             v-model.number.lazy="localTransaction.pricePerCoinBought"
-            class="inputMain border"
+            class="input-primary border"
             type="number"
             placeholder="$"
+            step="any"
+            inputmode="decimal"
           />
         </div>
         <div>
-          <p class="mb-[2px]">Date</p>
+          <label for="date" class="mb-[2px]">Date</label>
           <input
+            id="date"
             v-model="localTransaction.date"
-            class="inputMain border"
+            class="input-primary border"
             type="date"
           />
         </div>
         <div>
-          <p class="mb-[2px]">Fee</p>
+          <label for="fee" class="mb-[2px]">Fee</label>
           <input
+            id="fee"
             placeholder="$"
             v-model.number.lazy="localTransaction.fees"
-            class="inputMain border"
+            class="input-primary border"
             type="number"
           />
         </div>
         <div>
-          <p class="mb-[2px]">Sell Price</p>
+          <label for="sell-price" class="mb-[2px]">Sell Price</label>
           <input
+            id="sell-price"
             v-model.number.lazy="localTransaction.pricePerCoinSold"
             placeholder="$"
-            class="inputMain border"
+            class="input-primary border"
             type="number"
           />
         </div>
-        <div class="grid_Stats flex gap-2">
+        <div class="flex gap-1 xs:col-span-2 xs:gap-2">
           <div class="flex-1">
             <p class="mb-[2px]">Total Spent</p>
-            <span class="w-full inline-block border inputMain"
-              >{{ localTransaction.totalSpent }}$</span
+            <output class="w-full inline-block border input-primary"
+              >{{ localTransaction.totalSpent }}$</output
             >
           </div>
-          <div class="grid_Profit flex-1">
+          <div class="flex-1">
             <p class="mb-[2px]">Profit</p>
-            <span class="w-full inline-block border inputMain">
+            <output class="w-full inline-block border input-primary">
               {{
                 localTransaction.profit !== null
                   ? `${localTransaction.profit}$`
                   : "$"
               }}
-            </span>
+            </output>
           </div>
         </div>
-        <div class="grid_Button mt-2">
-          <button class="w-full inline-block border inputMain">Edit</button>
+        <div class="mt-2 col-span-full form-button">
+          <button
+            type="submit"
+            class="w-full inline-block border input-primary"
+          >
+            Edit
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   </section>
 </template>
 
 <style scoped>
 .editTransaction {
-  min-width: 70vw;
-  max-width: 31rem;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bodyColor);
-  padding-block: 0.6rem;
-  gap: 0.5rem;
-  padding-inline: 0.5rem;
+  /* min-width: 70vw;
+  max-width: 31rem; */
+  /* background-color: var(--bodyColor); */
+  /* padding-block: 0.6rem; */
+  /* padding-inline: 0.5rem; */
 }
 
 .editTransaction_grid {
-  font-size: 0.7rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.3rem;
+  /* font-size: 0.7rem; */
+  /* display: grid; */
+  /* gap: 0.3rem; */
 }
 
-.editTransaction_grid .inputMain {
+/* form .input-primary {
   padding: 0.2rem;
-}
+} */
 
-.grid_Button button {
+.form-button button {
   transition: all 0.2s;
 }
 
-.grid_Button button:hover {
+.form-button button:hover {
   background-color: var(--borderColor);
-}
-
-@media (min-width: 680px) {
-  .editTransaction {
-    font-size: 1rem;
-    min-width: 31rem;
-    padding-inline: 1rem;
-    padding-block: 1.5rem;
-  }
-
-  .editTransaction_grid {
-    font-size: 0.9rem;
-  }
-}
-@media (min-width: 350px) {
-  .editTransaction_grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-  }
-  .grid_Stats {
-    grid-row: 4;
-    grid-column: 1/3;
-  }
-
-  .grid_Button {
-    grid-column: 1/3;
-  }
 }
 </style>

@@ -40,12 +40,15 @@ button, a {
 input {
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+  min-height: 1.125rem;
 }
 
-.inputMain {
+
+.input-primary {
   background-color: var(--coinBlockBgActive);
   padding: .15rem;
-
+  border-radius: var(--borderRadius);
 }
 
 .card-border {
@@ -55,6 +58,10 @@ input {
 .container-border {
     /* border-color: var(--borderColor); */
     padding: .2rem;
+}
+
+output {
+  width: 100%;
 }
 
 
@@ -72,6 +79,10 @@ input {
   body {
     line-height: 1.5;
   }
+
+  .input-primary {
+    padding: .25rem;
+}
 }
 @media (min-width: 640px) {
   :root {
