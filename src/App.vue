@@ -7,6 +7,9 @@ import { usePortfolioStore } from "./stores/portfolioStore";
 import Modal from "./components/Modal.vue";
 import Error from "./components/Error.vue";
 import Sceleton from "./components/Sceleton.vue";
+import { nanoid } from "nanoid";
+
+console.log(nanoid(10));
 
 const store = usePortfolioStore();
 

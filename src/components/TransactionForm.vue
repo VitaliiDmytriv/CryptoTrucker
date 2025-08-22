@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { Transaction, FormMode } from "../types/index";
+import type { Transaction, FormMode, CoinsCacheStore } from "../types/index";
 import { computed, defineEmits, ref, toRaw, watch } from "vue";
+import { useTransactionCalculations } from "../composables/useTransactionCalculations";
 
 const emit = defineEmits<{
   (event: "close"): void;
@@ -9,55 +10,40 @@ const emit = defineEmits<{
 const props = defineProps<{
   transaction: Transaction;
   mode: FormMode;
+  coinsCacheStore: CoinsCacheStore;
 }>();
 
-const localTransaction = ref<Transaction>(
-  structuredClone(toRaw(props.transaction))
-);
+const { localTransaction } = useTransactionCalculations(props.transaction);
 
 const header = computed(() => {
   return props.mode === "edit" ? "Edit Transaction" : "Add Transaction";
 });
 
-// Convert all user inputs to numbers for consistent calculations
-const quantity = computed(() => Number(localTransaction.value.quantity));
-const priceBought = computed(() =>
-  Number(localTransaction.value.pricePerCoinBought)
-);
-const priceSold = computed(() =>
-  Number(localTransaction.value.pricePerCoinSold)
-);
-const fees = computed(() => Number(localTransaction.value.fees));
-
-// Обчислюємо totalSpent. Залежить від quantity та priceBought, повинно бути > 0
-const totalSpent = computed(() => {
-  if (quantity.value > 0 && priceBought.value > 0) {
-    return Number((quantity.value * priceBought.value).toFixed(2));
-  }
-  return null;
-});
-
-// Обчислюємо profit. Залежить від totalSpent !== null та priceSold, повинно бути > 0
-const profit = computed(() => {
-  const convertedFee = Math.max(0, fees.value);
-
-  if (totalSpent.value !== null && priceSold.value > 0) {
-    const profitValue =
-      priceSold.value * quantity.value - totalSpent.value - convertedFee;
-    return Number(profitValue.toFixed(2));
-  }
-  return null;
-});
-
-// Watch для побічного ефекту: оновлюємо поля localTransaction
-// Computed-властивості лише для читання, тому використовуємо watch для запису
-watch([totalSpent, profit], ([newTotalSpent, newProfit]) => {
-  localTransaction.value.totalSpent = newTotalSpent;
-  localTransaction.value.profit = newProfit;
-});
-
-function editTransaction() {
+async function editTransaction() {
   console.log(localTransaction.value);
+  try {
+    const response = await fetch(
+      `api/${localTransaction.value.name}/transactions/${localTransaction.value.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(localTransaction.value),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    if (data.success) {
+      props.coinsCacheStore.updateTransaction(
+        data.transaction.name,
+        data.transaction
+      );
+      emit("close");
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 </script>
 
@@ -138,6 +124,8 @@ function editTransaction() {
             placeholder="$"
             class="input-primary border"
             type="number"
+            step="any"
+            inputmode="decimal"
           />
         </div>
         <div class="flex gap-1 xs:col-span-2 xs:gap-2">
@@ -172,24 +160,6 @@ function editTransaction() {
 </template>
 
 <style scoped>
-.editTransaction {
-  /* min-width: 70vw;
-  max-width: 31rem; */
-  /* background-color: var(--bodyColor); */
-  /* padding-block: 0.6rem; */
-  /* padding-inline: 0.5rem; */
-}
-
-.editTransaction_grid {
-  /* font-size: 0.7rem; */
-  /* display: grid; */
-  /* gap: 0.3rem; */
-}
-
-/* form .input-primary {
-  padding: 0.2rem;
-} */
-
 .form-button button {
   transition: all 0.2s;
 }

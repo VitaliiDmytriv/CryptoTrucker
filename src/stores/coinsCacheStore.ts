@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { CoinsRecord, ErrorResponse } from "../types/index";
+import type { CoinsRecord, ErrorResponse, Transaction } from "../types/index";
 
 export const useCoinsCacheStore = defineStore("coinsCache", () => {
   const coinsCache = ref<CoinsRecord>({});
@@ -44,9 +44,18 @@ export const useCoinsCacheStore = defineStore("coinsCache", () => {
     error.value = null;
   }
 
+  function updateTransaction(coin: string, updatedTransaction: Transaction) {
+    const transactions = coinsCache.value[coin]?.transactions;
+    const index = transactions.findIndex((t) => t.id === updatedTransaction.id);
+    if (index !== -1) {
+      transactions[index] = { ...updatedTransaction };
+    }
+  }
+
   return {
     resetError,
     fetchCoinData,
+    updateTransaction,
     coinsCache,
     loading,
     error,

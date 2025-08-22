@@ -35,7 +35,7 @@ function closeEdit() {
   activeTransaction.value = undefined;
 }
 
-function openTransactionEditor(id: number) {
+function openTransactionEditor(id: string) {
   const transaction = coin.value?.transactions.find((el) => el.id === id);
   activeTransaction.value = transaction;
 }
@@ -83,10 +83,12 @@ function handleErrorRetry() {
       mode="edit"
       @close="closeEdit"
       :transaction="activeTransaction"
+      :coins-cache-store="store"
     />
   </Modal>
 
   <Modal v-if="store.error">
+    <object>{{ store.error }}</object>
     <Error
       @retry="handleErrorRetry"
       :message="store.error.message"

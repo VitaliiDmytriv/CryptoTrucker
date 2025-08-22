@@ -1,143 +1,149 @@
 {
-  "user": {
-    "totalProfit": 19.11,
-    "activeInvestment": 222.76,
-    "coins": {
-      "ADA": {
-        "coinFullName": "Cardano",
-        "transactions": [
-          {
-            "name": "ADA",
-            "id": 1,
-            "quantity": 34.16,
-            "pricePerCoinBought": 0.9225,
-            "fees": null,
-            "totalSpent": 31.51,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-06-26"
-          },
-          {
-            "name": "ADA",
-            "id": 2,
-            "quantity": 22.6,
-            "pricePerCoinBought": 0.93,
-            "fees": null,
-            "totalSpent": 21.08,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-01-08"
-          },
-          {
-            "name": "ADA",
-            "id": 3,
-            "quantity": 20.2,
-            "pricePerCoinBought": 1.0092,
-            "fees": null,
-            "totalSpent": 20.38,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-01-07"
-          }
-        ]
-      },
-      "UNI": {
-        "coinFullName": "Uniswap",
-        "transactions": [
-          {
-            "name": "UNI",
-            "id": 4,
-            "quantity": 1.18,
-            "pricePerCoinBought": 17.06,
-            "fees": null,
-            "totalSpent": 20.13,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2024-12-11"
-          },
-          {
-            "name": "UNI",
-            "id": 5,
-            "quantity": 1.187,
-            "pricePerCoinBought": 13.39,
-            "fees": null,
-            "totalSpent": 15.90,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-01-08"
-          },
-          {
-            "name": "UNI",
-            "id": 12,
-            "quantity": 2.06,
-            "pricePerCoinBought": 9.34,
-            "fees": null,
-            "totalSpent": 19.25,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-09-01"
-          }
-        ]
-      },
-      "ETH": {
-        "coinFullName": "Ethereum",
-        "transactions": [
-          {
-            "name": "ETH",
-            "id": 6,
-            "quantity": 0.0091,
-            "pricePerCoinBought": 2720,
-            "fees": null,
-            "totalSpent": 24.75,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-02-24"
-          },
-          {
-            "name": "ETH",
-            "id": 7,
-            "quantity": 0.0133,
-            "pricePerCoinBought": 2628,
-            "fees": null,
-            "totalSpent": 34.95,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-02-12"
-          },
-          {
-            "name": "ETH",
-            "id": 9,
-            "quantity": 0.018,
-            "pricePerCoinBought": 2628,
-            "fees": null,
-            "totalSpent": 47.30,
-            "pricePerCoinSold": 3690,
-            "profit": 19.11,
-            "isActive": false,
-            "date": "2025-02-07"
-          },
-          {
-            "name": "ETH",
-            "id": 8,
-            "quantity": 0.0136,
-            "pricePerCoinBought": 2560,
-            "fees": null,
-            "totalSpent": 34.81,
-            "pricePerCoinSold": null,
-            "profit": null,
-            "isActive": false,
-            "date": "2025-01-07"
-          }
-        ]
+  "users": [
+    {
+      "id": "3986b2f1-f4ed-42c7-b983-1d7144fbbe81",
+      "userName": "vitaliq",
+      "email": "vitaliqq.dmutriv@gmail.com",
+      "password": "$2a$10$HMcyOVRnrzZoyjFGSWprOuojbXRvJeba3kOUUPN0Kwo2RCwsx1yeW",
+      "totalProfit": 19.11,
+      "activeInvestment": 222.76,
+      "coins": {
+        "ADA": {
+          "coinFullName": "Cardano",
+          "transactions": [
+            {
+              "name": "ADA",
+              "id": "x0acN2KCZ4",
+              "quantity": 34.16,
+              "pricePerCoinBought": 0.9225,
+              "fees": 1,
+              "totalSpent": 31.51,
+              "pricePerCoinSold": 1.15,
+              "profit": 6.77,
+              "isActive": false,
+              "date": "2025-06-26"
+            },
+            {
+              "name": "ADA",
+              "id": "n0QuWheY3_",
+              "quantity": 22.6,
+              "pricePerCoinBought": 0.93,
+              "fees": null,
+              "totalSpent": 21.08,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-01-08"
+            },
+            {
+              "name": "ADA",
+              "id": "ZA7i7mDbd9",
+              "quantity": 20.2,
+              "pricePerCoinBought": 1.0092,
+              "fees": null,
+              "totalSpent": 20.38,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-01-07"
+            }
+          ]
+        },
+        "UNI": {
+          "coinFullName": "Uniswap",
+          "transactions": [
+            {
+              "name": "UNI",
+              "id": "FyLvJDpWE-",
+              "quantity": 1.18,
+              "pricePerCoinBought": 17.06,
+              "fees": null,
+              "totalSpent": 20.13,
+              "pricePerCoinSold": "",
+              "profit": null,
+              "isActive": false,
+              "date": "2024-12-11"
+            },
+            {
+              "name": "UNI",
+              "id": "SWaW1-w5ap",
+              "quantity": 1.187,
+              "pricePerCoinBought": 13.39,
+              "fees": null,
+              "totalSpent": 15.89,
+              "pricePerCoinSold": 15.12,
+              "profit": 2.06,
+              "isActive": false,
+              "date": "2025-01-08"
+            },
+            {
+              "name": "UNI",
+              "id": "iBm0GGFypl",
+              "quantity": 2.06,
+              "pricePerCoinBought": 9.34,
+              "fees": null,
+              "totalSpent": 19.25,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-09-01"
+            }
+          ]
+        },
+        "ETH": {
+          "coinFullName": "Ethereum",
+          "transactions": [
+            {
+              "name": "ETH",
+              "id": "BbaBP98OO7",
+              "quantity": 0.0091,
+              "pricePerCoinBought": 2720,
+              "fees": null,
+              "totalSpent": 24.75,
+              "pricePerCoinSold": "",
+              "profit": null,
+              "isActive": false,
+              "date": "2025-02-24"
+            },
+            {
+              "name": "ETH",
+              "id": "QMR3ESgDwi",
+              "quantity": 0.0133,
+              "pricePerCoinBought": 2628,
+              "fees": null,
+              "totalSpent": 34.95,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-02-12"
+            },
+            {
+              "name": "ETH",
+              "id": "guQFCcoCde",
+              "quantity": 0.018,
+              "pricePerCoinBought": 2628,
+              "fees": null,
+              "totalSpent": 47.3,
+              "pricePerCoinSold": 3690,
+              "profit": 19.11,
+              "isActive": false,
+              "date": "2025-02-07"
+            },
+            {
+              "name": "ETH",
+              "id": "rLHKamS2Ip",
+              "quantity": 0.0136,
+              "pricePerCoinBought": 2560,
+              "fees": null,
+              "totalSpent": 34.81,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-01-07"
+            }
+          ]
+        }
       }
     }
-  }
+  ]
 }
