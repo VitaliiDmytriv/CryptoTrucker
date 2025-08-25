@@ -1,37 +1,42 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { Portfolio } from "../types/index";
+import type { CoinsRecord, CoinData, Transaction } from "../types/index";
 
+// Мутаціїї на рівні pinia стору
 export const usePortfolioStore = defineStore("portfolio", () => {
-  const portfolio = ref<Portfolio | null>(null);
-  const loading = ref(false);
-  const error = ref<string | null>(null);
+  const coins = ref<CoinsRecord>({});
 
-  async function fetchPortfolioData() {
-    loading.value = true;
-    error.value = null;
-    try {
-      const res = await fetch(`/api/`);
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || `HTTP ${res.status}`);
-      }
-      portfolio.value = data;
-    } catch (err) {
-      if (err instanceof Error) {
-        error.value = err.message;
-      } else {
-        error.value = "We couldn't load coins list";
-      }
-    } finally {
-      loading.value = false;
-    }
+  function addCoin(symbol: string, coin: CoinData) {
+    coins.value[symbol] = coin;
   }
 
+  function getCoin(symbol: string): CoinData | undefined {
+    return coins.value[symbol];
+  }
+
+  function updateTransaction(
+    symbol: string,
+    id: string,
+    updTransaction: Transaction
+  ) {
+    const transactions = coins.value[symbol].transactions;
+    const transaction = transactions.find((t) => t.id === id);
+    if (!transaction) {
+      // тут потрібно зробити fetch запит знову, бо стор не має цієї транзакції
+      return;
+    }
+    Object.assign(transaction, updTransaction);
+  }
+
+  function addTransaction() {}
+  function removeTransaction() {}
+
   return {
-    portfolio,
-    loading,
-    error,
-    fetchPortfolioData,
+    getCoin,
+    addCoin,
+    coins,
+    addTransaction,
+    removeTransaction,
+    updateTransaction,
   };
 });

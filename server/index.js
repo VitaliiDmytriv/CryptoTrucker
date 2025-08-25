@@ -17,6 +17,10 @@ const sessionsDB = new Low(sessionsAdapter, { sessions: [] });
 const usersAdapter = new JSONFile("db/db.json");
 const usersDB = new Low(usersAdapter, { users: [] });
 
+function sendError(res, code, message, status = 400) {
+  return res.status(status).json({ message, code });
+}
+
 async function authMiddleware(req, res, next) {
   const sessionId = req.cookies.sessionId;
 
@@ -41,7 +45,7 @@ async function authMiddleware(req, res, next) {
   next();
 }
 
-// get ======
+// Home
 
 app.get("/", authMiddleware, async (req, res) => {
   try {
@@ -50,7 +54,7 @@ app.get("/", authMiddleware, async (req, res) => {
     const user = usersDB.data.users.find((u) => u.id === userId);
 
     if (!user || !user.coins) {
-      return res.status(500).json({ error: "Invalid DB structure" });
+      return sendError(res, "server-error", "Invalid DB structure", 500);
     }
     const coins = Object.keys(user.coins);
 
@@ -60,9 +64,11 @@ app.get("/", authMiddleware, async (req, res) => {
       activeInvestment: user.activeInvestment,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to read database" });
+    sendError(res, "server-error", "Failed to read database", 500);
   }
 });
+
+// Coins
 
 app.get("/:coin", authMiddleware, async (req, res) => {
   try {
@@ -73,30 +79,21 @@ app.get("/:coin", authMiddleware, async (req, res) => {
     const user = usersDB.data.users.find((u) => u.id === userId);
 
     if (!user || !user.coins) {
-      return res.status(500).json({
-        error: `Invalid DB structure ${user}}`,
-      });
+      return sendError(res, "not-found", "User isn't found", 404);
     }
 
     const coinData = user.coins[coin];
 
     if (!coinData) {
-      return res.status(404).json({
-        error: `Coin '${coin}' not found`,
-        code: "not-found",
-      });
+      return sendError(res, "not-found", `Coin '${coin}' not found`, 404);
     }
     res.json(coinData);
   } catch (error) {
-    console.error("Error reading DB:", error);
-    res.status(500).json({
-      error: "Failed to get data",
-      code: "server-error",
-    });
+    return sendError(res, "server-error", "Failed to get data", 500);
   }
 });
 
-// put ========
+// Transactions ========
 
 app.put(
   "/:coin/transactions/:transactionId",
@@ -111,25 +108,20 @@ app.put(
       const user = usersDB.data.users.find((u) => u.id === userId);
 
       if (!user) {
-        throw new Error("Something went wrong on the server");
+        return sendError(
+          res,
+          "server-error",
+          "Something went wrong on the server",
+          500
+        );
       }
 
-      const transactions = user.coins[coin]?.transactions;
-
-      if (!transactions) {
-        return res.status(404).json({
-          error: `Coin '${coin}' not found`,
-          code: "not-found",
-        });
-      }
+      const transactions = user.coins[coin]?.transactions || [];
 
       const transaction = transactions.find((t) => t.id === transactionId);
 
       if (!transaction) {
-        return res.status(404).json({
-          error: `Transaction is not found`,
-          code: "not-found",
-        });
+        return sendError(res, "not-found", `Transaction is not found`, 404);
       }
 
       // оновлюємо дані
@@ -140,7 +132,12 @@ app.put(
 
       res.json({ success: true, transaction });
     } catch (err) {
-      res.status(500).json({ error: err.message, code: "server-error" });
+      sendError(
+        res,
+        "server-error",
+        err.message || "Internal Server Error",
+        404
+      );
     }
   }
 );

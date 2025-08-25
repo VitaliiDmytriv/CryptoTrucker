@@ -2,6 +2,7 @@
 import type { Transaction, FormMode, CoinsCacheStore } from "../types/index";
 import { computed, defineEmits, ref, toRaw, watch } from "vue";
 import { useTransactionCalculations } from "../composables/useTransactionCalculations";
+import { useTransactions } from "../composables/useTransactions";
 
 const emit = defineEmits<{
   (event: "close"): void;
@@ -10,45 +11,52 @@ const emit = defineEmits<{
 const props = defineProps<{
   transaction: Transaction;
   mode: FormMode;
-  coinsCacheStore: CoinsCacheStore;
 }>();
 
 const { localTransaction } = useTransactionCalculations(props.transaction);
+const {
+  updateTransaction,
+  success: submitSuccess,
+  loading: submitLoading,
+  error: submitError,
+  resetSuccess,
+} = useTransactions();
 
 const header = computed(() => {
   return props.mode === "edit" ? "Edit Transaction" : "Add Transaction";
 });
 
-async function editTransaction() {
-  console.log(localTransaction.value);
-  try {
-    const response = await fetch(
-      `api/${localTransaction.value.name}/transactions/${localTransaction.value.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(localTransaction.value),
-      }
-    );
-    const data = await response.json();
-    console.log(data);
-    if (data.success) {
-      props.coinsCacheStore.updateTransaction(
-        data.transaction.name,
-        data.transaction
-      );
-      emit("close");
-    }
-  } catch (err) {
-    console.error(err);
+async function handleSubmit() {
+  await updateTransaction(
+    localTransaction.value.name,
+    localTransaction.value.id,
+    localTransaction.value
+  );
+  if (submitSuccess) {
+    setTimeout(resetSuccess, 1000);
+    // emit("close");
   }
 }
 </script>
 
 <template>
-  <section>
+  <section class="relative">
+    <div
+      v-if="submitLoading || submitError || submitSuccess"
+      class="absolute left-0 top-0 right-0 bottom-0 bg-[var(--opacityColor)] flex justify-center items-center"
+    >
+      <div v-if="submitLoading">
+        <div
+          class="w-6 h-6 border-2 border-black border-dashed rounded-full animate-spin"
+        ></div>
+      </div>
+      <div v-else-if="submitError">
+        <object data="" type="">
+          {{ submitError }}
+        </object>
+      </div>
+      <div v-else-if="submitSuccess">Transaction edited</div>
+    </div>
     <div
       class="bg-[var(--bodyColor)] rounded-md px-2 py-3 min-w-[70vw] sm:min-w-[16rem] max-w-[80vw] sm:max-w-lg md:px-4 md:py-6"
     >
@@ -58,9 +66,8 @@ async function editTransaction() {
         <button @click="emit('close')" class="mr-2">X</button>
       </div>
 
-      <!--  -->
       <form
-        @submit.prevent="editTransaction"
+        @submit.prevent="handleSubmit"
         class="text-xs grid gap-1 grid-cols-1 xs:grid-cols-2 xs:gap-2 md:text-sm"
       >
         <!--  -->

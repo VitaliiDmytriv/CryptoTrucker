@@ -18,8 +18,8 @@
               "pricePerCoinBought": 0.9225,
               "fees": 1,
               "totalSpent": 31.51,
-              "pricePerCoinSold": 1.15,
-              "profit": 6.77,
+              "pricePerCoinSold": "",
+              "profit": null,
               "isActive": false,
               "date": "2025-06-26"
             },
@@ -57,10 +57,10 @@
               "id": "FyLvJDpWE-",
               "quantity": 1.18,
               "pricePerCoinBought": 17.06,
-              "fees": null,
+              "fees": 10,
               "totalSpent": 20.13,
-              "pricePerCoinSold": "",
-              "profit": null,
+              "pricePerCoinSold": 10,
+              "profit": -18.33,
               "isActive": false,
               "date": "2024-12-11"
             },
@@ -82,9 +82,9 @@
               "quantity": 2.06,
               "pricePerCoinBought": 9.34,
               "fees": null,
-              "totalSpent": 19.25,
-              "pricePerCoinSold": null,
-              "profit": null,
+              "totalSpent": 19.24,
+              "pricePerCoinSold": 123,
+              "profit": 234.14,
               "isActive": false,
               "date": "2025-09-01"
             }
@@ -100,8 +100,8 @@
               "pricePerCoinBought": 2720,
               "fees": null,
               "totalSpent": 24.75,
-              "pricePerCoinSold": "",
-              "profit": null,
+              "pricePerCoinSold": 3000,
+              "profit": 2.55,
               "isActive": false,
               "date": "2025-02-24"
             },
@@ -112,7 +112,7 @@
               "pricePerCoinBought": 2628,
               "fees": null,
               "totalSpent": 34.95,
-              "pricePerCoinSold": null,
+              "pricePerCoinSold": "",
               "profit": null,
               "isActive": false,
               "date": "2025-02-12"
@@ -124,8 +124,8 @@
               "pricePerCoinBought": 2628,
               "fees": null,
               "totalSpent": 47.3,
-              "pricePerCoinSold": 3690,
-              "profit": 19.11,
+              "pricePerCoinSold": "",
+              "profit": null,
               "isActive": false,
               "date": "2025-02-07"
             },

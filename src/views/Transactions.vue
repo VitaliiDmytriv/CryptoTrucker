@@ -5,13 +5,18 @@ import { useRoute } from "vue-router";
 import type { CoinData, Transaction } from "../types/index";
 import TransactionForm from "../components/TransactionForm.vue";
 import Modal from "@/components/Modal.vue";
-import { useCoinsCacheStore } from "../stores/coinsCacheStore";
+import { useTransactions } from "../composables/useTransactions";
 import Error from "../components/Error.vue";
 import router from "@/router/router";
 import Sceleton from "@/components/Sceleton.vue";
 
 const route = useRoute();
-const store = useCoinsCacheStore();
+const {
+  loading: transactionsLoading,
+  error: transactionsError,
+  ...transactionsService
+} = useTransactions();
+
 const coin = ref<null | CoinData>(null);
 const activeTransaction = ref<undefined | Transaction>(undefined);
 const { width } = useWindowSize();
@@ -22,7 +27,7 @@ watch(
   async (newSymbol) => {
     if (typeof newSymbol === "string") {
       coin.value = null;
-      coin.value = await store.fetchCoinData(newSymbol);
+      coin.value = await transactionsService.fetchCoin(newSymbol);
     } else {
       coin.value = null;
     }
@@ -42,8 +47,7 @@ function openTransactionEditor(id: string) {
 
 // Handle Errors ===
 const errorButtonText = computed(() => {
-  if (!store.error) return "Go back";
-  switch (store.error.code) {
+  switch (transactionsError.value?.code) {
     case "not-found":
       return "Go back";
     case "server-error":
@@ -56,24 +60,23 @@ const errorButtonText = computed(() => {
 });
 
 function handleErrorRetry() {
-  if (!store.error) return;
-
-  switch (store.error.code) {
-    case "server-error":
-      store.resetError();
-      if (typeof route.params.coin === "string") {
-        (async () =>
-          (coin.value = await store.fetchCoinData(
-            route.params.coin as string
-          )))();
-      }
-      break;
-    default:
-      // Reset error and navigate to home
-      store.resetError();
-      router.push("/");
-      break;
-  }
+  // if (!store.error) return;
+  // switch (store.error.code) {
+  //   case "server-error":
+  //     store.resetError();
+  //     if (typeof route.params.coin === "string") {
+  //       (async () =>
+  //         (coin.value = await store.fetchCoinData(
+  //           route.params.coin as string
+  //         )))();
+  //     }
+  //     break;
+  //   default:
+  //     // Reset error and navigate to home
+  //     store.resetError();
+  //     router.push("/");
+  //     break;
+  // }
 }
 </script>
 
@@ -83,15 +86,14 @@ function handleErrorRetry() {
       mode="edit"
       @close="closeEdit"
       :transaction="activeTransaction"
-      :coins-cache-store="store"
     />
   </Modal>
 
-  <Modal v-if="store.error">
-    <object>{{ store.error }}</object>
+  <Modal v-if="transactionsError">
+    <object>{{ transactionsError }}</object>
     <Error
       @retry="handleErrorRetry"
-      :message="store.error.message"
+      :message="transactionsError.message"
       :button-txt="errorButtonText"
     />
   </Modal>
@@ -109,7 +111,7 @@ function handleErrorRetry() {
         </tr>
       </thead>
 
-      <tbody v-if="store.loading" class="sceletForFetch">
+      <tbody v-if="transactionsLoading" class="sceletForFetch">
         <tr v-for="scelet in 5" :key="scelet">
           <td :colspan="colspan">
             <Sceleton>asd</Sceleton>

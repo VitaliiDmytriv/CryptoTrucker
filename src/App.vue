@@ -3,7 +3,7 @@ import { ref, provide, computed, onMounted } from "vue";
 import DataBlock from "./components/DataBlock.vue";
 import CoinBlock from "./components/CoinBlock.vue";
 import TransactionList from "./components/TransactionList.vue";
-import { usePortfolioStore } from "./stores/portfolioStore";
+import { usePortfolioAnoteheStore } from "./stores/portfolioAnotherStore";
 import Modal from "./components/Modal.vue";
 import Error from "./components/Error.vue";
 import Sceleton from "./components/Sceleton.vue";
@@ -11,7 +11,7 @@ import { nanoid } from "nanoid";
 
 console.log(nanoid(10));
 
-const store = usePortfolioStore();
+const store = usePortfolioAnoteheStore();
 
 onMounted(() => {
   store.fetchPortfolioData();

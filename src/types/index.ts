@@ -24,7 +24,7 @@ export type FormMode = "add" | "edit";
 
 export interface ErrorResponse {
   message: string;
-  code?: "not-found" | "server-error" | "network";
+  code: "not-found" | "server-error" | "network" | "unexpected" | "unknown";
   status?: number;
 }
 
