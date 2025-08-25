@@ -72,7 +72,4 @@ transactions-api
 fetch запити на сервер повязані лише з транзакціями post,put,delete,get
 
  
-
-
-
-
+git commit: add success animation

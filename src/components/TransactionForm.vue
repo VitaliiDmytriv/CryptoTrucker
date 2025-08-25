@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Transaction, FormMode, CoinsCacheStore } from "../types/index";
 import { computed, defineEmits, ref, toRaw, watch } from "vue";
-import { useTransactionCalculations } from "../composables/useTransactionCalculations";
-import { useTransactions } from "../composables/useTransactions";
+import { useTransactionCalculations } from "@/composables/useTransactionCalculations";
+import { useTransactions } from "@/composables/useTransactions";
+import SubmitStatus from "@/components/SubmitStatus.vue";
 
 const emit = defineEmits<{
   (event: "close"): void;
@@ -22,6 +23,12 @@ const {
   resetSuccess,
 } = useTransactions();
 
+const isChanged = computed(() => {
+  return (
+    JSON.stringify(localTransaction.value) !== JSON.stringify(props.transaction)
+  );
+});
+
 const header = computed(() => {
   return props.mode === "edit" ? "Edit Transaction" : "Add Transaction";
 });
@@ -33,30 +40,21 @@ async function handleSubmit() {
     localTransaction.value
   );
   if (submitSuccess) {
-    setTimeout(resetSuccess, 1000);
-    // emit("close");
+    setTimeout(() => {
+      resetSuccess;
+      emit("close");
+    }, 1300);
   }
 }
 </script>
 
 <template>
   <section class="relative">
-    <div
-      v-if="submitLoading || submitError || submitSuccess"
-      class="absolute left-0 top-0 right-0 bottom-0 bg-[var(--opacityColor)] flex justify-center items-center"
-    >
-      <div v-if="submitLoading">
-        <div
-          class="w-6 h-6 border-2 border-black border-dashed rounded-full animate-spin"
-        ></div>
-      </div>
-      <div v-else-if="submitError">
-        <object data="" type="">
-          {{ submitError }}
-        </object>
-      </div>
-      <div v-else-if="submitSuccess">Transaction edited</div>
-    </div>
+    <SubmitStatus
+      :submit-error="submitError"
+      :submit-loading="submitLoading"
+      :submit-success="submitSuccess"
+    />
     <div
       class="bg-[var(--bodyColor)] rounded-md px-2 py-3 min-w-[70vw] sm:min-w-[16rem] max-w-[80vw] sm:max-w-lg md:px-4 md:py-6"
     >
@@ -155,6 +153,7 @@ async function handleSubmit() {
         </div>
         <div class="mt-2 col-span-full form-button">
           <button
+            :disabled="!isChanged"
             type="submit"
             class="w-full inline-block border input-primary"
           >
