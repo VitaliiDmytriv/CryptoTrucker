@@ -17,6 +17,9 @@ const sessionsDB = new Low(sessionsAdapter, { sessions: [] });
 const usersAdapter = new JSONFile("db/db.json");
 const usersDB = new Low(usersAdapter, { users: [] });
 
+const coinsListAdapter = new JSONFile("db/coinsList.json");
+const coinsListDB = new Low(coinsListAdapter, { coins: [] });
+
 function sendError(res, code, message, status = 400) {
   return res.status(status).json({ message, code });
 }
@@ -141,6 +144,68 @@ app.put(
     }
   }
 );
+
+// CoinGecko ==============
+
+// fetch coins list from CoinGecko and write it for local base
+async function fetchCoinsFromCoinGecko(limit = 1000) {
+  let coins = [];
+  const perPage = 250;
+  const pages = Math.ceil(limit / perPage);
+
+  for (let page = 1; page < pages; page++) {
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
+    );
+    if (!response.ok) {
+      throw {
+        message: data.message ?? "Failed to fetch coins",
+        code: data.code ?? "server-error",
+      };
+    }
+    const data = await response.json();
+    coins = [...coins, ...data];
+  }
+  return coins.slice(0, limit);
+}
+
+app.get("/coinslist/update", authMiddleware, async (req, res) => {
+  try {
+    const coins = await fetchCoinsFromCoinGecko(1250);
+    await coinsListDB.read();
+    coinsListDB.data.coins = coins;
+    await coinsListDB.write();
+    res.json({ success: true, message: `Збережено ${coins.length} монет` });
+  } catch (error) {
+    sendError(res, "server-error", "Failed to fetch coins", 500);
+  }
+});
+
+app.get("/coinslist/market", authMiddleware, async (req, res) => {
+  try {
+    await coinsListDB.read();
+    const search = req.query?.search;
+
+    let slicedCoins;
+    if (search) {
+      const searchLowerCase = search.toLowerCase();
+      slicedCoins = coinsListDB.data.coins.filter((coin) => {
+        return (
+          coin.name.toLowerCase().includes(searchLowerCase) ||
+          coin.symbol.toLowerCase().includes(searchLowerCase)
+        );
+      });
+    } else {
+      slicedCoins = coinsListDB.data.coins.slice(0, 50);
+    }
+
+    res.json({
+      coins: slicedCoins,
+    });
+  } catch (error) {
+    sendError(res, "server-error", "Failed to read database", 500);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

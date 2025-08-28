@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Transaction, FormMode, CoinsCacheStore } from "../types/index";
-import { computed, defineEmits, ref, toRaw, watch } from "vue";
+import { computed, defineEmits, onMounted, ref, toRaw, watch } from "vue";
 import { useTransactionCalculations } from "@/composables/useTransactionCalculations";
 import { useTransactions } from "@/composables/useTransactions";
 import SubmitStatus from "@/components/SubmitStatus.vue";
+import CoinSelect from "@/components/CoinSelect.vue";
 
 const emit = defineEmits<{
   (event: "close"): void;
@@ -68,13 +69,9 @@ async function handleSubmit() {
         @submit.prevent="handleSubmit"
         class="text-xs grid gap-1 grid-cols-1 xs:grid-cols-2 xs:gap-2 md:text-sm"
       >
-        <!--  -->
-        <div v-if="mode === 'add'">
-          <select v-if="mode === 'add'" v-model="localTransaction.name">
-            <option value="ADA">ADA</option>
-            <option value="ETH">ETH</option>
-            <option value="UNI">UNI</option>
-          </select>
+        <!-- <div v-if="mode === 'add'"> -->
+        <div v-if="true" class="col-span-2">
+          <CoinSelect />
         </div>
         <div class="">
           <label for="quantity" class="mb-[2px]">Quantity</label>
