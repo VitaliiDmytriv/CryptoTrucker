@@ -8,10 +8,12 @@ import Modal from "./components/Modal.vue";
 import Error from "./components/Error.vue";
 import Sceleton from "./components/Sceleton.vue";
 import { nanoid } from "nanoid";
+import TransactionForm from "@/components/TransactionForm.vue";
 
 console.log(nanoid(10));
 
 const store = usePortfolioAnoteheStore();
+const showAddTransaction = ref(false);
 
 onMounted(() => {
   store.fetchPortfolioData();
@@ -19,6 +21,10 @@ onMounted(() => {
 
 function handleError() {
   store.fetchPortfolioData();
+}
+
+function closeAddForm() {
+  showAddTransaction.value = false;
 }
 </script>
 
@@ -30,6 +36,9 @@ function handleError() {
         :message="store.error"
         button-txt="Try again"
       />
+    </Modal>
+    <Modal v-if="showAddTransaction" @close="closeAddForm">
+      <TransactionForm mode="add" @close="closeAddForm" />
     </Modal>
     <header>
       <h1>Crypto Trucker</h1>
@@ -48,25 +57,33 @@ function handleError() {
       </DataBlock>
     </section>
 
-    <section>
-      <div v-if="store.loading" class="flex gap-2">
-        <!-- <div v-if="true" class="flex gap-1 xs:gap-2"> -->
-        <Sceleton
-          class="container-border max-w-[2.25rem] sm:max-w-[3rem]"
-          v-for="scelet in 3"
-          :key="scelet"
-          >asd</Sceleton
-        >
+    <section class="flex">
+      <div class="flex-1">
+        <div v-if="store.loading" class="flex gap-2">
+          <!-- <div v-if="true" class="flex gap-1 xs:gap-2"> -->
+          <Sceleton
+            class="container-border max-w-[2.25rem] sm:max-w-[3rem]"
+            v-for="scelet in 3"
+            :key="scelet"
+            >asd</Sceleton
+          >
+        </div>
+
+        <div v-else class="flex gap-1 xs:gap-2">
+          <CoinBlock
+            v-for="coin in store.portfolio?.coins"
+            :key="coin"
+            :coin="coin"
+          />
+        </div>
       </div>
 
-      <div v-if="store.error">Error:{{ store.error }}</div>
-      <div v-else class="flex gap-1 xs:gap-2">
-        <CoinBlock
-          v-for="coin in store.portfolio?.coins"
-          :key="coin"
-          :coin="coin"
-        />
-      </div>
+      <button
+        class="card-border container-border select-none text-center min-w-[2.25rem] sm:min-w-[3rem]"
+        @click="showAddTransaction = true"
+      >
+        Add Transaction
+      </button>
     </section>
     <TransactionList />
   </section>

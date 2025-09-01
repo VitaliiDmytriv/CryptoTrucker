@@ -21,14 +21,14 @@
               "pricePerCoinSold": "",
               "profit": null,
               "isActive": false,
-              "date": "2025-06-26"
+              "date": "2025-06-02"
             },
             {
               "name": "ADA",
               "id": "n0QuWheY3_",
               "quantity": 22.6,
               "pricePerCoinBought": 0.93,
-              "fees": null,
+              "fees": "",
               "totalSpent": 21.08,
               "pricePerCoinSold": null,
               "profit": null,
@@ -40,10 +40,10 @@
               "id": "ZA7i7mDbd9",
               "quantity": 20.2,
               "pricePerCoinBought": 1.0092,
-              "fees": null,
-              "totalSpent": 20.38,
-              "pricePerCoinSold": null,
-              "profit": null,
+              "fees": "",
+              "totalSpent": 20.39,
+              "pricePerCoinSold": 1.04,
+              "profit": 0.62,
               "isActive": false,
               "date": "2025-01-07"
             }

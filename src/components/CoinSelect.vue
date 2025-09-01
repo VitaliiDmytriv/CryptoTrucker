@@ -1,55 +1,55 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { getCoinsList, updateCoinsList } from "@/api/coinsGeckoApi";
-import ChevronDownIcon from "@/assets/icons/chevron-down-svgrepo-com.svg";
-import SearchIcon from "@/assets/icons/search-svgrepo-com.svg";
+import type { Transaction, CoinGecko } from "@/types/index";
+import { useCoinList } from "@/composables/useCoinList";
+import { onClickOutside, useDebounceFn } from "@vueuse/core";
+import { Search, ChevronDown } from "lucide-vue-next";
 
-interface Coin {
-  id: string;
-  name: string;
-  symbol: string;
-  image: string;
-}
+// 1. не змінювати props - а емітити ✅,
+// 2.debounce з fetchCoinList, ✅
+// 3.onClickOutside замість blur + mousedown, ✅
+// 4.винести svg у компоненти, ✅
 
-const selected = ref<null | Coin>(null);
-const inputSearch = ref("");
-const showList = ref(false);
-const coins = ref<Coin[]>([]);
+const emit = defineEmits<{
+  (e: "handleSelect", coin: CoinGecko): void;
+}>();
 
-const placeholder = computed(() => {
-  return selected ? selected.value?.name : "";
+const props = defineProps<{
+  transaction: Transaction;
+}>();
+
+const searchQuery = ref("");
+const isDropdownOpen = ref(true);
+const dropdown = ref<null | HTMLElement>(null);
+
+const {
+  coinList,
+  fetchCoinList,
+  error: coinListErro,
+  loading: coinListLoading,
+} = useCoinList();
+
+const debouncedFetchCoinList = useDebounceFn(fetchCoinList, 400);
+
+watch(
+  () => searchQuery.value,
+  (newValue) => {
+    debouncedFetchCoinList(newValue);
+  }
+);
+
+onClickOutside(dropdown, () => {
+  if (props.transaction.name) {
+    isDropdownOpen.value = false;
+    searchQuery.value = "";
+  }
 });
 
-watch(
-  () => inputSearch.value,
-  (newValue) => {
-    handleFetch(newValue);
-  }
-);
-watch(
-  () => selected.value,
-  (newValue) => {
-    console.log(selected);
-  }
-);
-
-async function handleFetch(search: string) {
-  try {
-    const data = await getCoinsList(search);
-    coins.value = data;
-    // console.log(data);
-  } catch (error) {
-    console.log(error);
-  }
+function selectCoin(coin: CoinGecko) {
+  isDropdownOpen.value = false;
+  searchQuery.value = "";
+  emit("handleSelect", coin);
 }
-
-function handleMouseDown(coin: Coin) {
-  selected.value = { ...coin };
-  showList.value = false;
-  inputSearch.value = "";
-}
-
-handleFetch("");
 </script>
 
 <template>
@@ -57,80 +57,58 @@ handleFetch("");
   <div class="relative">
     <div class="relative">
       <!-- input -->
-      <input
-        maxlength="20"
-        @focus="showList = true"
-        @blur="showList = false"
-        type="text"
-        class="input-primary border"
-        v-model="inputSearch"
-        :placeholder="placeholder"
-      />
+      <div class="relative">
+        <input
+          maxlength="20"
+          @focus="isDropdownOpen = true"
+          type="text"
+          class="input-primary border"
+          v-model.trim="searchQuery"
+        />
+
+        <div
+          v-if="!isDropdownOpen"
+          class="absolute top-1/2 -translate-y-1/2 left-1"
+        >
+          <div v-if="transaction.name" class="flex justify-center gap-2">
+            <span class="w-5 inline-block">
+              <img class="w-full" :src="transaction.image" alt="" />
+            </span>
+            <span>{{ transaction.name }}</span>
+            <span class="text-[#808a9d]">{{
+              transaction.symbol.toUpperCase()
+            }}</span>
+          </div>
+          <div v-else>Select Coin</div>
+        </div>
+      </div>
+
       <span class="absolute w-5 right-1 top-1/2 -translate-y-1/2">
-        <span v-if="showList">
-          <svg
-            v-if="showList"
-            viewBox="0 0 21 21"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#000000"
-          >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              <g
-                fill="none"
-                fill-rule="evenodd"
-                stroke="#000000"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="8.5" cy="8.5" r="5"></circle>
-                <path d="m17.571 17.5-5.571-5.5"></path>
-              </g>
-            </g>
-          </svg>
+        <span v-if="isDropdownOpen">
+          <Search :size="16" :stroke-width="1.5" />
         </span>
         <span v-else>
-          <svg
-            viewBox="0 0 21 21"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#000000"
-          >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              <path
-                d="m8.5.5-4 4-4-4"
-                fill="none"
-                stroke="#000000"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                transform="translate(6 8)"
-              ></path>
-            </g>
-          </svg>
+          <ChevronDown :size="16" :stroke-width="1.5" />
         </span>
       </span>
 
       <!-- dropdown -->
 
       <ul
-        v-if="showList"
+        ref="dropdown"
+        v-if="isDropdownOpen"
         class="absolute mt-1 max-h-48 bg-[var(--bodyColor)] shadow-md w-full rounded-md p-1 overflow-y-auto"
       >
+        <li v-if="coinListLoading">Searching...</li>
+        <li v-else-if="!coinList.length" class="p-2 flex items-center">
+          No data
+        </li>
         <li
+          v-else
           class="p-2 flex items-center cursor-pointer hover:bg-[var(--transactionHover)]"
-          v-for="coin in coins"
+          v-for="coin in coinList"
           :key="coin.id"
-          @mousedown="handleMouseDown(coin)"
+          @click="selectCoin(coin)"
         >
           <span class="mr-2 w-5">
             <img :src="coin.image" alt="" />
@@ -138,7 +116,6 @@ handleFetch("");
           <span class="mr-2 font-semibold">{{ coin.name }}</span>
           <span class="uppercase">{{ coin.symbol }}</span>
         </li>
-        <li v-if="!coins.length" class="p-2 flex items-center">No data</li>
       </ul>
     </div>
   </div>

@@ -188,11 +188,10 @@ app.get("/coinslist/market", authMiddleware, async (req, res) => {
 
     let slicedCoins;
     if (search) {
-      const searchLowerCase = search.toLowerCase();
       slicedCoins = coinsListDB.data.coins.filter((coin) => {
         return (
-          coin.name.toLowerCase().includes(searchLowerCase) ||
-          coin.symbol.toLowerCase().includes(searchLowerCase)
+          coin.name.toLowerCase().includes(search) ||
+          coin.symbol.toLowerCase().includes(search)
         );
       });
     } else {

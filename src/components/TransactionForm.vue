@@ -1,21 +1,28 @@
 <script setup lang="ts">
-import type { Transaction, FormMode, CoinsCacheStore } from "../types/index";
-import { computed, defineEmits, onMounted, ref, toRaw, watch } from "vue";
+import type { CoinGecko, TransactionFormProps } from "../types/index";
+import {
+  computed,
+  defineEmits,
+  onMounted,
+  onUpdated,
+  ref,
+  toRaw,
+  watch,
+} from "vue";
 import { useTransactionCalculations } from "@/composables/useTransactionCalculations";
 import { useTransactions } from "@/composables/useTransactions";
 import SubmitStatus from "@/components/SubmitStatus.vue";
 import CoinSelect from "@/components/CoinSelect.vue";
+import { X } from "lucide-vue-next";
 
 const emit = defineEmits<{
   (event: "close"): void;
 }>();
 
-const props = defineProps<{
-  transaction: Transaction;
-  mode: FormMode;
-}>();
+const props = defineProps<TransactionFormProps>();
 
-const { localTransaction } = useTransactionCalculations(props.transaction);
+const { localTransaction } = useTransactionCalculations(props);
+
 const {
   updateTransaction,
   success: submitSuccess,
@@ -24,27 +31,49 @@ const {
   resetSuccess,
 } = useTransactions();
 
-const isChanged = computed(() => {
-  return (
-    JSON.stringify(localTransaction.value) !== JSON.stringify(props.transaction)
-  );
+const canSubmit = computed(() => {
+  if (props.mode === "edit") {
+    return (
+      JSON.stringify(localTransaction.value) ===
+      JSON.stringify(props.transaction)
+    );
+  } else if (props.mode === "add") {
+    return !localTransaction.value.name;
+  }
 });
 
-const header = computed(() => {
+const headerTxt = computed(() => {
   return props.mode === "edit" ? "Edit Transaction" : "Add Transaction";
 });
 
+const buttonTxt = computed(() => {
+  return props.mode === "edit" ? "Edit" : "Add transaction";
+});
+
+function selectNewCoin(coin: CoinGecko) {
+  localTransaction.value.pricePerCoinBought = coin.current_price;
+  localTransaction.value.image = coin.image;
+  localTransaction.value.symbol = coin.symbol;
+  localTransaction.value.name = coin.name;
+}
+
 async function handleSubmit() {
-  await updateTransaction(
-    localTransaction.value.name,
-    localTransaction.value.id,
-    localTransaction.value
-  );
-  if (submitSuccess) {
-    setTimeout(() => {
-      resetSuccess;
-      emit("close");
-    }, 1300);
+  if (props.mode === "edit") {
+    await updateTransaction(
+      localTransaction.value.name,
+      localTransaction.value.id,
+      localTransaction.value
+    );
+    if (submitSuccess) {
+      setTimeout(() => {
+        resetSuccess;
+        emit("close");
+      }, 1300);
+    }
+  } else if (props.mode === "add") {
+    if (localTransaction.value.name) {
+      console.log(localTransaction.value);
+    }
   }
 }
 </script>
@@ -61,8 +90,10 @@ async function handleSubmit() {
     >
       <!--  -->
       <div class="flex justify-between xs:text-sm md:text-base mb-2">
-        <h2>{{ header }}</h2>
-        <button @click="emit('close')" class="mr-2">X</button>
+        <h2>{{ headerTxt }}</h2>
+        <button @click="emit('close')" class="mr-2">
+          <X :size="20" :stroke-width="1.5" />
+        </button>
       </div>
 
       <form
@@ -70,8 +101,11 @@ async function handleSubmit() {
         class="text-xs grid gap-1 grid-cols-1 xs:grid-cols-2 xs:gap-2 md:text-sm"
       >
         <!-- <div v-if="mode === 'add'"> -->
-        <div v-if="true" class="col-span-2">
-          <CoinSelect />
+        <div v-if="props.mode === 'add'" class="col-span-2">
+          <CoinSelect
+            @handleSelect="selectNewCoin"
+            :transaction="localTransaction"
+          />
         </div>
         <div class="">
           <label for="quantity" class="mb-[2px]">Quantity</label>
@@ -150,11 +184,11 @@ async function handleSubmit() {
         </div>
         <div class="mt-2 col-span-full form-button">
           <button
-            :disabled="!isChanged"
+            :disabled="canSubmit"
             type="submit"
             class="w-full inline-block border input-primary"
           >
-            Edit
+            {{ buttonTxt }}
           </button>
         </div>
       </form>

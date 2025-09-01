@@ -1,10 +1,30 @@
 import { computed, ref, watch, toRaw } from "vue";
-import type { Transaction } from "../types/index";
+import type { Transaction, TransactionFormProps } from "../types/index";
+import { getTodayDate } from "@/helpers/helpFunctions";
+import { nanoid } from "nanoid";
 
-export function useTransactionCalculations(transaction: Transaction) {
-  const localTransaction = ref<Transaction>(
-    structuredClone(toRaw(transaction))
-  );
+const defaultTransaction = {
+  symbol: "",
+  name: "",
+  id: nanoid(10).toString(),
+  image: "",
+  quantity: null,
+  pricePerCoinBought: null,
+  fees: null,
+  totalSpent: null,
+  pricePerCoinSold: null,
+  profit: null,
+  isActive: false,
+  date: getTodayDate(),
+};
+
+export function useTransactionCalculations(props: TransactionFormProps) {
+  // перевірка на тип моду, якщо add то дефолтний обєкт для нової транзакціїї, якщо ні, то транзакція з пропсу для змін
+  const source = props.mode === "add" ? defaultTransaction : props.transaction;
+
+  // створення локального реф обєкту для роботи з формою
+  const localTransaction = ref<Transaction>(structuredClone(toRaw(source)));
+
   // Convert all user inputs to numbers for consistent calculations
   const quantity = computed(() => Number(localTransaction.value.quantity));
   const priceBought = computed(() =>
@@ -35,8 +55,7 @@ export function useTransactionCalculations(transaction: Transaction) {
     return null;
   });
 
-  // Watch для побічного ефекту: оновлюємо поля localTransaction
-  // Computed-властивості лише для читання, тому використовуємо watch для запису
+  // оновлюємо поля localTransaction
   watch([totalSpent, profit], ([newTotalSpent, newProfit]) => {
     localTransaction.value.totalSpent = newTotalSpent;
     localTransaction.value.profit = newProfit;

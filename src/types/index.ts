@@ -1,9 +1,11 @@
 export interface Transaction {
+  symbol: string;
   name: string;
   id: string;
-  quantity: number;
-  pricePerCoinBought: number;
-  fees: number;
+  image: string;
+  quantity: number | null;
+  pricePerCoinBought: number | null;
+  fees: number | null;
   totalSpent: number | null;
   pricePerCoinSold: null | number;
   profit: null | number;
@@ -41,4 +43,24 @@ export interface CoinsCacheStore {
   fetchCoinData(symbol: string): Promise<any | null>;
   resetError(): void;
   updateTransaction(coin: string, updatedTransaction: Transaction): void;
+}
+
+export interface AddProps {
+  mode: "add";
+  transaction?: never;
+}
+
+export interface EditProps {
+  mode: "edit";
+  transaction: Transaction;
+}
+
+export type TransactionFormProps = AddProps | EditProps;
+
+export interface CoinGecko {
+  id: string;
+  name: string;
+  symbol: string;
+  image: string;
+  current_price: number;
 }

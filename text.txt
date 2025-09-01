@@ -81,3 +81,4 @@ svg colections - https://www.svgrepo.com/collection/system-ui-line-icons/2
 27/08 - розібратись з URLSearchParams , проводжу фільтрації на сервері при пошуку монети, без pinia поки, все зі сервера ✅
 28/08 - відрефакторити coinSelect, створити відображення монети через absolute у input після новообраного coin, 
         функціонал для додаваня транзакції на сервер, додати loading коли я роблю фільтрацію на сервері при пошуку монети
+31/08 - виправити transaction form на mobile screen, 

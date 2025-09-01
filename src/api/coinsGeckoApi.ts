@@ -1,6 +1,8 @@
 export async function getCoinsList(search = "") {
   const params = new URLSearchParams({ search });
-  const response = await fetch(`api/coinslist/market?${params.toString()}`);
+  const response = await fetch(
+    `api/coinslist/market?${params.toString().toLowerCase()}`
+  );
   const data = await response.json();
   if (!response.ok) {
     throw {
