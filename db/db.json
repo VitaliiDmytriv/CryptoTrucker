@@ -12,7 +12,8 @@
           "coinFullName": "Cardano",
           "transactions": [
             {
-              "name": "ADA",
+              "symbol": "ADA",
+              "name": "Cardano",
               "id": "x0acN2KCZ4",
               "quantity": 34.16,
               "pricePerCoinBought": 0.9225,
@@ -24,7 +25,8 @@
               "date": "2025-06-02"
             },
             {
-              "name": "ADA",
+              "symbol": "ADA",
+              "name": "Cardano",
               "id": "n0QuWheY3_",
               "quantity": 22.6,
               "pricePerCoinBought": 0.93,
@@ -36,7 +38,8 @@
               "date": "2025-01-08"
             },
             {
-              "name": "ADA",
+              "symbol": "ADA",
+              "name": "Cardano",
               "id": "ZA7i7mDbd9",
               "quantity": 20.2,
               "pricePerCoinBought": 1.0092,
@@ -53,7 +56,8 @@
           "coinFullName": "Uniswap",
           "transactions": [
             {
-              "name": "UNI",
+              "name": "Uniswap",
+              "symbol": "UNI",
               "id": "FyLvJDpWE-",
               "quantity": 1.18,
               "pricePerCoinBought": 17.06,
@@ -65,7 +69,8 @@
               "date": "2024-12-11"
             },
             {
-              "name": "UNI",
+              "name": "Uniswap",
+              "symbol": "UNI",
               "id": "SWaW1-w5ap",
               "quantity": 1.187,
               "pricePerCoinBought": 13.39,
@@ -77,7 +82,8 @@
               "date": "2025-01-08"
             },
             {
-              "name": "UNI",
+              "name": "Uniswap",
+              "symbol": "UNI",
               "id": "iBm0GGFypl",
               "quantity": 2.06,
               "pricePerCoinBought": 9.34,
@@ -87,6 +93,20 @@
               "profit": 234.14,
               "isActive": false,
               "date": "2025-09-01"
+            },
+            {
+              "symbol": "UNI",
+              "name": "Uniswap",
+              "id": "wqCuMmzXbm",
+              "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
+              "quantity": 10,
+              "pricePerCoinBought": 9.98,
+              "fees": null,
+              "totalSpent": 99.8,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-02"
             }
           ]
         },
@@ -94,7 +114,8 @@
           "coinFullName": "Ethereum",
           "transactions": [
             {
-              "name": "ETH",
+              "symbol": "ETH",
+              "name": "Ethereum",
               "id": "BbaBP98OO7",
               "quantity": 0.0091,
               "pricePerCoinBought": 2720,
@@ -106,7 +127,8 @@
               "date": "2025-02-24"
             },
             {
-              "name": "ETH",
+              "symbol": "ETH",
+              "name": "Ethereum",
               "id": "QMR3ESgDwi",
               "quantity": 0.0133,
               "pricePerCoinBought": 2628,
@@ -118,7 +140,8 @@
               "date": "2025-02-12"
             },
             {
-              "name": "ETH",
+              "symbol": "ETH",
+              "name": "Ethereum",
               "id": "guQFCcoCde",
               "quantity": 0.018,
               "pricePerCoinBought": 2628,
@@ -130,7 +153,8 @@
               "date": "2025-02-07"
             },
             {
-              "name": "ETH",
+              "symbol": "ETH",
+              "name": "Ethereum",
               "id": "rLHKamS2Ip",
               "quantity": 0.0136,
               "pricePerCoinBought": 2560,
@@ -140,6 +164,58 @@
               "profit": null,
               "isActive": false,
               "date": "2025-01-07"
+            }
+          ]
+        },
+        "XRP": {
+          "coinFullName": "XRP",
+          "transactions": [
+            {
+              "symbol": "XRP",
+              "name": "XRP",
+              "id": "16EsDeM0ND",
+              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
+              "quantity": 12,
+              "pricePerCoinBought": 3.01,
+              "fees": null,
+              "totalSpent": 36.12,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-16"
+            },
+            {
+              "symbol": "XRP",
+              "name": "XRP",
+              "id": "EJAByaVAbJ",
+              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
+              "quantity": 10,
+              "pricePerCoinBought": 3.01,
+              "fees": null,
+              "totalSpent": 30.1,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-07-29"
+            }
+          ]
+        },
+        "TON": {
+          "coinFullName": "Toncoin",
+          "transactions": [
+            {
+              "symbol": "TON",
+              "name": "Toncoin",
+              "id": "4jbZQOqL62",
+              "image": "https://coin-images.coingecko.com/coins/images/17980/large/photo_2024-09-10_17.09.00.jpeg?1725963446",
+              "quantity": 10,
+              "pricePerCoinBought": 3.18,
+              "fees": null,
+              "totalSpent": 31.8,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-04"
             }
           ]
         }

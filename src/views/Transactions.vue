@@ -63,7 +63,7 @@ function handleErrorRetry() {
   // if (!store.error) return;
   // switch (store.error.code) {
   //   case "server-error":
-  //     store.resetError();
+  //     store.resetError();s
   //     if (typeof route.params.coin === "string") {
   //       (async () =>
   //         (coin.value = await store.fetchCoinData(
@@ -124,7 +124,7 @@ function handleErrorRetry() {
           @click="openTransactionEditor(transaction.id)"
           v-for="transaction in coin.transactions"
         >
-          <td class="hidden sm:table-cell">{{ transaction.name }}</td>
+          <td class="hidden sm:table-cell">{{ transaction.symbol }}</td>
           <td>{{ transaction.quantity }}</td>
           <td>${{ transaction.pricePerCoinBought }}</td>
           <td>

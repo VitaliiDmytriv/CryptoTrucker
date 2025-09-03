@@ -31,24 +31,16 @@ export function useTransactions() {
     }
   }
 
-  async function updateTransaction(
-    symbol: string,
-    id: string,
-    updTransaction: Transaction
-  ) {
+  async function updateTransaction(updTransaction: Transaction) {
     try {
       loading.value = true;
       error.value = null;
       success.value = false;
 
-      const data = await transactionApi.editTransaction(
-        symbol,
-        id,
-        updTransaction
-      );
+      const data = await transactionApi.editTransaction(updTransaction);
 
       if (data.success) {
-        portfolio.updateTransaction(symbol, id, updTransaction);
+        portfolio.updateTransaction(updTransaction);
         success.value = true;
       }
     } catch (err) {
@@ -57,8 +49,27 @@ export function useTransactions() {
       loading.value = false;
     }
   }
+
+  async function addTransaction(transaction: Transaction) {
+    try {
+      loading.value = true;
+      error.value = null;
+      success.value = false;
+
+      const data = await transactionApi.createTransaction(transaction);
+
+      if (data.success) {
+        portfolio.addTransaction(data.transaction);
+        success.value = true;
+      }
+    } catch (err) {
+      error.value = mapError(err);
+    } finally {
+      loading.value = false;
+    }
+  }
+
   async function removeTransaction() {}
-  async function addTransaction() {}
 
   function resetSuccess() {
     success.value = false;

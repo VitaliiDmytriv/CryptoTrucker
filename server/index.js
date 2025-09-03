@@ -145,6 +145,33 @@ app.put(
   }
 );
 
+app.post("/:coin/transactions", authMiddleware, async (req, res) => {
+  try {
+    const { coin: coinSymbol } = req.params;
+    const { userId } = req;
+
+    await usersDB.read();
+
+    const user = usersDB.data.users.find((u) => u.id === userId);
+    const coin = user.coins[coinSymbol];
+
+    if (coin) {
+      coin.transactions.push(req.body);
+    } else {
+      user.coins[coinSymbol] = {
+        coinFullName: req.body.name,
+        transactions: [req.body],
+      };
+    }
+    res.json({ success: true, transaction: req.body });
+
+    // зберігаємо у базу
+    await usersDB.write();
+  } catch (err) {
+    sendError(res, "server-error", err.message || "Internal Server Error", 404);
+  }
+});
+
 // CoinGecko ==============
 
 // fetch coins list from CoinGecko and write it for local base
@@ -169,7 +196,7 @@ async function fetchCoinsFromCoinGecko(limit = 1000) {
   return coins.slice(0, limit);
 }
 
-app.get("/coinslist/update", authMiddleware, async (req, res) => {
+app.get("/coinslist/update", async (req, res) => {
   try {
     const coins = await fetchCoinsFromCoinGecko(1250);
     await coinsListDB.read();
@@ -181,7 +208,7 @@ app.get("/coinslist/update", authMiddleware, async (req, res) => {
   }
 });
 
-app.get("/coinslist/market", authMiddleware, async (req, res) => {
+app.get("/coinslist/market", async (req, res) => {
   try {
     await coinsListDB.read();
     const search = req.query?.search;

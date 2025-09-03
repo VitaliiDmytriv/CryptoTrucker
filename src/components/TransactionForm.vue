@@ -29,6 +29,7 @@ const {
   loading: submitLoading,
   error: submitError,
   resetSuccess,
+  addTransaction,
 } = useTransactions();
 
 const canSubmit = computed(() => {
@@ -53,27 +54,24 @@ const buttonTxt = computed(() => {
 function selectNewCoin(coin: CoinGecko) {
   localTransaction.value.pricePerCoinBought = coin.current_price;
   localTransaction.value.image = coin.image;
-  localTransaction.value.symbol = coin.symbol;
+  localTransaction.value.symbol = coin.symbol.toUpperCase();
   localTransaction.value.name = coin.name;
 }
 
 async function handleSubmit() {
   if (props.mode === "edit") {
-    await updateTransaction(
-      localTransaction.value.name,
-      localTransaction.value.id,
-      localTransaction.value
-    );
-    if (submitSuccess) {
-      setTimeout(() => {
-        resetSuccess;
-        emit("close");
-      }, 1300);
-    }
+    await updateTransaction(localTransaction.value);
   } else if (props.mode === "add") {
     if (localTransaction.value.name) {
-      console.log(localTransaction.value);
+      await addTransaction(localTransaction.value);
     }
+  }
+
+  if (submitSuccess.value) {
+    setTimeout(() => {
+      resetSuccess();
+      emit("close");
+    }, 1300);
   }
 }
 </script>
