@@ -49,4 +49,22 @@ export async function createTransaction(transaction: Transaction) {
   return data;
 }
 
-export async function deleteTransaction() {}
+export async function deleteTransaction(id: string, symbol: string) {
+  const response = await fetch(`api/${symbol}/transactions/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw {
+      message: data.message ?? "Unknown server error",
+      code: data.code ?? "server-error",
+    };
+  }
+
+  return data;
+}

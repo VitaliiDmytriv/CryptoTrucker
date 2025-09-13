@@ -13,9 +13,24 @@ export function useTransactions() {
   const error = ref<null | ErrorResponse>(null);
   const success = ref(false);
 
-  async function fetchCoin(symbol: string) {
-    const inCacheCoin = portfolio.getCoin(symbol);
-    if (inCacheCoin) return inCacheCoin;
+  async function fetchCoinList() {
+    loading.value = true;
+    resetError();
+    try {
+      const res = await coinsApi.getCoinList();
+      portfolio.setCoinList(res.coins);
+    } catch (err) {
+      error.value = mapError(err);
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function fetchCoin(symbol: string, refetch = false) {
+    if (!refetch) {
+      const inCacheCoin = portfolio.getCoin(symbol);
+      if (inCacheCoin) return inCacheCoin;
+    }
 
     loading.value = true;
     error.value = null;
@@ -69,13 +84,41 @@ export function useTransactions() {
     }
   }
 
-  async function removeTransaction() {}
+  async function removeTransaction(id: string, symbol: string) {
+    try {
+      loading.value = true;
+      error.value = null;
+      success.value = false;
+
+      const data = await transactionApi.deleteTransaction(id, symbol);
+
+      console.log(data);
+
+      if (data.success) {
+        fetchCoin(symbol, true);
+        success.value = true;
+        return { success: true };
+      }
+    } catch (err) {
+      error.value = mapError(err);
+    } finally {
+      loading.value = false;
+    }
+  }
 
   function resetSuccess() {
     success.value = false;
   }
+
+  function resetError() {
+    console.log("in resetError");
+
+    error.value = null;
+  }
+
   return {
     fetchCoin,
+    resetError,
     error,
     loading,
     resetSuccess,
@@ -83,5 +126,6 @@ export function useTransactions() {
     updateTransaction,
     removeTransaction,
     addTransaction,
+    fetchCoinList,
   };
 }

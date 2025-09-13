@@ -9,3 +9,15 @@ export async function getCoin(symbol: string) {
   }
   return data;
 }
+
+export async function getCoinList() {
+  const response = await fetch(`api/`);
+  const data = await response.json();
+  if (!response.ok) {
+    throw {
+      message: data.message ?? "Unknown server error",
+      code: data.code ?? "server-error",
+    };
+  }
+  return data;
+}

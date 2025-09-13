@@ -1,15 +1,26 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import type { CoinsRecord, CoinData, Transaction } from "../types/index";
-import { useEventBus } from "@vueuse/core";
 
 // Мутаціїї на рівні pinia стору
 export const usePortfolioStore = defineStore("portfolio", () => {
-  const coins = ref<CoinsRecord>({});
-  const coinAddedBus = useEventBus<string>("new-coin");
+  const coinsList = ref<string[]>([]); // ['UNI','ETH'...]
+  const coins = ref<CoinsRecord>({}); // {'UNI': {transactions: [],...}, 'ETH': {transactions: [],...}}=
+
+  watch(coins.value, () => {
+    console.log("new value");
+  });
+
+  function setCoinList(coins: string[]) {
+    coinsList.value = coins;
+  }
 
   function addCoin(symbol: string, coin: CoinData) {
-    coins.value[symbol] = coin;
+    if (coins.value[symbol]) {
+      Object.assign(coins.value[symbol], coin);
+    } else {
+      coins.value[symbol] = coin;
+    }
   }
 
   function getCoin(symbol: string): CoinData | undefined {
@@ -27,21 +38,27 @@ export const usePortfolioStore = defineStore("portfolio", () => {
   }
 
   function addTransaction(transaction: Transaction) {
-    const coin = coins.value[transaction.symbol];
-    if (coin) {
-      coin.transactions.push(transaction);
+    console.log(coins.value);
+
+    // якщо монета є у коінлисті, то дивимось ми вже загружали її, якщо так то додаємо транзакцію
+    if (coinsList.value.includes(transaction.symbol)) {
+      const coin = coins.value[transaction.symbol];
+      if (coin) {
+        coin.transactions.push(transaction);
+      }
     } else {
       coins.value[transaction.symbol] = {
         coinFullName: transaction.name,
         transactions: [transaction],
       };
-
-      coinAddedBus.emit(transaction.symbol);
+      coinsList.value.push(transaction.symbol);
     }
   }
   function removeTransaction() {}
 
   return {
+    setCoinList,
+    coinsList,
     getCoin,
     addCoin,
     coins,

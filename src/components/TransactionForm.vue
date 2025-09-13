@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import type { CoinGecko, TransactionFormProps } from "../types/index";
-import {
-  computed,
-  defineEmits,
-  onMounted,
-  onUpdated,
-  ref,
-  toRaw,
-  watch,
-} from "vue";
+import { computed, defineEmits, ref } from "vue";
 import { useTransactionCalculations } from "@/composables/useTransactionCalculations";
 import { useTransactions } from "@/composables/useTransactions";
 import SubmitStatus from "@/components/SubmitStatus.vue";
 import CoinSelect from "@/components/CoinSelect.vue";
-import { X } from "lucide-vue-next";
+import { X, Trash } from "lucide-vue-next";
+import ConfirmModal from "@/components/ConfirmModal.vue";
 
 const emit = defineEmits<{
   (event: "close"): void;
@@ -22,14 +15,13 @@ const emit = defineEmits<{
 const props = defineProps<TransactionFormProps>();
 
 const { localTransaction } = useTransactionCalculations(props);
+const isConfirmModalOpen = ref(false);
 
 const {
-  updateTransaction,
   success: submitSuccess,
   loading: submitLoading,
   error: submitError,
-  resetSuccess,
-  addTransaction,
+  ...transactionService
 } = useTransactions();
 
 const canSubmit = computed(() => {
@@ -60,16 +52,38 @@ function selectNewCoin(coin: CoinGecko) {
 
 async function handleSubmit() {
   if (props.mode === "edit") {
-    await updateTransaction(localTransaction.value);
+    await transactionService.updateTransaction(localTransaction.value);
   } else if (props.mode === "add") {
     if (localTransaction.value.name) {
-      await addTransaction(localTransaction.value);
+      await transactionService.addTransaction(localTransaction.value);
     }
   }
 
   if (submitSuccess.value) {
     setTimeout(() => {
-      resetSuccess();
+      transactionService.resetSuccess();
+      emit("close");
+    }, 1300);
+  }
+}
+
+function openConfirmModal() {
+  isConfirmModalOpen.value = true;
+}
+function closeConfirmModal() {
+  isConfirmModalOpen.value = false;
+}
+
+async function handleDelete() {
+  closeConfirmModal();
+  await transactionService.removeTransaction(
+    localTransaction.value.id,
+    localTransaction.value.symbol
+  );
+
+  if (submitSuccess.value) {
+    setTimeout(() => {
+      transactionService.resetSuccess();
       emit("close");
     }, 1300);
   }
@@ -82,6 +96,12 @@ async function handleSubmit() {
       :submit-error="submitError"
       :submit-loading="submitLoading"
       :submit-success="submitSuccess"
+    />
+
+    <ConfirmModal
+      v-if="isConfirmModalOpen"
+      @closeModal="closeConfirmModal"
+      @handleAction="handleDelete"
     />
     <div
       class="bg-[var(--bodyColor)] rounded-md px-2 py-3 min-w-[70vw] sm:min-w-[16rem] max-w-[80vw] sm:max-w-lg md:px-4 md:py-6"
@@ -181,13 +201,23 @@ async function handleSubmit() {
           </div>
         </div>
         <div class="mt-2 col-span-full form-button">
-          <button
-            :disabled="canSubmit"
-            type="submit"
-            class="w-full inline-block border input-primary"
-          >
-            {{ buttonTxt }}
-          </button>
+          <div class="flex gap-2">
+            <button
+              :disabled="canSubmit"
+              type="submit"
+              class="w-full inline-block border input-primary"
+            >
+              {{ buttonTxt }}
+            </button>
+            <div
+              v-if="props.mode === 'edit'"
+              class="flex justify-center items-center"
+            >
+              <button @click.prevent="openConfirmModal">
+                <Trash :size="20" :stroke-width="1.5" />
+              </button>
+            </div>
+          </div>
         </div>
       </form>
     </div>
@@ -199,7 +229,7 @@ async function handleSubmit() {
   transition: all 0.2s;
 }
 
-.form-button button:hover {
+.form-button button[type="submit"]:hover {
   background-color: var(--borderColor);
 }
 </style>

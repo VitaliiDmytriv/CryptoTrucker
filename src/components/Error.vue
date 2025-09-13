@@ -1,12 +1,42 @@
 <script setup lang="ts">
+import router from "@/router/router";
+import { ErrorResponse } from "@/types/index";
+import { computed } from "vue";
+
 const props = defineProps<{
-  message: string;
-  buttonTxt: string;
+  error: ErrorResponse;
 }>();
 
 const emit = defineEmits<{
-  (event: "retry"): void;
+  (event: "resetError"): void;
 }>();
+
+const errorButtonText = computed(() => {
+  switch (props.error.code) {
+    case "not-found":
+      return "Go back";
+    case "server-error":
+      return "Try again";
+    case "network":
+      return "Check connection";
+    default:
+      return "Go back";
+  }
+});
+
+function handleRetry() {
+  switch (props.error.code) {
+    case "not-found":
+      router.push("/");
+      emit("resetError");
+      break;
+
+    default:
+      router.push("/");
+      emit("resetError");
+      break;
+  }
+}
 </script>
 
 <template>
@@ -14,9 +44,9 @@ const emit = defineEmits<{
     class="error border bg-[var(--bodyColor)] flex items-center flex-col justify-evenly p-1"
   >
     <p>Ooops, Error</p>
-    <p>{{ message }}</p>
-    <button @click="emit('retry')" class="inputMain border min-w-[35%]">
-      {{ buttonTxt }}
+    <p>{{ error.message }}</p>
+    <button @click="handleRetry" class="inputMain border min-w-[35%]">
+      {{ errorButtonText }}
     </button>
   </section>
 </template>

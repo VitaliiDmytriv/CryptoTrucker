@@ -5,11 +5,6 @@ import { useCoinList } from "@/composables/useCoinList";
 import { onClickOutside, useDebounceFn } from "@vueuse/core";
 import { Search, ChevronDown } from "lucide-vue-next";
 
-// 1. не змінювати props - а емітити ✅,
-// 2.debounce з fetchCoinList, ✅
-// 3.onClickOutside замість blur + mousedown, ✅
-// 4.винести svg у компоненти, ✅
-
 const emit = defineEmits<{
   (e: "handleSelect", coin: CoinGecko): void;
 }>();
@@ -21,6 +16,7 @@ const props = defineProps<{
 const searchQuery = ref("");
 const isDropdownOpen = ref(true);
 const dropdown = ref<null | HTMLElement>(null);
+const inputRef = ref<HTMLInputElement | null>(null);
 
 const {
   coinList,
@@ -37,6 +33,10 @@ watch(
     debouncedFetchCoinList(newValue);
   }
 );
+
+onMounted(() => {
+  inputRef.value?.focus();
+});
 
 onClickOutside(dropdown, () => {
   if (props.transaction.name) {
@@ -64,6 +64,7 @@ function selectCoin(coin: CoinGecko) {
           type="text"
           class="input-primary border"
           v-model.trim="searchQuery"
+          ref="inputRef"
         />
 
         <div

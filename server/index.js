@@ -172,6 +172,60 @@ app.post("/:coin/transactions", authMiddleware, async (req, res) => {
   }
 });
 
+app.delete("/:coin/transactions/:id", authMiddleware, async (req, res) => {
+  try {
+    const { coin: coinSymbol, id } = req.params;
+    const { userId } = req;
+
+    await usersDB.read();
+
+    const user = usersDB.data.users.find((u) => u.id === userId);
+
+    if (!user) {
+      return sendError(
+        res,
+        "server-error",
+        "Something went wrong on the server",
+        500
+      );
+    }
+
+    const coin = user.coins[coinSymbol];
+
+    if (!coin) {
+      return sendError(
+        res,
+        "server-error",
+        `We couln't find ${coinSymbol} coin`,
+        404
+      );
+    }
+
+    const foundIndex = coin.transactions.findIndex(
+      (transaction) => transaction.id === id
+    );
+
+    if (foundIndex < 0) {
+      return sendError(
+        res,
+        "server-error",
+        `We couln't find such transaction in ${coinSymbol} coin`,
+        404
+      );
+    }
+
+    coin.transactions.splice(foundIndex, 1);
+
+    await usersDB.write();
+
+    res.json({ success: true, transactios: coin.transactions });
+
+    // зберігаємо у базу
+  } catch (err) {
+    sendError(res, "server-error", err.message || "Internal Server Error", 404);
+  }
+});
+
 // CoinGecko ==============
 
 // fetch coins list from CoinGecko and write it for local base

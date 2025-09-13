@@ -44,40 +44,6 @@ function openTransactionEditor(id: string) {
   const transaction = coin.value?.transactions.find((el) => el.id === id);
   activeTransaction.value = transaction;
 }
-
-// Handle Errors ===
-const errorButtonText = computed(() => {
-  switch (transactionsError.value?.code) {
-    case "not-found":
-      return "Go back";
-    case "server-error":
-      return "Try again";
-    case "network":
-      return "Check connection";
-    default:
-      return "Go back";
-  }
-});
-
-function handleErrorRetry() {
-  // if (!store.error) return;
-  // switch (store.error.code) {
-  //   case "server-error":
-  //     store.resetError();s
-  //     if (typeof route.params.coin === "string") {
-  //       (async () =>
-  //         (coin.value = await store.fetchCoinData(
-  //           route.params.coin as string
-  //         )))();
-  //     }
-  //     break;
-  //   default:
-  //     // Reset error and navigate to home
-  //     store.resetError();
-  //     router.push("/");
-  //     break;
-  // }
-}
 </script>
 
 <template>
@@ -90,11 +56,9 @@ function handleErrorRetry() {
   </Modal>
 
   <Modal v-if="transactionsError">
-    <object>{{ transactionsError }}</object>
     <Error
-      @retry="handleErrorRetry"
-      :message="transactionsError.message"
-      :button-txt="errorButtonText"
+      @resetError="transactionsService.resetError"
+      :error="transactionsError"
     />
   </Modal>
 

@@ -49,6 +49,20 @@
               "profit": 0.62,
               "isActive": false,
               "date": "2025-01-07"
+            },
+            {
+              "symbol": "ADA",
+              "name": "Cardano",
+              "id": "sL6u5km8sy",
+              "image": "https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090",
+              "quantity": 10,
+              "pricePerCoinBought": 0.864038,
+              "fees": null,
+              "totalSpent": 8.64,
+              "pricePerCoinSold": 1,
+              "profit": 1.36,
+              "isActive": false,
+              "date": "2025-08-10"
             }
           ]
         },
@@ -67,46 +81,6 @@
               "profit": null,
               "isActive": false,
               "date": "2024-12-11"
-            },
-            {
-              "name": "Uniswap",
-              "symbol": "UNI",
-              "id": "SWaW1-w5ap",
-              "quantity": 1.187,
-              "pricePerCoinBought": 13.39,
-              "fees": null,
-              "totalSpent": 15.89,
-              "pricePerCoinSold": 15.12,
-              "profit": 2.06,
-              "isActive": false,
-              "date": "2025-01-08"
-            },
-            {
-              "name": "Uniswap",
-              "symbol": "UNI",
-              "id": "iBm0GGFypl",
-              "quantity": 2.06,
-              "pricePerCoinBought": 9.34,
-              "fees": null,
-              "totalSpent": 19.24,
-              "pricePerCoinSold": 123,
-              "profit": 234.14,
-              "isActive": false,
-              "date": "2025-09-01"
-            },
-            {
-              "symbol": "UNI",
-              "name": "Uniswap",
-              "id": "wqCuMmzXbm",
-              "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
-              "quantity": 10,
-              "pricePerCoinBought": 9.98,
-              "fees": null,
-              "totalSpent": 99.8,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-08-02"
             }
           ]
         },
@@ -151,71 +125,77 @@
               "profit": null,
               "isActive": false,
               "date": "2025-02-07"
-            },
-            {
-              "symbol": "ETH",
-              "name": "Ethereum",
-              "id": "rLHKamS2Ip",
-              "quantity": 0.0136,
-              "pricePerCoinBought": 2560,
-              "fees": null,
-              "totalSpent": 34.81,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-01-07"
             }
           ]
         },
-        "XRP": {
-          "coinFullName": "XRP",
+        "DOGE": {
+          "coinFullName": "Dogecoin",
           "transactions": [
             {
-              "symbol": "XRP",
-              "name": "XRP",
-              "id": "16EsDeM0ND",
-              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
-              "quantity": 12,
-              "pricePerCoinBought": 3.01,
+              "symbol": "DOGE",
+              "name": "Dogecoin",
+              "id": "Y7AY8rawGU",
+              "image": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409",
+              "quantity": 90,
+              "pricePerCoinBought": 0.220387,
               "fees": null,
-              "totalSpent": 36.12,
+              "totalSpent": 19.83,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-08-16"
-            },
-            {
-              "symbol": "XRP",
-              "name": "XRP",
-              "id": "EJAByaVAbJ",
-              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
-              "quantity": 10,
-              "pricePerCoinBought": 3.01,
-              "fees": null,
-              "totalSpent": 30.1,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-07-29"
+              "date": "2025-07-16"
             }
           ]
         },
-        "TON": {
-          "coinFullName": "Toncoin",
+        "BNB": {
+          "coinFullName": "BNB",
           "transactions": [
             {
-              "symbol": "TON",
-              "name": "Toncoin",
-              "id": "4jbZQOqL62",
-              "image": "https://coin-images.coingecko.com/coins/images/17980/large/photo_2024-09-10_17.09.00.jpeg?1725963446",
-              "quantity": 10,
-              "pricePerCoinBought": 3.18,
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "YFlMaleJsi",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 1,
+              "pricePerCoinBought": 861.57,
               "fees": null,
-              "totalSpent": 31.8,
+              "totalSpent": 861.57,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-08-04"
+              "date": "2025-07-14"
+            },
+            {
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "Y3uX7A0QM0",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 2,
+              "pricePerCoinBought": 861.57,
+              "fees": null,
+              "totalSpent": 1723.14,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-10"
+            }
+          ]
+        },
+        "BTC": {
+          "coinFullName": "Bitcoin",
+          "transactions": [
+            {
+              "symbol": "BTC",
+              "name": "Bitcoin",
+              "id": "eQqyy6r-P4",
+              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+              "quantity": 0.001,
+              "pricePerCoinBought": 112064,
+              "fees": null,
+              "totalSpent": 112.06,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-13"
             }
           ]
         }

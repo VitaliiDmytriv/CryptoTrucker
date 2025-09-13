@@ -9,14 +9,23 @@ import Error from "./components/Error.vue";
 import Sceleton from "./components/Sceleton.vue";
 import { nanoid } from "nanoid";
 import TransactionForm from "@/components/TransactionForm.vue";
-
-console.log(nanoid(10));
+import { useTransactions } from "./composables/useTransactions";
+import { usePortfolioStore } from "./stores/portfolioStore";
+import { storeToRefs } from "pinia";
 
 const store = usePortfolioAnoteheStore();
 const showAddTransaction = ref(false);
+const {
+  fetchCoinList,
+  loading: coinListLoading,
+  error: coinListError,
+} = useTransactions();
+const portfolio = usePortfolioStore();
 
-onMounted(() => {
-  store.fetchPortfolioData();
+onMounted(async () => {
+  // store.fetchPortfolioData();
+  await fetchCoinList();
+  // console.log("in App vue: " + coinsList);
 });
 
 function handleError() {
@@ -30,12 +39,12 @@ function closeAddForm() {
 
 <template>
   <section class="p-2 flex flex-col gap-2 min-h-screen h-[2000px]">
-    <Modal v-if="store.error" @close="">
-      <Error
+    <Modal v-if="coinListError" @close="">
+      <!-- <Error
         @retry="handleError"
-        :message="store.error"
+        :message="coinListError.message"
         button-txt="Try again"
-      />
+      /> -->
     </Modal>
     <Modal v-if="showAddTransaction" @close="closeAddForm">
       <TransactionForm mode="add" @close="closeAddForm" />
@@ -44,7 +53,7 @@ function closeAddForm() {
       <h1>Crypto Trucker</h1>
     </header>
 
-    <section class="flex gap-2 xs:gap-4">
+    <!-- <section class="flex gap-2 xs:gap-4">
       <DataBlock>
         <p class="font-bold xs:mb-2">Active Investment</p>
         <Sceleton v-if="store.loading">asd</Sceleton>
@@ -55,11 +64,11 @@ function closeAddForm() {
         <Sceleton v-if="store.loading">asd</Sceleton>
         <p v-else>{{ store.portfolio?.totalProfit }}$</p>
       </DataBlock>
-    </section>
+    </section> -->
 
     <section class="flex">
       <div class="flex-1">
-        <div v-if="store.loading" class="flex gap-2">
+        <div v-if="coinListLoading" class="flex gap-2">
           <!-- <div v-if="true" class="flex gap-1 xs:gap-2"> -->
           <Sceleton
             class="container-border max-w-[2.25rem] sm:max-w-[3rem]"
@@ -71,7 +80,7 @@ function closeAddForm() {
 
         <div v-else class="flex gap-1 xs:gap-2">
           <CoinBlock
-            v-for="coin in store.portfolio?.coins"
+            v-for="coin in portfolio.coinsList"
             :key="coin"
             :coin="coin"
           />
