@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 import type { CoinData, Transaction } from "../types/index";
 import TransactionForm from "../components/TransactionForm.vue";
 import Modal from "@/components/Modal.vue";
-import { useTransactions } from "../composables/useTransactions";
+import { useTransaction } from "../composables/useTransactions";
 import Error from "../components/Error.vue";
 import router from "@/router/router";
 import Sceleton from "@/components/Sceleton.vue";
@@ -15,7 +15,7 @@ const {
   loading: transactionsLoading,
   error: transactionsError,
   ...transactionsService
-} = useTransactions();
+} = useTransaction();
 
 const coin = ref<null | CoinData>(null);
 const activeTransaction = ref<undefined | Transaction>(undefined);

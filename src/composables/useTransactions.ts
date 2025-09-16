@@ -6,7 +6,7 @@ import * as transactionApi from "../api/transactionsApi";
 import { usePortfolioStore } from "../stores/portfolioStore";
 
 // клей між стором, api запитами, обробокю помилок, loading, відправкою даних на UI
-export function useTransactions() {
+export function useTransaction() {
   const portfolio = usePortfolioStore();
 
   const loading = ref(false);

@@ -9,7 +9,7 @@ import Error from "./components/Error.vue";
 import Sceleton from "./components/Sceleton.vue";
 import { nanoid } from "nanoid";
 import TransactionForm from "@/components/TransactionForm.vue";
-import { useTransactions } from "./composables/useTransactions";
+import { useTransaction } from "./composables/useTransactions";
 import { usePortfolioStore } from "./stores/portfolioStore";
 import { storeToRefs } from "pinia";
 
@@ -19,7 +19,7 @@ const {
   fetchCoinList,
   loading: coinListLoading,
   error: coinListError,
-} = useTransactions();
+} = useTransaction();
 const portfolio = usePortfolioStore();
 
 onMounted(async () => {

@@ -177,6 +177,20 @@
               "profit": null,
               "isActive": false,
               "date": "2025-08-10"
+            },
+            {
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "8s4HK2JBml",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 12,
+              "pricePerCoinBought": 861.57,
+              "fees": null,
+              "totalSpent": 10338.84,
+              "pricePerCoinSold": 900,
+              "profit": 461.16,
+              "isActive": false,
+              "date": "2025-08-16"
             }
           ]
         },
@@ -196,6 +210,20 @@
               "profit": null,
               "isActive": false,
               "date": "2025-08-13"
+            },
+            {
+              "symbol": "BTC",
+              "name": "Bitcoin",
+              "id": "4qYsKrmzAP",
+              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+              "quantity": 0.022,
+              "pricePerCoinBought": 112064,
+              "fees": null,
+              "totalSpent": 2465.41,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-07"
             }
           ]
         }

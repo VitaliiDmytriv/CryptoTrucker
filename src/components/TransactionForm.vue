@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import type { CoinGecko, TransactionFormProps } from "../types/index";
-import { computed, defineEmits, ref } from "vue";
-import { useTransactionCalculations } from "@/composables/useTransactionCalculations";
-import { useTransactions } from "@/composables/useTransactions";
+import { computed, defineEmits, ref, toRefs } from "vue";
 import SubmitStatus from "@/components/SubmitStatus.vue";
 import CoinSelect from "@/components/CoinSelect.vue";
 import { X, Trash } from "lucide-vue-next";
 import ConfirmModal from "@/components/ConfirmModal.vue";
+import { useTransactionForm } from "@/composables/useTransactionForm";
 
 const emit = defineEmits<{
   (event: "close"): void;
@@ -14,114 +13,41 @@ const emit = defineEmits<{
 
 const props = defineProps<TransactionFormProps>();
 
-const { localTransaction } = useTransactionCalculations(props);
-const isConfirmModalOpen = ref(false);
-
-const {
-  success: submitSuccess,
-  loading: submitLoading,
-  error: submitError,
-  ...transactionService
-} = useTransactions();
-
-const canSubmit = computed(() => {
-  if (props.mode === "edit") {
-    return (
-      JSON.stringify(localTransaction.value) ===
-      JSON.stringify(props.transaction)
-    );
-  } else if (props.mode === "add") {
-    return !localTransaction.value.name;
-  }
-});
-
-const headerTxt = computed(() => {
-  return props.mode === "edit" ? "Edit Transaction" : "Add Transaction";
-});
-
-const buttonTxt = computed(() => {
-  return props.mode === "edit" ? "Edit" : "Add transaction";
-});
-
-function selectNewCoin(coin: CoinGecko) {
-  localTransaction.value.pricePerCoinBought = coin.current_price;
-  localTransaction.value.image = coin.image;
-  localTransaction.value.symbol = coin.symbol.toUpperCase();
-  localTransaction.value.name = coin.name;
-}
-
-async function handleSubmit() {
-  if (props.mode === "edit") {
-    await transactionService.updateTransaction(localTransaction.value);
-  } else if (props.mode === "add") {
-    if (localTransaction.value.name) {
-      await transactionService.addTransaction(localTransaction.value);
-    }
-  }
-
-  if (submitSuccess.value) {
-    setTimeout(() => {
-      transactionService.resetSuccess();
-      emit("close");
-    }, 1300);
-  }
-}
-
-function openConfirmModal() {
-  isConfirmModalOpen.value = true;
-}
-function closeConfirmModal() {
-  isConfirmModalOpen.value = false;
-}
-
-async function handleDelete() {
-  closeConfirmModal();
-  await transactionService.removeTransaction(
-    localTransaction.value.id,
-    localTransaction.value.symbol
-  );
-
-  if (submitSuccess.value) {
-    setTimeout(() => {
-      transactionService.resetSuccess();
-      emit("close");
-    }, 1300);
-  }
-}
+const { localTransaction, ...formService } = useTransactionForm(props, emit);
 </script>
 
 <template>
   <section class="relative">
     <SubmitStatus
-      :submit-error="submitError"
-      :submit-loading="submitLoading"
-      :submit-success="submitSuccess"
+      :submit-error="formService.submitError.value"
+      :submit-loading="formService.submitLoading.value"
+      :submit-success="formService.submitSuccess.value"
     />
 
     <ConfirmModal
-      v-if="isConfirmModalOpen"
-      @closeModal="closeConfirmModal"
-      @handleAction="handleDelete"
+      v-if="formService.isConfirmModalOpen.value"
+      @closeModal="formService.closeConfirmModal"
+      @handleAction="formService.handleDelete"
     />
     <div
       class="bg-[var(--bodyColor)] rounded-md px-2 py-3 min-w-[70vw] sm:min-w-[16rem] max-w-[80vw] sm:max-w-lg md:px-4 md:py-6"
     >
       <!--  -->
       <div class="flex justify-between xs:text-sm md:text-base mb-2">
-        <h2>{{ headerTxt }}</h2>
+        <h2>{{ formService.headerTxt }}</h2>
         <button @click="emit('close')" class="mr-2">
           <X :size="20" :stroke-width="1.5" />
         </button>
       </div>
 
       <form
-        @submit.prevent="handleSubmit"
+        @submit.prevent="formService.handleSubmit"
         class="text-xs grid gap-1 grid-cols-1 xs:grid-cols-2 xs:gap-2 md:text-sm"
       >
         <!-- <div v-if="mode === 'add'"> -->
         <div v-if="props.mode === 'add'" class="col-span-2">
           <CoinSelect
-            @handleSelect="selectNewCoin"
+            @handleSelect="formService.selectNewCoin"
             :transaction="localTransaction"
           />
         </div>
@@ -203,17 +129,17 @@ async function handleDelete() {
         <div class="mt-2 col-span-full form-button">
           <div class="flex gap-2">
             <button
-              :disabled="canSubmit"
+              :disabled="formService.isSubmitDisabled.value"
               type="submit"
               class="w-full inline-block border input-primary"
             >
-              {{ buttonTxt }}
+              {{ formService.buttonTxt }}
             </button>
             <div
               v-if="props.mode === 'edit'"
               class="flex justify-center items-center"
             >
-              <button @click.prevent="openConfirmModal">
+              <button @click.prevent="formService.openConfirmModal">
                 <Trash :size="20" :stroke-width="1.5" />
               </button>
             </div>
