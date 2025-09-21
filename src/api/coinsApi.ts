@@ -11,6 +11,8 @@ export async function getCoin(symbol: string) {
 }
 
 export async function getCoinList() {
+  // console.log("here");
+
   const response = await fetch(`api/`);
   const data = await response.json();
   if (!response.ok) {

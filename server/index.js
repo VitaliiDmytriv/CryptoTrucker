@@ -25,27 +25,35 @@ function sendError(res, code, message, status = 400) {
 }
 
 async function authMiddleware(req, res, next) {
-  const sessionId = req.cookies.sessionId;
+  // missing-session
+  // expired-session
+  // invalid-session
+  try {
+    const sessionId = req.cookies.sessionId;
 
-  if (!sessionId) {
-    return res.status(401).json({ error: "No session" });
+    if (!sessionId) {
+      return sendError(res, "missing-session", "No session ID provided", 401);
+    }
+
+    await sessionsDB.read();
+    const session = sessionsDB.data.sessions.find(
+      (s) => s.sessionId === sessionId
+    );
+
+    if (!session) {
+      return sendError(res, "missing-session", "Session not found", 401);
+    }
+
+    if (new Date(session.expiresAt) < new Date()) {
+      return sendError(res, "missing-session", "Session expired", 401);
+    }
+
+    req.userId = session.userId;
+    next();
+  } catch (err) {
+    console.error("Auth middleware error:", err);
+    return sendError(res, "server-error", "Internal server error", 500);
   }
-
-  await sessionsDB.read();
-  const session = sessionsDB.data.sessions.find(
-    (s) => s.sessionId === sessionId
-  );
-
-  if (!session) {
-    return res.status(401).json({ error: "Invalid session" });
-  }
-
-  if (new Date(session.expiresAt) < new Date()) {
-    return res.status(401).json({ error: "Session expired" });
-  }
-
-  req.userId = session.userId;
-  next();
 }
 
 // Home
@@ -216,9 +224,14 @@ app.delete("/:coin/transactions/:id", authMiddleware, async (req, res) => {
 
     coin.transactions.splice(foundIndex, 1);
 
+    // якщо немає траназкцій, видаляємо монету
+    if (!coin.transactions.length) {
+      delete user.coins[coinSymbol];
+    }
+
     await usersDB.write();
 
-    res.json({ success: true, transactios: coin.transactions });
+    res.json({ success: true, coins: Object.keys(user.coins) });
 
     // зберігаємо у базу
   } catch (err) {

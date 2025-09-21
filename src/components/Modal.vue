@@ -32,7 +32,7 @@ onUnmounted(() => {
 .modal {
   position: fixed;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.08);
   top: 0;
   left: 0;
@@ -40,8 +40,13 @@ onUnmounted(() => {
   justify-content: center;
   align-items: center;
   z-index: 10;
+
+  overflow-y: auto;
+  padding: 1.5rem;
 }
 
 .modal_content {
+  max-height: 100%;
+  /* overflow-y: auto; */
 }
 </style>

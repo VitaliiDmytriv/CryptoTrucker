@@ -17,7 +17,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
 </script>
 
 <template>
-  <section class="relative">
+  <section class="relative max-h-full h-96">
     <SubmitStatus
       :submit-error="formService.submitError.value"
       :submit-loading="formService.submitLoading.value"

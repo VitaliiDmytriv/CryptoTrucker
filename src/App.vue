@@ -40,11 +40,7 @@ function closeAddForm() {
 <template>
   <section class="p-2 flex flex-col gap-2 min-h-screen h-[2000px]">
     <Modal v-if="coinListError" @close="">
-      <!-- <Error
-        @retry="handleError"
-        :message="coinListError.message"
-        button-txt="Try again"
-      /> -->
+      <Error :error="coinListError" />
     </Modal>
     <Modal v-if="showAddTransaction" @close="closeAddForm">
       <TransactionForm mode="add" @close="closeAddForm" />

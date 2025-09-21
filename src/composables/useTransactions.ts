@@ -4,6 +4,7 @@ import { ref } from "vue";
 import * as coinsApi from "../api/coinsApi";
 import * as transactionApi from "../api/transactionsApi";
 import { usePortfolioStore } from "../stores/portfolioStore";
+import router from "@/router/router";
 
 // клей між стором, api запитами, обробокю помилок, loading, відправкою даних на UI
 export function useTransaction() {
@@ -95,8 +96,16 @@ export function useTransaction() {
       console.log(data);
 
       if (data.success) {
-        fetchCoin(symbol, true);
+        // якщо coinList без змін, то рефетчимо дані по цій монеі, якщо зі змінами, то оновлюємо coinList, без нової монети
+        if (data.coins.length !== portfolio.coinsList.length) {
+          portfolio.setCoinList(data.coins);
+          router.push("/");
+        } else {
+          fetchCoin(symbol, true);
+        }
         success.value = true;
+        console.log(data.coins);
+
         return { success: true };
       }
     } catch (err) {
