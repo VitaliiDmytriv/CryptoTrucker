@@ -50,6 +50,11 @@ function selectCoin(coin: CoinGecko) {
   searchQuery.value = "";
   emit("handleSelect", coin);
 }
+
+function openDropDown() {
+  isDropdownOpen.value = true;
+  inputRef.value?.focus();
+}
 </script>
 
 <template>
@@ -60,7 +65,7 @@ function selectCoin(coin: CoinGecko) {
       <div class="relative">
         <input
           maxlength="20"
-          @focus="isDropdownOpen = true"
+          @focus="openDropDown"
           type="text"
           class="input-primary border"
           v-model.trim="searchQuery"
@@ -89,7 +94,7 @@ function selectCoin(coin: CoinGecko) {
           <Search :size="16" :stroke-width="1.5" />
         </span>
         <span v-else>
-          <ChevronDown :size="16" :stroke-width="1.5" />
+          <ChevronDown @click="openDropDown" :size="16" :stroke-width="1.5" />
         </span>
       </span>
 

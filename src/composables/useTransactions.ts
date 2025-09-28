@@ -77,6 +77,7 @@ export function useTransaction() {
       if (data.success) {
         portfolio.addTransaction(data.transaction);
         success.value = true;
+        router.push(`/${transaction.symbol}`);
       }
     } catch (err) {
       error.value = mapError(err);
@@ -99,6 +100,7 @@ export function useTransaction() {
         // якщо coinList без змін, то рефетчимо дані по цій монеі, якщо зі змінами, то оновлюємо coinList, без нової монети
         if (data.coins.length !== portfolio.coinsList.length) {
           portfolio.setCoinList(data.coins);
+          portfolio.removeTransaction(symbol);
           router.push("/");
         } else {
           fetchCoin(symbol, true);

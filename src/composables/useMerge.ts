@@ -16,8 +16,7 @@ export function useMerge(symbol: string) {
   watch(
     transactionsToMerge,
     () => {
-      const update = calc();
-      Object.assign(defaultTransaction.value, update);
+      updateDefaultTransaction();
     },
     { deep: true, immediate: false }
   );
@@ -54,7 +53,7 @@ export function useMerge(symbol: string) {
     }
   }
 
-  function calc() {
+  function calculateMergedTransaction() {
     const quantity = transactionsToMerge.value.reduce(
       (prev, cur) => prev + (cur.quantity || 0),
       0
@@ -76,6 +75,11 @@ export function useMerge(symbol: string) {
       fees,
       pricePerCoinBought,
     };
+  }
+
+  function updateDefaultTransaction() {
+    const update = calculateMergedTransaction();
+    Object.assign(defaultTransaction.value, update);
   }
 
   return {

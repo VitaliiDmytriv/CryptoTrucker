@@ -35,10 +35,10 @@ watch(
   () => route.params.coin,
   async (newSymbol) => {
     const symbol = Array.isArray(newSymbol) ? newSymbol[0] : newSymbol;
+    coin.value = null;
 
     if (symbol) {
       merge.reset(symbol);
-      coin.value = null;
       coin.value = await transactionsService.fetchCoin(symbol);
       merge.setCoinImage(coin.value?.transactions[0].image || "");
     }

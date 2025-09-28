@@ -17,10 +17,9 @@ export function useTransactionForm(
   props: TransactionFormProps,
   emit: (e: "close", afterSuccses?: boolean) => void
 ) {
-  const { localTransaction } = useTransactionCalculations(props);
-
   const isConfirmModalOpen = ref(false);
 
+  const { localTransaction } = useTransactionCalculations(props);
   const {
     success: submitSuccess,
     loading: submitLoading,
@@ -29,37 +28,41 @@ export function useTransactionForm(
   } = useTransaction();
 
   const isSubmitDisabled = computed(() => {
-    if (props.mode === "edit") {
-      return areTransactionsEqual(localTransaction.value, props.transaction);
-    } else if (props.mode === "add") {
-      return !localTransaction.value.name;
+    const tx = localTransaction.value;
+    switch (props.mode) {
+      case "edit":
+        return areTransactionsEqual(tx, props.transaction);
+      case "add":
+        return !tx.name;
+      default:
+        return false;
     }
   });
-
   const headerTxt = computed(() => LABELS[props.mode].header);
   const buttonTxt = computed(() => LABELS[props.mode].button);
+
+  const submitHandlesr: Record<string, () => Promise<void>> = {
+    edit: () => transactionService.updateTransaction(localTransaction.value),
+    add: () => transactionService.addTransaction(localTransaction.value),
+    merge: () =>
+      transactionService.mergeTransactions(
+        localTransaction.value,
+        props.mergeSet || new Set()
+      ),
+  };
+
+  async function handleSubmit() {
+    if (props.mode === "add" && !localTransaction.value.name) return;
+    await submitHandlesr[props.mode]?.();
+
+    runAfterSuccess(submitSuccess, onSuccsess);
+  }
 
   function selectNewCoin(coin: CoinGecko) {
     localTransaction.value.pricePerCoinBought = coin.current_price;
     localTransaction.value.image = coin.image;
     localTransaction.value.symbol = coin.symbol.toUpperCase();
     localTransaction.value.name = coin.name;
-  }
-
-  async function handleSubmit() {
-    const txName = localTransaction.value.name;
-    if (props.mode === "edit") {
-      await transactionService.updateTransaction(localTransaction.value);
-    } else if (props.mode === "add" && txName) {
-      await transactionService.addTransaction(localTransaction.value);
-    } else if (props.mode === "merge") {
-      await transactionService.mergeTransactions(
-        localTransaction.value,
-        props.mergeSet
-      );
-    }
-
-    afterHandle(submitSuccess, onSuccsess);
   }
 
   function openConfirmModal() {
@@ -76,7 +79,7 @@ export function useTransactionForm(
       localTransaction.value.symbol
     );
 
-    afterHandle(submitSuccess, onSuccsess);
+    runAfterSuccess(submitSuccess, onSuccsess);
   }
 
   //   Help functions /////////////////
@@ -86,7 +89,7 @@ export function useTransactionForm(
     emit("close", true);
   }
 
-  function afterHandle(condition: Ref<boolean>, callback: () => void) {
+  function runAfterSuccess(condition: Ref<boolean>, callback: () => void) {
     if (condition.value) {
       setTimeout(() => callback(), 1300);
     }

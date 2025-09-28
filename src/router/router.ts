@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Transactions from "../views/Transactions.vue";
 import NotFound from "@/views/NotFound.vue";
+import Home from "@/views/Home.vue";
 
 const routes = [
   { path: "/", component: Transactions },

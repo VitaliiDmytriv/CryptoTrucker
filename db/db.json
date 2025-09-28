@@ -8,37 +8,18 @@
       "totalProfit": 19.11,
       "activeInvestment": 222.76,
       "coins": {
-        "UNI": {
-          "coinFullName": "Uniswap",
+        "ETH": {
+          "coinFullName": "Ethereum",
           "transactions": [
             {
-              "symbol": "UNI",
-              "name": "",
-              "id": "fLKfQv--_U",
-              "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
-              "quantity": 28,
-              "pricePerCoinBought": 9.2321,
-              "fees": 2,
-              "totalSpent": 258.5,
-              "pricePerCoinSold": 10,
-              "profit": 19.5,
-              "isActive": false,
-              "date": "2025-08-23"
-            }
-          ]
-        },
-        "DOGE": {
-          "coinFullName": "Dogecoin",
-          "transactions": [
-            {
-              "symbol": "DOGE",
-              "name": "",
-              "id": "68wemCLsCX",
-              "image": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409",
-              "quantity": 1090,
-              "pricePerCoinBought": 0.2204,
-              "fees": 0,
-              "totalSpent": 240.22183,
+              "symbol": "ETH",
+              "name": "Ethereum",
+              "id": "FqGw3pI7q7",
+              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
+              "quantity": 0.4,
+              "pricePerCoinBought": 3996.56,
+              "fees": null,
+              "totalSpent": 1598.62,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
@@ -46,32 +27,32 @@
             }
           ]
         },
-        "ADA": {
-          "coinFullName": "Cardano",
+        "BNB": {
+          "coinFullName": "BNB",
           "transactions": [
             {
-              "symbol": "ADA",
-              "name": "Cardano",
-              "id": "11gdmJNcSl",
-              "image": "https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090",
-              "quantity": 123,
-              "pricePerCoinBought": 0.864038,
-              "fees": null,
-              "totalSpent": 106.28,
+              "symbol": "BNB",
+              "name": "",
+              "id": "oNcV30RrAo",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 13,
+              "pricePerCoinBought": 964.59,
+              "fees": 0,
+              "totalSpent": 12539.67,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
               "date": "2025-08-28"
             },
             {
-              "symbol": "ADA",
-              "name": "",
-              "id": "atM0I7jcmK",
-              "image": "https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090",
-              "quantity": 638,
-              "pricePerCoinBought": 0.7696,
-              "fees": 0,
-              "totalSpent": 490.97928,
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "Is-hSF_tHP",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 2,
+              "pricePerCoinBought": 921,
+              "fees": null,
+              "totalSpent": 1842,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,

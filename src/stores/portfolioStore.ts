@@ -51,11 +51,17 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     }
   }
 
+  function removeTransaction(symbol: string) {
+    delete coins.value[symbol];
+    console.log(coins.value);
+  }
+
   function setNewTransactions(symbol: string, transactions: Transaction[]) {
     coins.value[symbol].transactions = transactions;
   }
 
   return {
+    removeTransaction,
     setCoinList,
     coinsList,
     getCoin,
