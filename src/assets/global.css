@@ -51,6 +51,11 @@ input {
   min-height: 1.125rem;
 }
 
+.btnActive {
+  background-color: var(--coinBlockBgActive);
+  overflow: hidden;
+}
+
 
 .input-primary {
   background-color: var(--coinBlockBgActive);
@@ -69,6 +74,10 @@ input {
 
 output {
   width: 100%;
+}
+
+.btn-primary{
+  @apply card-border container-border select-none text-center min-w-[2.25rem] sm:min-w-[3rem]
 }
 
 

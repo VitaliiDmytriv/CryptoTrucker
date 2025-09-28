@@ -10,11 +10,12 @@ import type {
 const LABELS = {
   edit: { header: "Edit Transaction", button: "Edit" },
   add: { header: "Add Transaction", button: "Add transaction" },
+  merge: { header: "Merge Transactions", button: "Merge" },
 };
 
 export function useTransactionForm(
   props: TransactionFormProps,
-  emit: (e: "close") => void
+  emit: (e: "close", afterSuccses?: boolean) => void
 ) {
   const { localTransaction } = useTransactionCalculations(props);
 
@@ -51,6 +52,11 @@ export function useTransactionForm(
       await transactionService.updateTransaction(localTransaction.value);
     } else if (props.mode === "add" && txName) {
       await transactionService.addTransaction(localTransaction.value);
+    } else if (props.mode === "merge") {
+      await transactionService.mergeTransactions(
+        localTransaction.value,
+        props.mergeSet
+      );
     }
 
     afterHandle(submitSuccess, onSuccsess);
@@ -77,7 +83,7 @@ export function useTransactionForm(
 
   function onSuccsess() {
     transactionService.resetSuccess();
-    emit("close");
+    emit("close", true);
   }
 
   function afterHandle(condition: Ref<boolean>, callback: () => void) {

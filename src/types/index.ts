@@ -22,7 +22,7 @@ export interface CoinsRecord {
   [coinSymbol: string]: CoinData;
 }
 
-export type FormMode = "add" | "edit";
+export type FormMode = "add" | "edit" | "merge";
 
 export interface ErrorResponse {
   message: string;
@@ -48,14 +48,21 @@ export interface CoinsCacheStore {
 export interface AddProps {
   mode: "add";
   transaction?: never;
+  mergeSet?: Set<string>;
 }
 
 export interface EditProps {
   mode: "edit";
   transaction: Transaction;
+  mergeSet?: Set<string>;
+}
+export interface MergeProps {
+  mode: "merge";
+  transaction: Transaction;
+  mergeSet: Set<string>;
 }
 
-export type TransactionFormProps = AddProps | EditProps;
+export type TransactionFormProps = AddProps | EditProps | MergeProps;
 
 export interface CoinGecko {
   id: string;

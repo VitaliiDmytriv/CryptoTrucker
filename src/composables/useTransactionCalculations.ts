@@ -1,23 +1,9 @@
 import { computed, ref, watch, toRaw } from "vue";
 import type { Transaction, TransactionFormProps } from "../types/index";
-import { getTodayDate } from "@/helpers/helpFunctions";
-import { nanoid } from "nanoid";
+import { getDefaultTransaction } from "@/helpers/helpFunctions";
 
 export function useTransactionCalculations(props: TransactionFormProps) {
-  const defaultTransaction = {
-    symbol: "",
-    name: "",
-    id: nanoid(10).toString(),
-    image: "",
-    quantity: null,
-    pricePerCoinBought: null,
-    fees: null,
-    totalSpent: null,
-    pricePerCoinSold: null,
-    profit: null,
-    isActive: false,
-    date: getTodayDate(),
-  };
+  const defaultTransaction = getDefaultTransaction();
   // перевірка на тип моду, якщо add то дефолтний обєкт для нової транзакціїї, якщо ні, то транзакція з пропсу для змін
   const source = props.mode === "add" ? defaultTransaction : props.transaction;
 

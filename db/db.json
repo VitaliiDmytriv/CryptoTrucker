@@ -8,110 +8,22 @@
       "totalProfit": 19.11,
       "activeInvestment": 222.76,
       "coins": {
-        "ADA": {
-          "coinFullName": "Cardano",
-          "transactions": [
-            {
-              "symbol": "ADA",
-              "name": "Cardano",
-              "id": "x0acN2KCZ4",
-              "quantity": 34.16,
-              "pricePerCoinBought": 0.9225,
-              "fees": "",
-              "totalSpent": 31.51,
-              "pricePerCoinSold": "",
-              "profit": null,
-              "isActive": false,
-              "date": "2025-06-02"
-            },
-            {
-              "symbol": "ADA",
-              "name": "Cardano",
-              "id": "n0QuWheY3_",
-              "quantity": 22.6,
-              "pricePerCoinBought": 0.93,
-              "fees": "",
-              "totalSpent": 21.08,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-01-08"
-            }
-          ]
-        },
         "UNI": {
           "coinFullName": "Uniswap",
           "transactions": [
             {
-              "name": "Uniswap",
               "symbol": "UNI",
-              "id": "FyLvJDpWE-",
-              "quantity": 1.18,
-              "pricePerCoinBought": 17.06,
-              "fees": "",
-              "totalSpent": 20.13,
-              "pricePerCoinSold": "",
-              "profit": null,
-              "isActive": false,
-              "date": "2024-12-11"
-            },
-            {
-              "symbol": "UNI",
-              "name": "Uniswap",
-              "id": "lRH5XmRGqd",
+              "name": "",
+              "id": "fLKfQv--_U",
               "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
-              "quantity": 10,
-              "pricePerCoinBought": 9.98,
-              "fees": null,
-              "totalSpent": 99.8,
-              "pricePerCoinSold": null,
-              "profit": null,
+              "quantity": 28,
+              "pricePerCoinBought": 9.2321,
+              "fees": 2,
+              "totalSpent": 258.5,
+              "pricePerCoinSold": 10,
+              "profit": 19.5,
               "isActive": false,
-              "date": "2025-08-20"
-            }
-          ]
-        },
-        "ETH": {
-          "coinFullName": "Ethereum",
-          "transactions": [
-            {
-              "symbol": "ETH",
-              "name": "Ethereum",
-              "id": "BbaBP98OO7",
-              "quantity": 0.0091,
-              "pricePerCoinBought": 2720,
-              "fees": null,
-              "totalSpent": 24.75,
-              "pricePerCoinSold": 3000,
-              "profit": 2.55,
-              "isActive": false,
-              "date": "2025-02-24"
-            },
-            {
-              "symbol": "ETH",
-              "name": "Ethereum",
-              "id": "QMR3ESgDwi",
-              "quantity": 0.0133,
-              "pricePerCoinBought": 2628,
-              "fees": null,
-              "totalSpent": 34.95,
-              "pricePerCoinSold": "",
-              "profit": null,
-              "isActive": false,
-              "date": "2025-02-12"
-            },
-            {
-              "symbol": "ETH",
-              "name": "Ethereum",
-              "id": "guQFCcoCde",
-              "quantity": 0.018,
-              "pricePerCoinBought": 2628,
-              "fees": null,
-              "totalSpent": 47.3,
-              "pricePerCoinSold": "",
-              "profit": null,
-              "isActive": false,
-              "date": "2025-02-07"
+              "date": "2025-08-23"
             }
           ]
         },
@@ -120,17 +32,50 @@
           "transactions": [
             {
               "symbol": "DOGE",
-              "name": "Dogecoin",
-              "id": "Y7AY8rawGU",
+              "name": "",
+              "id": "68wemCLsCX",
               "image": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409",
-              "quantity": 90,
-              "pricePerCoinBought": 0.220387,
-              "fees": null,
-              "totalSpent": 19.83,
-              "pricePerCoinSold": 12,
-              "profit": 1060.17,
+              "quantity": 1090,
+              "pricePerCoinBought": 0.2204,
+              "fees": 0,
+              "totalSpent": 240.22183,
+              "pricePerCoinSold": null,
+              "profit": null,
               "isActive": false,
-              "date": "2025-07-16"
+              "date": "2025-08-28"
+            }
+          ]
+        },
+        "ADA": {
+          "coinFullName": "Cardano",
+          "transactions": [
+            {
+              "symbol": "ADA",
+              "name": "Cardano",
+              "id": "11gdmJNcSl",
+              "image": "https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090",
+              "quantity": 123,
+              "pricePerCoinBought": 0.864038,
+              "fees": null,
+              "totalSpent": 106.28,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-28"
+            },
+            {
+              "symbol": "ADA",
+              "name": "",
+              "id": "atM0I7jcmK",
+              "image": "https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090",
+              "quantity": 638,
+              "pricePerCoinBought": 0.7696,
+              "fees": 0,
+              "totalSpent": 490.97928,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-08-28"
             }
           ]
         }

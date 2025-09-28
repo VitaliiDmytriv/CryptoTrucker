@@ -7,10 +7,6 @@ export const usePortfolioStore = defineStore("portfolio", () => {
   const coinsList = ref<string[]>([]); // ['UNI','ETH'...]
   const coins = ref<CoinsRecord>({}); // {'UNI': {transactions: [],...}, 'ETH': {transactions: [],...}}=
 
-  watch(coins.value, () => {
-    console.log("new value");
-  });
-
   function setCoinList(coins: string[]) {
     coinsList.value = coins;
   }
@@ -54,7 +50,10 @@ export const usePortfolioStore = defineStore("portfolio", () => {
       coinsList.value.push(transaction.symbol);
     }
   }
-  function removeTransaction() {}
+
+  function setNewTransactions(symbol: string, transactions: Transaction[]) {
+    coins.value[symbol].transactions = transactions;
+  }
 
   return {
     setCoinList,
@@ -63,7 +62,7 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     addCoin,
     coins,
     addTransaction,
-    removeTransaction,
     updateTransaction,
+    setNewTransactions,
   };
 });

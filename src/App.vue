@@ -82,13 +82,12 @@ function closeAddForm() {
           />
         </div>
       </div>
-
-      <button
-        class="card-border container-border select-none text-center min-w-[2.25rem] sm:min-w-[3rem]"
-        @click="showAddTransaction = true"
-      >
-        Add Transaction
-      </button>
+      <div class="flex gap-1 xs:gap-2">
+        <div id="merge"></div>
+        <button class="btn-primary" @click="showAddTransaction = true">
+          Add Transaction
+        </button>
+      </div>
     </section>
     <TransactionList />
   </section>

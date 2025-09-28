@@ -115,6 +115,33 @@ export function useTransaction() {
     }
   }
 
+  async function mergeTransactions(
+    transaction: Transaction,
+    mergeSet: Set<string>
+  ) {
+    try {
+      loading.value = true;
+      error.value = null;
+      success.value = false;
+
+      const data = await transactionApi.mergeTransactions(
+        transaction,
+        mergeSet
+      );
+
+      console.log(data);
+
+      if (data.success) {
+        portfolio.setNewTransactions(transaction.symbol, data.transactions);
+        success.value = true;
+      }
+    } catch (err) {
+      error.value = mapError(err);
+    } finally {
+      loading.value = false;
+    }
+  }
+
   function resetSuccess() {
     success.value = false;
   }
@@ -136,5 +163,6 @@ export function useTransaction() {
     removeTransaction,
     addTransaction,
     fetchCoinList,
+    mergeTransactions,
   };
 }

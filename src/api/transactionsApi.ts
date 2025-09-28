@@ -68,3 +68,28 @@ export async function deleteTransaction(id: string, symbol: string) {
 
   return data;
 }
+
+export async function mergeTransactions(
+  transaction: Transaction,
+  mergeSet: Set<string>
+) {
+  const body = { add: transaction, delete: Array.from(mergeSet) };
+  const response = await fetch(`api/${transaction.symbol}/transactions/merge`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw {
+      message: data.message ?? "Unknown server error",
+      code: data.code ?? "server-error",
+    };
+  }
+
+  return data;
+}

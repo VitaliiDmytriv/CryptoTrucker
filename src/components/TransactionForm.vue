@@ -8,7 +8,7 @@ import ConfirmModal from "@/components/ConfirmModal.vue";
 import { useTransactionForm } from "@/composables/useTransactionForm";
 
 const emit = defineEmits<{
-  (event: "close"): void;
+  (event: "close", afterSuccses?: boolean): void;
 }>();
 
 const props = defineProps<TransactionFormProps>();
@@ -17,7 +17,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
 </script>
 
 <template>
-  <section class="relative max-h-full h-96">
+  <section class="relative max-h-full">
     <SubmitStatus
       :submit-error="formService.submitError.value"
       :submit-loading="formService.submitLoading.value"
@@ -62,6 +62,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
             placeholder="$"
             step="any"
             inputmode="decimal"
+            :readonly="props.mode === 'merge'"
           />
         </div>
         <div class="">
@@ -75,6 +76,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
             placeholder="$"
             step="any"
             inputmode="decimal"
+            :readonly="props.mode === 'merge'"
           />
         </div>
         <div>

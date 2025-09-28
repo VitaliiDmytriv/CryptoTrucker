@@ -239,6 +239,61 @@ app.delete("/:coin/transactions/:id", authMiddleware, async (req, res) => {
   }
 });
 
+app.patch("/:coin/transactions/merge", authMiddleware, async (req, res) => {
+  try {
+    const { coin: coinSymbol } = req.params;
+    const { userId } = req;
+
+    await usersDB.read();
+
+    const user = usersDB.data.users.find((u) => u.id === userId);
+
+    if (!user) {
+      return sendError(
+        res,
+        "server-error",
+        "Something went wrong on the server",
+        500
+      );
+    }
+
+    const coin = user.coins[coinSymbol];
+
+    if (!coin) {
+      return sendError(
+        res,
+        "server-error",
+        `We couln't find ${coinSymbol} coin`,
+        404
+      );
+    }
+
+    const deleteIds = new Set(
+      Array.isArray(req.body.delete) ? req.body.delete : []
+    );
+    const newTransaction = req.body.add ?? null;
+
+    if (!newTransaction) {
+      return sendError(res, "server-error", "No new transaction provided", 400);
+    }
+
+    const filteredTransactions = coin.transactions.filter(
+      (t) => !deleteIds.has(t.id)
+    );
+
+    filteredTransactions.push(newTransaction);
+
+    coin.transactions = filteredTransactions;
+
+    await usersDB.write();
+
+    res.json({ success: true, transactions: filteredTransactions });
+
+    // зберігаємо у базу
+  } catch (err) {
+    sendError(res, "server-error", err.message || "Internal Server Error", 500);
+  }
+});
 // CoinGecko ==============
 
 // fetch coins list from CoinGecko and write it for local base

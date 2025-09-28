@@ -1,4 +1,4 @@
-import { getCoinsList } from "@/api/coinsGeckoApi";
+import { getCoinsList, updateCoinsList } from "@/api/coinsGeckoApi";
 import { mapError } from "@/helpers/mapError";
 import { CoinGecko, ErrorResponse } from "@/types";
 import { ref } from "vue";
