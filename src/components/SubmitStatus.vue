@@ -13,7 +13,7 @@ defineProps<{
 <template>
   <div
     v-if="submitLoading || submitError || submitSuccess"
-    class="absolute left-0 top-0 right-0 bottom-0 bg-[var(--opacityColor)] flex justify-center items-center"
+    class="absolute left-0 top-0 right-0 bottom-0 bg-[var(--opacityColor)] flex justify-center items-center z-20"
   >
     <!-- Loading -->
     <div v-if="submitLoading">

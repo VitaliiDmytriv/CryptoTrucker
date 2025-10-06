@@ -38,7 +38,9 @@ function closeAddForm() {
 </script>
 
 <template>
-  <section class="p-2 flex flex-col gap-2 min-h-screen h-[2000px]">
+  <section
+    class="p-2 flex flex-col gap-2 min-h-screen h-[2000px] max-w-7xl m-auto"
+  >
     <Modal v-if="coinListError" @close="">
       <Error :error="coinListError" />
     </Modal>

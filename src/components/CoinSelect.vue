@@ -42,6 +42,7 @@ onClickOutside(dropdown, () => {
   if (props.transaction.name) {
     isDropdownOpen.value = false;
     searchQuery.value = "";
+    inputRef.value?.blur();
   }
 });
 
@@ -73,37 +74,38 @@ function openDropDown() {
         />
 
         <div
+          @click="openDropDown"
           v-if="!isDropdownOpen"
-          class="absolute top-1/2 -translate-y-1/2 left-1"
+          class="absolute top-1/2 -translate-y-1/2 left-1 right-7"
         >
-          <div v-if="transaction.name" class="flex justify-center gap-2">
-            <span class="w-5 inline-block">
-              <img class="w-full" :src="transaction.image" alt="" />
-            </span>
-            <span>{{ transaction.name }}</span>
-            <span class="text-[#808a9d]">{{
-              transaction.symbol.toUpperCase()
-            }}</span>
+          <div v-if="transaction.name" class="flex gap-2 items-center">
+            <div class="crypto_icon">
+              <img class="" :src="transaction.image" alt="" />
+            </div>
+            <p class="flex-1 truncate md:flex-initial">
+              {{ transaction.name }}
+            </p>
+            <p class="text-[#808a9d]">{{ transaction.symbol.toUpperCase() }}</p>
           </div>
           <div v-else>Select Coin</div>
         </div>
       </div>
 
-      <span class="absolute w-5 right-1 top-1/2 -translate-y-1/2">
-        <span v-if="isDropdownOpen">
+      <div class="absolute w-5 right-1 top-1/2 -translate-y-1/2">
+        <div v-if="isDropdownOpen">
           <Search :size="16" :stroke-width="1.5" />
-        </span>
-        <span v-else>
+        </div>
+        <div v-else>
           <ChevronDown @click="openDropDown" :size="16" :stroke-width="1.5" />
-        </span>
-      </span>
+        </div>
+      </div>
 
       <!-- dropdown -->
 
       <ul
         ref="dropdown"
         v-if="isDropdownOpen"
-        class="absolute mt-1 max-h-48 bg-[var(--bodyColor)] shadow-md w-full rounded-md p-1 overflow-y-auto"
+        class="absolute mt-1 max-h-48 bg-[var(--bodyColor)] shadow-lg w-full rounded-md p-1 overflow-y-auto"
       >
         <li v-if="coinListLoading">Searching...</li>
         <li v-else-if="!coinList.length" class="p-2 flex items-center">
@@ -111,18 +113,34 @@ function openDropDown() {
         </li>
         <li
           v-else
-          class="p-2 flex items-center cursor-pointer hover:bg-[var(--transactionHover)]"
+          class="p-1 sm:p-2 flex gap-1 sm:gap-2 items-center cursor-pointer hover:bg-[var(--transactionHover)]"
           v-for="coin in coinList"
           :key="coin.id"
           @click="selectCoin(coin)"
         >
-          <span class="mr-2 w-5">
+          <div class="crypto_icon">
             <img :src="coin.image" alt="" />
-          </span>
-          <span class="mr-2 font-semibold">{{ coin.name }}</span>
-          <span class="uppercase">{{ coin.symbol }}</span>
+          </div>
+          <p class="mr-2 truncate flex-1">
+            <b>{{ coin.name }}</b>
+          </p>
+          <p class="uppercase text-[#808a9d] shrink-0">
+            {{ coin.symbol }}
+          </p>
         </li>
       </ul>
     </div>
   </div>
 </template>
+
+<style scoped>
+/* max-w-[5rem] xs:max-w-[7rem] sm:max-w-none */
+.crypto_icon {
+  @apply w-3 xs:w-4;
+  @apply sm:w-5;
+}
+
+p {
+  @apply text-xs sm:text-sm;
+}
+</style>

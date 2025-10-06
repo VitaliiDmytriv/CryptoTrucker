@@ -10,6 +10,7 @@ import Error from "../components/Error.vue";
 import Sceleton from "@/components/Sceleton.vue";
 import { useMerge } from "@/composables/useMerge";
 import { Merge } from "lucide-vue-next";
+import { formatter } from "@/helpers/helpFunctions";
 
 const formMode = ref<"edit" | "merge">("edit");
 const route = useRoute();
@@ -165,7 +166,13 @@ function handleMerge() {
           }"
         >
           <td class="hidden sm:table-cell">{{ transaction.symbol }}</td>
-          <td>{{ transaction.quantity }}</td>
+          <td>
+            {{
+              transaction.quantity
+                ? formatter.format(transaction.quantity)
+                : "-"
+            }}
+          </td>
           <td>${{ transaction.pricePerCoinBought }}</td>
           <td>
             {{
@@ -178,7 +185,7 @@ function handleMerge() {
             {{ transaction.fees ? `$${transaction.fees}` : "-" }}
           </td>
           <td>
-            {{ transaction.profit ? `$${transaction.profit}` : "-" }}
+            {{ transaction.profit ? `$${transaction.profit.toFixed(2)}` : "-" }}
           </td>
         </tr>
       </tbody>

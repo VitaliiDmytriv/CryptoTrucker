@@ -5,6 +5,7 @@ import * as coinsApi from "../api/coinsApi";
 import * as transactionApi from "../api/transactionsApi";
 import { usePortfolioStore } from "../stores/portfolioStore";
 import router from "@/router/router";
+import { createSplitTransactions } from "@/helpers/helpFunctions";
 
 // клей між стором, api запитами, обробокю помилок, loading, відправкою даних на UI
 export function useTransaction() {
@@ -144,6 +145,41 @@ export function useTransaction() {
     }
   }
 
+  async function splitTransaction(
+    transaction: Transaction,
+    curentQuantity: number,
+    splitQuantity: number
+  ) {
+    const [updatedTransaction, splitedTransaction] = createSplitTransactions(
+      transaction,
+      curentQuantity,
+      splitQuantity
+    );
+
+    try {
+      loading.value = true;
+      error.value = null;
+      success.value = false;
+
+      const data = await transactionApi.splitTransaction(
+        updatedTransaction,
+        splitedTransaction
+      );
+
+      if (data.success) {
+        portfolio.setNewTransactions(
+          updatedTransaction.symbol,
+          data.transactions
+        );
+        success.value = true;
+      }
+    } catch (err) {
+      error.value = mapError(err);
+    } finally {
+      loading.value = false;
+    }
+  }
+
   function resetSuccess() {
     success.value = false;
   }
@@ -166,5 +202,6 @@ export function useTransaction() {
     addTransaction,
     fetchCoinList,
     mergeTransactions,
+    splitTransaction,
   };
 }

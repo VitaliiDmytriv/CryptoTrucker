@@ -10,6 +10,10 @@ https://www.colorhunt.co/palette/f2f2f2eae4d5b6b09f000000
 #000000
 */
 
+*{
+  box-sizing: border-box;
+}
+
 :root {
   --borderColor: #bebebe;
   --bodyColor: #ffffff;
@@ -20,6 +24,8 @@ https://www.colorhunt.co/palette/f2f2f2eae4d5b6b09f000000
   --bgWhite: #ffffff;
   --fzBase: 0.75rem; 
   --greenColor: rgb(22, 199, 132);
+  --inputPadding: 0.125rem;
+  --inputDatePadding: 0.0625rem;
 
   /* --bodyColor: #f2f2f2; */
 }
@@ -51,6 +57,10 @@ input {
   min-height: 1.125rem;
 }
 
+/* input:not([type="date"]){
+  padding: 5px;
+} */
+
 .btnActive {
   background-color: var(--coinBlockBgActive);
   overflow: hidden;
@@ -59,8 +69,12 @@ input {
 
 .input-primary {
   background-color: var(--coinBlockBgActive);
-  padding: .15rem;
+  padding: var(--inputPadding);
   border-radius: var(--borderRadius);
+}
+
+.input-primary[type="date"]{
+  padding: var(--inputDatePadding);
 }
 
 .card-border {
@@ -96,13 +110,12 @@ output {
     line-height: 1.5;
   }
 
-  .input-primary {
-    padding: .25rem;
-}
 }
 @media (min-width: 640px) {
   :root {
     --fzBase: 1rem; 
+    --inputPadding: 0.25rem;
+    --inputDatePadding: 0.1875rem;
   }
 }
 @media (min-width: 768px) {
@@ -116,3 +129,7 @@ output {
 /* .dark body {
   background-color: gray;
 } */
+
+label {
+  display: block;
+}

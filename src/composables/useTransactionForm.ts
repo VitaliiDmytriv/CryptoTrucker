@@ -6,11 +6,13 @@ import type {
   TransactionFormProps,
   Transaction,
 } from "../types/index";
+import { useSplit } from "./useSplit";
 
 const LABELS = {
   edit: { header: "Edit Transaction", button: "Edit" },
   add: { header: "Add Transaction", button: "Add transaction" },
   merge: { header: "Merge Transactions", button: "Merge" },
+  split: { header: "Split Transaction", button: "Split" },
 };
 
 export function useTransactionForm(
@@ -27,10 +29,15 @@ export function useTransactionForm(
     ...transactionService
   } = useTransaction();
 
+  const { editType, setEditType, ...split } = useSplit(localTransaction.value);
+
   const isSubmitDisabled = computed(() => {
     const tx = localTransaction.value;
     switch (props.mode) {
       case "edit":
+        if (editType.value === "split") {
+          return !split.canSplit.value;
+        }
         return areTransactionsEqual(tx, props.transaction);
       case "add":
         return !tx.name;
@@ -38,8 +45,14 @@ export function useTransactionForm(
         return false;
     }
   });
-  const headerTxt = computed(() => LABELS[props.mode].header);
-  const buttonTxt = computed(() => LABELS[props.mode].button);
+  const headerTxt = computed(() => {
+    if (editType.value === "split") return LABELS["split"].header;
+    return LABELS[props.mode].header;
+  });
+  const buttonTxt = computed(() => {
+    if (editType.value === "split") return LABELS["split"].button;
+    return LABELS[props.mode].button;
+  });
 
   const submitHandlesr: Record<string, () => Promise<void>> = {
     edit: () => transactionService.updateTransaction(localTransaction.value),
@@ -49,11 +62,18 @@ export function useTransactionForm(
         localTransaction.value,
         props.mergeSet || new Set()
       ),
+    split: () =>
+      transactionService.splitTransaction(
+        localTransaction.value,
+        split.curentQuantity.value,
+        split.splitQuantity.value as number
+      ),
   };
 
   async function handleSubmit() {
-    if (props.mode === "add" && !localTransaction.value.name) return;
-    await submitHandlesr[props.mode]?.();
+    const action = editType.value === "split" ? editType.value : props.mode;
+    if (action === "add" && !localTransaction.value.name) return;
+    await submitHandlesr[action]?.();
 
     runAfterSuccess(submitSuccess, onSuccsess);
   }
@@ -100,6 +120,9 @@ export function useTransactionForm(
   }
 
   return {
+    split,
+    editType,
+    setEditType,
     localTransaction,
     closeConfirmModal,
     selectNewCoin,

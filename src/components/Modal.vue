@@ -23,6 +23,7 @@ onUnmounted(() => {
 <template>
   <section @click="emit('close')" role="dialog" aria-modal="true" class="modal">
     <div @click.stop class="modal_content">
+      <!-- <div @click.stop class="modal_content animate__animated animate__fadeInUp"> -->
       <slot />
     </div>
   </section>
@@ -33,6 +34,7 @@ onUnmounted(() => {
   position: fixed;
   width: 100%;
   height: 100vh;
+  min-height: fit-content;
   background-color: rgba(0, 0, 0, 0.08);
   top: 0;
   left: 0;
@@ -47,6 +49,10 @@ onUnmounted(() => {
 
 .modal_content {
   max-height: 100%;
-  /* overflow-y: auto; */
+  position: relative;
+  overflow-y: auto;
+  border: 1px solid var(--borderColor);
+  border-radius: var(--borderRadius);
+  /* z-index: 100; */
 }
 </style>

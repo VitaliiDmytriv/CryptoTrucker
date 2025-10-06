@@ -56,12 +56,13 @@ async function authMiddleware(req, res, next) {
   }
 }
 
+const userId = "3986b2f1-f4ed-42c7-b983-1d7144fbbe81";
 // Home
 
-app.get("/", authMiddleware, async (req, res) => {
+app.get("/", async (req, res) => {
   try {
     await usersDB.read();
-    const { userId } = req;
+
     const user = usersDB.data.users.find((u) => u.id === userId);
 
     if (!user || !user.coins) {
@@ -81,11 +82,10 @@ app.get("/", authMiddleware, async (req, res) => {
 
 // Coins
 
-app.get("/:coin", authMiddleware, async (req, res) => {
+app.get("/:coin", async (req, res) => {
   try {
     await usersDB.read();
     const { coin } = req.params;
-    const { userId } = req;
 
     const user = usersDB.data.users.find((u) => u.id === userId);
 
@@ -108,11 +108,10 @@ app.get("/:coin", authMiddleware, async (req, res) => {
 
 app.put(
   "/:coin/transactions/:transactionId",
-  authMiddleware,
+
   async (req, res) => {
     try {
       const { coin, transactionId } = req.params;
-      const { userId } = req;
 
       await usersDB.read();
 
@@ -153,10 +152,9 @@ app.put(
   }
 );
 
-app.post("/:coin/transactions", authMiddleware, async (req, res) => {
+app.post("/:coin/transactions", async (req, res) => {
   try {
     const { coin: coinSymbol } = req.params;
-    const { userId } = req;
 
     await usersDB.read();
 
@@ -180,10 +178,9 @@ app.post("/:coin/transactions", authMiddleware, async (req, res) => {
   }
 });
 
-app.delete("/:coin/transactions/:id", authMiddleware, async (req, res) => {
+app.delete("/:coin/transactions/:id", async (req, res) => {
   try {
     const { coin: coinSymbol, id } = req.params;
-    const { userId } = req;
 
     await usersDB.read();
 
@@ -239,10 +236,9 @@ app.delete("/:coin/transactions/:id", authMiddleware, async (req, res) => {
   }
 });
 
-app.patch("/:coin/transactions/merge", authMiddleware, async (req, res) => {
+app.patch("/:coin/transactions/merge", async (req, res) => {
   try {
     const { coin: coinSymbol } = req.params;
-    const { userId } = req;
 
     await usersDB.read();
 
@@ -288,6 +284,56 @@ app.patch("/:coin/transactions/merge", authMiddleware, async (req, res) => {
     await usersDB.write();
 
     res.json({ success: true, transactions: filteredTransactions });
+
+    // зберігаємо у базу
+  } catch (err) {
+    sendError(res, "server-error", err.message || "Internal Server Error", 500);
+  }
+});
+
+app.patch("/:coin/transactions/split", async (req, res) => {
+  try {
+    const { coin: coinSymbol } = req.params;
+
+    await usersDB.read();
+
+    const user = usersDB.data.users.find((u) => u.id === userId);
+
+    if (!user) {
+      return sendError(
+        res,
+        "server-error",
+        "Something went wrong on the server",
+        500
+      );
+    }
+
+    const coin = user.coins[coinSymbol];
+
+    if (!coin) {
+      return sendError(
+        res,
+        "server-error",
+        `We couln't find ${coinSymbol} coin`,
+        404
+      );
+    }
+
+    const { updatedTransaction, splitedTransaction } = req.body;
+
+    const index = coin.transactions.findIndex(
+      (t) => t.id === updatedTransaction.id
+    );
+
+    if (index === -1) {
+      return sendError(res, "not-found", `Transaction is not found`, 404);
+    }
+
+    coin.transactions.splice(index, 1, updatedTransaction, splitedTransaction);
+
+    await usersDB.write();
+
+    res.json({ transactions: coin.transactions, success: true });
 
     // зберігаємо у базу
   } catch (err) {
