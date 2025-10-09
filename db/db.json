@@ -116,36 +116,22 @@
             }
           ]
         },
-        "XRP": {
-          "coinFullName": "XRP",
+        "SOL": {
+          "coinFullName": "Solana",
           "transactions": [
             {
-              "symbol": "XRP",
-              "name": "XRP",
-              "id": "CkOQ48aYuM",
-              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
-              "quantity": 2,
-              "pricePerCoinBought": 2.79,
+              "symbol": "SOL",
+              "name": "Solana",
+              "id": "74tYsNGGdi",
+              "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
+              "quantity": 0.5,
+              "pricePerCoinBought": 201.79,
               "fees": null,
-              "totalSpent": 5.58,
+              "totalSpent": 100.89,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-09-07"
-            },
-            {
-              "symbol": "XRP",
-              "name": "XRP",
-              "id": "HEUjyXELBG",
-              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
-              "quantity": 2,
-              "pricePerCoinBought": 2.79,
-              "fees": null,
-              "totalSpent": 5.58,
-              "pricePerCoinSold": 3,
-              "profit": 0.42,
-              "isActive": false,
-              "date": "2025-09-07"
+              "date": "2025-09-09"
             }
           ]
         }

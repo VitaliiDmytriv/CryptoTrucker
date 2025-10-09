@@ -4,12 +4,12 @@ import { ref } from "vue";
 import * as coinsApi from "../api/coinsApi";
 import * as transactionApi from "../api/transactionsApi";
 import { usePortfolioStore } from "../stores/portfolioStore";
-import router from "@/router/router";
-import { createSplitedTransactions } from "@/helpers/transactionCalculations";
+import { useRouter } from "vue-router";
 
 // клей між стором, api запитами, обробокю помилок, loading, відправкою даних на UI
 export function useTransaction() {
   const portfolio = usePortfolioStore();
+  const router = useRouter();
 
   const loading = ref(false);
   const error = ref<null | ErrorResponse>(null);

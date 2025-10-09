@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Header from "@/components/layout/Header.vue";
-import PortfolioView from "@/views/PortfolioView.vue";
+import PortfolioView from "@/components/layout/PortfolioView.vue";
 </script>
 
 <template>
