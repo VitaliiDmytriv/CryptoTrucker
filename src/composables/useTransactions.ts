@@ -5,7 +5,7 @@ import * as coinsApi from "../api/coinsApi";
 import * as transactionApi from "../api/transactionsApi";
 import { usePortfolioStore } from "../stores/portfolioStore";
 import router from "@/router/router";
-import { createSplitTransactions } from "@/helpers/helpFunctions";
+import { createSplitedTransactions } from "@/helpers/transactionCalculations";
 
 // клей між стором, api запитами, обробокю помилок, loading, відправкою даних на UI
 export function useTransaction() {
@@ -118,19 +118,13 @@ export function useTransaction() {
     }
   }
 
-  async function mergeTransactions(
-    transaction: Transaction,
-    mergeSet: Set<string>
-  ) {
+  async function mergeTransactions(transaction: Transaction, mergeSet: Set<string>) {
     try {
       loading.value = true;
       error.value = null;
       success.value = false;
 
-      const data = await transactionApi.mergeTransactions(
-        transaction,
-        mergeSet
-      );
+      const data = await transactionApi.mergeTransactions(transaction, mergeSet);
 
       console.log(data);
 
@@ -145,32 +139,16 @@ export function useTransaction() {
     }
   }
 
-  async function splitTransaction(
-    transaction: Transaction,
-    curentQuantity: number,
-    splitQuantity: number
-  ) {
-    const [updatedTransaction, splitedTransaction] = createSplitTransactions(
-      transaction,
-      curentQuantity,
-      splitQuantity
-    );
-
+  async function splitTransaction(soureTransaction: Transaction, targetTransaction: Transaction) {
     try {
       loading.value = true;
       error.value = null;
       success.value = false;
 
-      const data = await transactionApi.splitTransaction(
-        updatedTransaction,
-        splitedTransaction
-      );
+      const data = await transactionApi.splitTransaction(soureTransaction, targetTransaction);
 
       if (data.success) {
-        portfolio.setNewTransactions(
-          updatedTransaction.symbol,
-          data.transactions
-        );
+        portfolio.setNewTransactions(soureTransaction.symbol, data.transactions);
         success.value = true;
       }
     } catch (err) {

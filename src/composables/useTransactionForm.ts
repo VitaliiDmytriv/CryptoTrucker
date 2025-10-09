@@ -1,11 +1,7 @@
 import { useTransactionCalculations } from "@/composables/useTransactionCalculations";
 import { ref, computed, Ref } from "vue";
 import { useTransaction } from "@/composables/useTransactions";
-import type {
-  CoinGecko,
-  TransactionFormProps,
-  Transaction,
-} from "../types/index";
+import type { CoinGecko, TransactionFormProps, Transaction } from "../types/index";
 import { useSplit } from "./useSplit";
 
 const LABELS = {
@@ -22,6 +18,7 @@ export function useTransactionForm(
   const isConfirmModalOpen = ref(false);
 
   const { localTransaction } = useTransactionCalculations(props);
+
   const {
     success: submitSuccess,
     loading: submitLoading,
@@ -58,21 +55,19 @@ export function useTransactionForm(
     edit: () => transactionService.updateTransaction(localTransaction.value),
     add: () => transactionService.addTransaction(localTransaction.value),
     merge: () =>
-      transactionService.mergeTransactions(
-        localTransaction.value,
-        props.mergeSet || new Set()
-      ),
+      transactionService.mergeTransactions(localTransaction.value, props.mergeSet || new Set()),
     split: () =>
       transactionService.splitTransaction(
-        localTransaction.value,
-        split.curentQuantity.value,
-        split.splitQuantity.value as number
+        split.sourceTransaction.value,
+        split.targetTransaction.value
       ),
   };
 
   async function handleSubmit() {
     const action = editType.value === "split" ? editType.value : props.mode;
+
     if (action === "add" && !localTransaction.value.name) return;
+
     await submitHandlesr[action]?.();
 
     runAfterSuccess(submitSuccess, onSuccsess);

@@ -33,56 +33,14 @@ export const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 5, // максимум 4 знаки
 });
 
-function calculateTotalSpent(quantity: number, pricePerCoin: number) {
-  return Number((quantity * pricePerCoin).toFixed(2));
-}
+export function isTransactionValid(transaction: Transaction): boolean {
+  const { quantity, pricePerCoinBought, pricePerCoinSold, fees } = transaction;
+  if (!quantity) return false;
+  if (quantity < 0) return false;
+  if (!pricePerCoinBought) return false;
+  if (pricePerCoinBought < 0) return false;
+  if (Number(fees) < 0) return false;
+  if (Number(pricePerCoinSold) < 0) return false;
 
-function recalculateTransactionProfit(
-  transaction: Transaction,
-  curentQuantity: number
-): Transaction {
-  const totalSpent = calculateTotalSpent(
-    curentQuantity,
-    transaction.pricePerCoinBought as number
-  );
-
-  let profit = null;
-
-  if (transaction.pricePerCoinSold) {
-    const brutoProfit = curentQuantity * transaction.pricePerCoinSold;
-    profit = brutoProfit - totalSpent - (transaction.fees || 0);
-  }
-
-  return {
-    ...transaction,
-    profit,
-    totalSpent,
-    quantity: curentQuantity,
-  };
-}
-
-export function createSplitTransactions(
-  transaction: Transaction,
-  curentQuantity: number,
-  splitQuantity: number
-) {
-  const currentTransaction = recalculateTransactionProfit(
-    transaction,
-    curentQuantity
-  );
-
-  const splitedTransaction = {
-    ...currentTransaction,
-    id: nanoid(10).toString(),
-    quantity: splitQuantity,
-    fees: null,
-    pricePerCoinSold: null,
-    profit: null,
-    totalSpent: calculateTotalSpent(
-      splitQuantity,
-      currentTransaction.pricePerCoinBought as number
-    ),
-  };
-
-  return [currentTransaction, splitedTransaction];
+  return true;
 }

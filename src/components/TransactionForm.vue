@@ -43,19 +43,12 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
             :class="{ right: formService.editType.value === 'split' }"
             class="togleHighlight"
           ></div>
-          <span @click="formService.setEditType('edit')" class="togleItem"
-            >Edit</span
-          >
-          <span @click="formService.setEditType('split')" class="togleItem"
-            >Split</span
-          >
+          <span @click="formService.setEditType('edit')" class="togleItem">Edit</span>
+          <span @click="formService.setEditType('split')" class="togleItem">Split</span>
         </div>
       </div>
       <div v-if="props.mode === 'add'" class="col-span-2">
-        <CoinSelect
-          @handleSelect="formService.selectNewCoin"
-          :transaction="localTransaction"
-        />
+        <CoinSelect @handleSelect="formService.selectNewCoin" :transaction="localTransaction" />
       </div>
       <form @submit.prevent="formService.handleSubmit" class="">
         <!-- <div v-if="mode === 'add'"> -->
@@ -127,17 +120,13 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
             <div class="flex-1">
               <p>Total Spent</p>
               <output class="w-full inline-block border input-primary"
-                >{{ localTransaction.totalSpent?.toFixed(2) }}$</output
+                >{{ localTransaction.totalSpent }}$</output
               >
             </div>
             <div class="flex-1">
               <p>Profit</p>
               <output class="w-full inline-block border input-primary">
-                {{
-                  localTransaction.profit !== null
-                    ? `${localTransaction.profit.toFixed(2)}$`
-                    : "$"
-                }}
+                {{ localTransaction.profit }}$
               </output>
             </div>
           </div>
@@ -147,7 +136,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
             <label for="quantity">1-st (Current)</label>
             <input
               id="quantity"
-              :value="formatter.format(formService.split.curentQuantity.value)"
+              :value="formatter.format(formService.split.sourceTransaction.value.quantity ?? 0)"
               class="input-primary border"
               type="number"
               placeholder="$"
@@ -162,7 +151,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
             <input
               id="quantity"
               required
-              v-model="formService.split.splitQuantity.value"
+              v-model="formService.split.targetTransaction.value.quantity"
               class="input-primary border"
               type="number"
               placeholder="Write quantity"
@@ -176,6 +165,36 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
               {{ formService.split.errorMessage.value }}
             </div>
           </div>
+          <div class="row-start-2">
+            <p>Total Spent</p>
+            <output class="w-full inline-block border input-primary"
+              >{{ formService.split.sourceTransaction.value.totalSpent }}$</output
+            >
+          </div>
+          <div class="">
+            <p>Total Spent</p>
+            <output class="w-full inline-block border input-primary"
+              >{{ formService.split.targetTransaction.value.totalSpent }}$</output
+            >
+          </div>
+          <div class="xs:col-start-2">
+            <label for="sell-price">Sell Price</label>
+            <input
+              id="sell-price"
+              v-model.number="formService.split.targetTransaction.value.pricePerCoinSold"
+              placeholder="$"
+              class="input-primary border"
+              type="number"
+              step="any"
+              inputmode="decimal"
+            />
+          </div>
+          <div class="xs:col-start-2">
+            <p>Profit</p>
+            <output class="w-full inline-block border input-primary">
+              {{ formService.split.targetTransaction.value.profit }}$
+            </output>
+          </div>
         </template>
         <div class="mt-2 col-span-full [grid-row-end:-1] form-button">
           <div class="flex gap-2">
@@ -186,10 +205,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
             >
               {{ formService.buttonTxt }}
             </button>
-            <div
-              v-if="props.mode === 'edit'"
-              class="flex justify-center items-center"
-            >
+            <div v-if="props.mode === 'edit'" class="flex justify-center items-center">
               <button @click.prevent="formService.openConfirmModal">
                 <Trash :size="20" :stroke-width="1.5" />
               </button>

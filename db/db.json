@@ -8,97 +8,78 @@
       "totalProfit": 19.11,
       "activeInvestment": 222.76,
       "coins": {
-        "CRV": {
-          "coinFullName": "Curve DAO",
+        "ETH": {
+          "coinFullName": "Ethereum",
           "transactions": [
             {
-              "symbol": "CRV",
-              "name": "Curve DAO",
-              "id": "Apd6ctrnET",
-              "image": "https://coin-images.coingecko.com/coins/images/12124/large/Curve.png?1696511967",
-              "quantity": 123,
-              "pricePerCoinBought": 0.656833,
+              "symbol": "ETH",
+              "name": "Ethereum",
+              "id": "ZSXIVP4SdP",
+              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
+              "quantity": 0.0243,
+              "pricePerCoinBought": 3996.56,
               "fees": null,
-              "totalSpent": 80.79,
+              "totalSpent": 97.12,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-09-06"
+              "date": "2025-09-07"
             },
             {
-              "symbol": "CRV",
-              "name": "Curve DAO",
-              "id": "fIbKoQkVph",
-              "image": "https://coin-images.coingecko.com/coins/images/12124/large/Curve.png?1696511967",
+              "symbol": "ETH",
+              "name": "Ethereum",
+              "id": "EliYgo2-Wd",
+              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
+              "quantity": 0.01,
+              "pricePerCoinBought": 4200.32,
+              "fees": 1,
+              "totalSpent": 42,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-09-10"
+            },
+            {
+              "symbol": "ETH",
+              "name": "Ethereum",
+              "id": "v1Za51jocn",
+              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
+              "quantity": 0.005,
+              "pricePerCoinBought": 4200.32,
+              "fees": null,
+              "totalSpent": 21,
+              "pricePerCoinSold": 4900,
+              "profit": 3.5,
+              "isActive": false,
+              "date": "2025-09-10"
+            },
+            {
+              "symbol": "ETH",
+              "name": "Ethereum",
+              "id": "3MJ2CCHrey",
+              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
+              "quantity": 0.03,
+              "pricePerCoinBought": 4200.12,
+              "fees": null,
+              "totalSpent": 126,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-09-08"
+            },
+            {
+              "symbol": "ETH",
+              "name": "Ethereum",
+              "id": "GvrLw4r2su",
+              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
               "quantity": 12,
-              "pricePerCoinBought": 0.62,
+              "pricePerCoinBought": 3996.56,
               "fees": null,
-              "totalSpent": 7.44,
+              "totalSpent": 47958.72,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-09-04"
-            },
-            {
-              "symbol": "CRV",
-              "name": "Curve DAO",
-              "id": "oWYXQQTQRw",
-              "image": "https://coin-images.coingecko.com/coins/images/12124/large/Curve.png?1696511967",
-              "quantity": 10,
-              "pricePerCoinBought": 0.62,
-              "fees": null,
-              "totalSpent": 6.2,
-              "pricePerCoinSold": 0.73,
-              "profit": 1.1,
-              "isActive": false,
-              "date": "2025-09-04"
-            },
-            {
-              "symbol": "CRV",
-              "name": "Curve DAO",
-              "id": "TrmgZK-DaX",
-              "image": "https://coin-images.coingecko.com/coins/images/12124/large/Curve.png?1696511967",
-              "quantity": 31,
-              "pricePerCoinBought": 0.62,
-              "fees": null,
-              "totalSpent": 19.22,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-09-04"
-            }
-          ]
-        },
-        "UNI": {
-          "coinFullName": "Uniswap",
-          "transactions": [
-            {
-              "symbol": "UNI",
-              "name": "Uniswap",
-              "id": "kpLH1cv67j",
-              "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
-              "quantity": 3.68,
-              "pricePerCoinBought": 8.14,
-              "fees": null,
-              "totalSpent": 29.96,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-08-22"
-            },
-            {
-              "symbol": "UNI",
-              "name": "Uniswap",
-              "id": "0abcSKgHhp",
-              "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
-              "quantity": 3.9,
-              "pricePerCoinBought": 7.69,
-              "fees": null,
-              "totalSpent": 29.99,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-08-25"
+              "date": "2025-09-09"
             }
           ]
         },
@@ -107,64 +88,64 @@
           "transactions": [
             {
               "symbol": "BTC",
-              "name": "Bitcoin",
-              "id": "NG0hVq8wKd",
+              "name": "",
+              "id": "9Dw2n450iG",
               "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
-              "quantity": 0.0003,
+              "quantity": 0.00223,
+              "pricePerCoinBought": 117425.8386,
+              "fees": 0,
+              "totalSpent": 261.86,
+              "pricePerCoinSold": 125000,
+              "profit": 16.89,
+              "isActive": false,
+              "date": "2025-09-09"
+            },
+            {
+              "symbol": "BTC",
+              "name": "Bitcoin",
+              "id": "KuvGYMXep2",
+              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+              "quantity": 0.2,
               "pricePerCoinBought": 109494,
               "fees": null,
-              "totalSpent": 32.85,
+              "totalSpent": 21898.8,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-09-03"
-            },
-            {
-              "symbol": "BTC",
-              "name": "Bitcoin",
-              "id": "jntBx34p90",
-              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
-              "quantity": 0.00034999999999999994,
-              "pricePerCoinBought": 102494,
-              "fees": null,
-              "totalSpent": 35.87,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-09-06"
-            },
-            {
-              "symbol": "BTC",
-              "name": "Bitcoin",
-              "id": "XeoBqUkgSZ",
-              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
-              "quantity": 0.00025,
-              "pricePerCoinBought": 102494,
-              "fees": null,
-              "totalSpent": 25.62,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-09-06"
+              "date": "2025-09-09"
             }
           ]
         },
-        "ETH": {
-          "coinFullName": "Ethereum",
+        "XRP": {
+          "coinFullName": "XRP",
           "transactions": [
             {
-              "symbol": "ETH",
-              "name": "Ethereum",
-              "id": "xsKEqvOoQE",
-              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
-              "quantity": 0.022,
-              "pricePerCoinBought": 3996.56,
+              "symbol": "XRP",
+              "name": "XRP",
+              "id": "CkOQ48aYuM",
+              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
+              "quantity": 2,
+              "pricePerCoinBought": 2.79,
               "fees": null,
-              "totalSpent": 87.92,
+              "totalSpent": 5.58,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-09-03"
+              "date": "2025-09-07"
+            },
+            {
+              "symbol": "XRP",
+              "name": "XRP",
+              "id": "HEUjyXELBG",
+              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
+              "quantity": 2,
+              "pricePerCoinBought": 2.79,
+              "fees": null,
+              "totalSpent": 5.58,
+              "pricePerCoinSold": 3,
+              "profit": 0.42,
+              "isActive": false,
+              "date": "2025-09-07"
             }
           ]
         }

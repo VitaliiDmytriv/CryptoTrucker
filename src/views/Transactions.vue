@@ -87,10 +87,7 @@ function handleMerge() {
   </Modal>
 
   <Modal v-if="transactionsError">
-    <Error
-      @resetError="transactionsService.resetError"
-      :error="transactionsError"
-    />
+    <Error @resetError="transactionsService.resetError" :error="transactionsError" />
   </Modal>
 
   <Teleport to="#merge">
@@ -104,36 +101,33 @@ function handleMerge() {
     </button>
   </Teleport>
 
-  <div
-    v-if="merge.isMerging.value"
-    class="fixed left-2 right-2 bg-slate-200 bottom-0 p-2"
-  >
-    <div class="flex items-center gap-5">
-      <div class="flex items-center">
-        <span class="inline-block w-7">
-          <img :src="merge.defaultTransaction.value.image" alt="" />
-        </span>
-        <span>{{ merge.defaultTransaction.value.symbol }}</span>
-      </div>
-      <div class="text-center">
-        <div>Coins</div>
-        <div>{{ merge.defaultTransaction.value.quantity }}</div>
-      </div>
-      <div class="text-center">
-        <div>Average price</div>
-        <div>{{ merge.defaultTransaction.value.pricePerCoinBought }}</div>
-      </div>
-      <div class="ml-auto">
-        <button
-          :disabled="!merge.canMerge.value"
-          @click="handleMerge"
-          class="btn-primary"
-        >
-          Merge
-        </button>
+  <div class="bottom-decoration"></div>
+
+  <template v-if="merge.isMerging.value">
+    <div class="mergeBlock card-border">
+      <div class="flex items-center gap-5">
+        <div class="flex items-center">
+          <span class="inline-block w-7">
+            <img :src="merge.defaultTransaction.value.image" alt="" />
+          </span>
+          <span>{{ merge.defaultTransaction.value.symbol }}</span>
+        </div>
+        <div class="text-center">
+          <div>Coins</div>
+          <div>{{ merge.defaultTransaction.value.quantity }}</div>
+        </div>
+        <div class="text-center">
+          <div>Average price</div>
+          <div>{{ merge.defaultTransaction.value.pricePerCoinBought }}</div>
+        </div>
+        <div class="ml-auto">
+          <button :disabled="!merge.canMerge.value" @click="handleMerge" class="btn-primary">
+            Merge
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </template>
 
   <div>
     <table>
@@ -161,25 +155,16 @@ function handleMerge() {
           @click="handleClickOnTransaction(transaction.id)"
           v-for="transaction in coin.transactions"
           :class="{
-            active:
-              merge.isMerging.value && merge.mergeSet.value.has(transaction.id),
+            active: merge.isMerging.value && merge.mergeSet.value.has(transaction.id),
           }"
         >
           <td class="hidden sm:table-cell">{{ transaction.symbol }}</td>
           <td>
-            {{
-              transaction.quantity
-                ? formatter.format(transaction.quantity)
-                : "-"
-            }}
+            {{ transaction.quantity ? formatter.format(transaction.quantity) : "-" }}
           </td>
           <td>${{ transaction.pricePerCoinBought }}</td>
           <td>
-            {{
-              transaction.pricePerCoinSold
-                ? `$${transaction.pricePerCoinSold}`
-                : "-"
-            }}
+            {{ transaction.pricePerCoinSold ? `$${transaction.pricePerCoinSold}` : "-" }}
           </td>
           <td class="hidden sm:table-cell">
             {{ transaction.fees ? `$${transaction.fees}` : "-" }}
@@ -227,5 +212,38 @@ td {
 
 .sceletForFetch tr:hover {
   background-color: initial;
+}
+
+.mergeBlock {
+  @apply fixed left-2 right-2 bottom-2 p-2 bg-white;
+  @apply 2xl:left-1/2 2xl:-translate-x-1/2 2xl:max-w-[79rem] 2xl:w-full;
+  border: 1px solid var(--borderColor);
+}
+
+.bottom-decoration {
+  position: fixed;
+  bottom: 0.5rem;
+  height: 3.5rem;
+  background-color: #ffffff;
+  @apply fixed left-2 right-2 bottom-0;
+  @apply 2xl:left-1/2 2xl:-translate-x-1/2 2xl:max-w-[79rem] 2xl:w-full;
+}
+
+.bottom-decoration::after {
+  content: "";
+  position: absolute;
+  bottom: 0.5rem;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  border-bottom: 1px solid var(--borderColor);
+  border-left: 1px solid var(--borderColor);
+  border-right: 1px solid var(--borderColor);
+  border-top: 1px solid white;
+
+  border-radius: var(--borderRadius);
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
 </style>

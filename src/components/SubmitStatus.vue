@@ -17,9 +17,7 @@ defineProps<{
   >
     <!-- Loading -->
     <div v-if="submitLoading">
-      <div
-        class="w-6 h-6 border-2 border-black border-dashed rounded-full animate-spin"
-      ></div>
+      <div class="w-6 h-6 border-2 border-black border-dashed rounded-full animate-spin"></div>
     </div>
     <!-- Error -->
     <div v-else-if="submitError">
@@ -29,11 +27,7 @@ defineProps<{
     </div>
     <!-- Success -->
     <div v-else-if="submitSuccess">
-      <Vue3Lottie
-        :animation-data="successAnim"
-        :loop="false"
-        style="width: 80px; height: 80px"
-      />
+      <Vue3Lottie :animation-data="successAnim" :loop="false" style="width: 80px; height: 80px" />
     </div>
   </div>
 </template>

@@ -1,16 +1,30 @@
 import { Transaction } from "@/types";
 import { useDebounceFn } from "@vueuse/core";
 import { ref, watch } from "vue";
+import { useTransactionCalculations } from "./useTransactionCalculations";
+import { cloneTransaction, cloneTransactionWithDefaults } from "@/helpers/transactionCalculations";
+import { formatter } from "@/helpers/helpFunctions";
 
 type EditType = "edit" | "split";
 const message = "It can't be more or equal";
 
 export function useSplit(transaction: Transaction) {
-  const editType = ref<EditType>("edit");
-  const transactionQuantity = transaction.quantity as number;
+  const baseQuantity = transaction.quantity as number;
+  // зробити два клона, current та split, і у режимі split контролити його через useTransacCalculation,
+  // привязати до інпутів, і одразу оновлювати
+  const { localTransaction: sourceTransaction } = useTransactionCalculations({
+    mode: "edit",
+    transaction: cloneTransaction(transaction, true),
+  });
 
-  const curentQuantity = ref(transactionQuantity);
-  const splitQuantity = ref<null | number>(null);
+  const { localTransaction: targetTransaction } = useTransactionCalculations({
+    transaction: cloneTransactionWithDefaults(transaction),
+    mode: "edit",
+  });
+
+  const editType = ref<EditType>("edit");
+  // const curentQuantity = ref(baseQuantity);
+  // const splitQuantity = ref<null | number>(null);
   const errorMessage = ref<null | string>(null);
   const canSplit = ref(false);
 
@@ -18,10 +32,13 @@ export function useSplit(transaction: Transaction) {
 
   watch(editType, () => {
     reset();
-    splitQuantity.value = null;
+    targetTransaction.value.quantity = null;
   });
 
-  watch(splitQuantity, (newValue) => debounsedFnDivision(newValue));
+  watch(
+    () => targetTransaction.value.quantity,
+    (newValue) => debounsedFnDivision(newValue)
+  );
 
   function handleInputDivision(input: number | null) {
     const inputQuantity = Number(input);
@@ -33,14 +50,14 @@ export function useSplit(transaction: Transaction) {
     }
 
     // якщо більше quantity транзакції
-    if (inputQuantity >= transactionQuantity) {
-      errorMessage.value = `It can't be more or equal ${transactionQuantity}`;
+    if (inputQuantity >= baseQuantity) {
+      errorMessage.value = `It can't be more or equal ${baseQuantity}`;
       canSplit.value = false;
       return;
     }
 
     errorMessage.value = null;
-    curentQuantity.value = transactionQuantity - inputQuantity;
+    sourceTransaction.value.quantity = +formatter.format(baseQuantity - inputQuantity);
     canSplit.value = true;
   }
 
@@ -50,16 +67,16 @@ export function useSplit(transaction: Transaction) {
 
   function reset() {
     canSplit.value = false;
-    curentQuantity.value = transactionQuantity;
+    sourceTransaction.value.quantity = baseQuantity;
     errorMessage.value = null;
   }
 
   return {
+    sourceTransaction,
+    targetTransaction,
     canSplit,
     errorMessage,
     editType,
     setEditType,
-    curentQuantity,
-    splitQuantity,
   };
 }
