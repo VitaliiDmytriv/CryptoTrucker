@@ -1,8 +1,10 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import "./assets/global.css";
 import router from "./router/router";
 import { createPinia } from "pinia";
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
+import "./assets/global.css";
 
 const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -17,4 +19,5 @@ const pinia = createPinia();
 
 app.use(pinia);
 app.use(router);
+app.use(ElementPlus);
 app.mount("#app");
