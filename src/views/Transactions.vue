@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch, Teleport } from "vue";
+import { computed, ref, watch, Teleport, nextTick } from "vue";
 import { useWindowSize } from "@vueuse/core";
 import { useRoute } from "vue-router";
 import type { CoinData, FormMode, Transaction } from "../types/index";
 import TransactionForm from "../components/TransactionForm.vue";
-import Modal from "@/components/Modal.vue";
 import { useTransaction } from "../composables/useTransactions";
-import Error from "../components/Error.vue";
 import Sceleton from "@/components/Sceleton.vue";
 import { useMerge } from "@/composables/useMerge";
 import { Merge } from "lucide-vue-next";
-import { formatter } from "@/helpers/helpFunctions";
+import { formatCryptoValue } from "@/helpers/helpFunctions";
 
 const formMode = ref<"edit" | "merge">("edit");
 const route = useRoute();
@@ -44,6 +42,7 @@ watch(
       merge.reset(symbol);
       coin.value = await transactionsService.fetchCoin(symbol);
       merge.setCoinImage(coin.value?.transactions[0].image || "");
+      merge.setCoinName(coin.value?.transactions[0].name || "");
     }
   },
   { immediate: true }
@@ -76,6 +75,7 @@ function handleClickOnTransaction(id: string) {
 
 function handleMerge() {
   activeTransaction.value = merge.defaultTransaction.value;
+  dialogVisible.value = true;
   formMode.value = "merge";
 }
 </script>
@@ -114,11 +114,13 @@ function handleMerge() {
         </div>
         <div class="text-center">
           <div>Coins</div>
-          <div>{{ merge.defaultTransaction.value.quantity }}</div>
+          <div>{{ formatCryptoValue(merge.defaultTransaction.value.quantity, "quantity") }}</div>
         </div>
         <div class="text-center">
           <div>Average price</div>
-          <div>{{ merge.defaultTransaction.value.pricePerCoinBought }}</div>
+          <div>
+            {{ formatCryptoValue(merge.defaultTransaction.value.pricePerCoinBought, "currency") }}
+          </div>
         </div>
         <div class="ml-auto">
           <button :disabled="!merge.canMerge.value" @click="handleMerge" class="btn-primary">
@@ -160,17 +162,17 @@ function handleMerge() {
         >
           <td class="hidden sm:table-cell">{{ transaction.symbol }}</td>
           <td>
-            {{ transaction.quantity ? formatter.format(transaction.quantity) : "-" }}
+            {{ formatCryptoValue(transaction.quantity, "quantity") }}
           </td>
-          <td>${{ transaction.pricePerCoinBought }}</td>
+          <td>${{ formatCryptoValue(transaction.pricePerCoinBought, "currency") }}</td>
           <td>
-            {{ transaction.pricePerCoinSold ? `$${transaction.pricePerCoinSold}` : "-" }}
+            {{ formatCryptoValue(transaction.pricePerCoinSold, "currency") }}
           </td>
           <td class="hidden sm:table-cell">
-            {{ transaction.fees ? `$${transaction.fees}` : "-" }}
+            {{ formatCryptoValue(transaction.fees, "money") }}
           </td>
           <td>
-            {{ transaction.profit ? `$${transaction.profit.toFixed(2)}` : "-" }}
+            {{ formatCryptoValue(transaction.profit, "money") }}
           </td>
         </tr>
       </tbody>

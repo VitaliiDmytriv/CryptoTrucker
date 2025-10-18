@@ -7,7 +7,7 @@ import { Trash } from "lucide-vue-next";
 import { useTransactionForm } from "@/composables/useTransactionForm";
 import { mainFormRules, getSplitFormRules, submitForm } from "@/helpers/formValidation";
 import { FormInstance } from "element-plus";
-import { handleDeleteTransaction } from "@/helpers/helpFunctions";
+import { handleDeleteTransaction, formatCryptoValue } from "@/helpers/helpFunctions";
 
 const emit = defineEmits<{
   (event: "close", afterSuccses?: boolean): void;
@@ -19,7 +19,7 @@ const { localTransaction, ...formService } = useTransactionForm(props, emit);
 const rules = computed(() =>
   formService.editType.value === "edit"
     ? mainFormRules
-    : getSplitFormRules(localTransaction.value.quantity)
+    : getSplitFormRules(localTransaction.value.quantity || 0)
 );
 const transaction = computed(() =>
   formService.editType.value === "edit"
@@ -95,7 +95,10 @@ const transaction = computed(() =>
 
           <div class="no-focus xs:col-span-2 flex xs:gap-2 gap-1">
             <el-form-item class="flex-1" label="Total Spent">
-              <el-input :value="`${localTransaction.totalSpent || ''}$`" readonly />
+              <el-input
+                :value="`${formatCryptoValue(localTransaction.totalSpent, 'money')}$`"
+                readonly
+              />
             </el-form-item>
             <el-form-item class="flex-1" label="Profit">
               <el-input
@@ -103,7 +106,7 @@ const transaction = computed(() =>
                   'profit-minus': (localTransaction.profit || 0) < 0,
                   'profit-plus': (localTransaction.profit || 0) > 0,
                 }"
-                :value="`${localTransaction.profit || ''}$`"
+                :value="`${formatCryptoValue(localTransaction.profit, 'money')}$`"
                 readonly
               />
             </el-form-item>
@@ -130,14 +133,20 @@ const transaction = computed(() =>
           <div class="row-start-2">
             <el-form-item class="no-focus" label="Total Spent">
               <el-input
-                :value="`${formService.split.sourceTransaction.value.totalSpent}$`"
+                :value="`${formatCryptoValue(
+                  formService.split.sourceTransaction.value.totalSpent,
+                  'money'
+                )}$`"
                 readonly
               />
             </el-form-item>
           </div>
           <el-form-item class="no-focus" label="Total Spent">
             <el-input
-              :value="`${formService.split.targetTransaction.value.totalSpent || ''}$`"
+              :value="`${formatCryptoValue(
+                formService.split.targetTransaction.value.totalSpent,
+                'money'
+              )}$`"
               readonly
             />
           </el-form-item>
@@ -174,7 +183,7 @@ const transaction = computed(() =>
             {{ formService.buttonTxt }}
           </el-button>
           <el-button
-            v-if="props.mode !== 'add'"
+            v-if="props.mode === 'edit'"
             plain
             class="group"
             type="danger"

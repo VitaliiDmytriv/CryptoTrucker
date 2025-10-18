@@ -9,7 +9,7 @@ export function toNumber(value: number | null) {
 // Обчислюємо totalSpent. Залежить від quantity та priceBought, повинно бути > 0
 export function calcTotalSpent(quantity: number, priceBought: number) {
   if (quantity > 0 && priceBought > 0) {
-    return +(quantity * priceBought).toFixed(2);
+    return quantity * priceBought;
   }
   return null;
 }
@@ -23,9 +23,28 @@ export function calcProfit(
 ) {
   if (totalSpent !== null && priceSold > 0) {
     const profit = priceSold * quantity - totalSpent - fee;
-    return +profit.toFixed(2);
+    return profit;
   }
   return null;
+}
+
+export function calculateMergedTransaction(transactions: Transaction[]) {
+  const quantity = transactions.reduce((acc, cur) => acc + Number(cur.quantity), 0);
+
+  const totalSpent = transactions.reduce(
+    (acc, cur) => acc + (cur.quantity || 0) * Number(cur.pricePerCoinBought),
+    0
+  );
+  const fees = transactions.reduce((acc, cur) => acc + Number(cur.fees), 0) || null;
+
+  const pricePerCoinBought = Number(totalSpent / quantity) || 0;
+  // const pricePerCoinBought = totalSpent / quantity;
+  return {
+    quantity,
+    totalSpent,
+    fees,
+    pricePerCoinBought,
+  };
 }
 
 function recalculateTransaction(transaction: Transaction, quantity: number): Transaction {

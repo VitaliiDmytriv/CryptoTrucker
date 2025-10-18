@@ -3,7 +3,7 @@ export interface Transaction {
   name: string;
   id: string;
   image: string;
-  quantity: number;
+  quantity: number | null;
   pricePerCoinBought: number | null;
   fees: number | null;
   totalSpent: number | null;

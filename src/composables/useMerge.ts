@@ -1,4 +1,5 @@
 import { getDefaultTransaction } from "@/helpers/helpFunctions";
+import { calculateMergedTransaction } from "@/helpers/transactionCalculations";
 import { Transaction } from "@/types";
 import { computed, ref, watch } from "vue";
 
@@ -38,14 +39,15 @@ export function useMerge(symbol: string) {
   function setCoinImage(url: string) {
     defaultTransaction.value.image = url;
   }
+  function setCoinName(coinName: string) {
+    defaultTransaction.value.name = coinName;
+  }
   function reset(newSymbol: string) {
     cancelMerging();
     defaultTransaction.value = getDefaultTransaction(newSymbol);
   }
   function toggleTransactionToMerge(transaction: Transaction) {
-    const foundIndex = transactionsToMerge.value.findIndex(
-      (t) => t.id === transaction.id
-    );
+    const foundIndex = transactionsToMerge.value.findIndex((t) => t.id === transaction.id);
     if (foundIndex === -1) {
       transactionsToMerge.value.push(transaction);
     } else {
@@ -53,32 +55,8 @@ export function useMerge(symbol: string) {
     }
   }
 
-  function calculateMergedTransaction() {
-    const quantity = transactionsToMerge.value.reduce(
-      (prev, cur) => prev + (cur.quantity || 0),
-      0
-    );
-
-    const totalSpent = transactionsToMerge.value.reduce(
-      (prev, cur) => prev + (cur.quantity || 0) * (cur.pricePerCoinBought || 0),
-      0
-    );
-    const fees = transactionsToMerge.value.reduce(
-      (prev, cur) => prev + (cur.fees || 0),
-      0
-    );
-    const pricePerCoinBought = Number((totalSpent / quantity).toFixed(4)) || 0;
-
-    return {
-      quantity: Number(quantity.toFixed(5)),
-      totalSpent,
-      fees,
-      pricePerCoinBought,
-    };
-  }
-
   function updateDefaultTransaction() {
-    const update = calculateMergedTransaction();
+    const update = calculateMergedTransaction(transactionsToMerge.value);
     Object.assign(defaultTransaction.value, update);
   }
 
@@ -91,6 +69,7 @@ export function useMerge(symbol: string) {
     transactionsToMerge,
     cancelMerging,
     startMerging,
+    setCoinName,
     reset,
     toggleTransactionToMerge,
     setCoinImage,
