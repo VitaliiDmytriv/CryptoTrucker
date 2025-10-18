@@ -14,9 +14,10 @@ import TransactionForm from "@/components/TransactionForm.vue";
 
 console.log("PortfolioView loaded");
 const store = usePortfolioAnoteheStore();
-const showAddTransaction = ref(false);
 const { fetchCoinList, loading: coinListLoading, error: coinListError } = useTransaction();
 const portfolio = usePortfolioStore();
+
+const dialogVisible = ref(false);
 
 onMounted(async () => {
   await fetchCoinList();
@@ -27,7 +28,7 @@ function handleError() {
 }
 
 function closeAddForm() {
-  showAddTransaction.value = false;
+  dialogVisible.value = false;
 }
 </script>
 
@@ -36,9 +37,8 @@ function closeAddForm() {
     <Modal v-if="coinListError" @close="">
       <Error :error="coinListError" />
     </Modal>
-    <Modal v-if="showAddTransaction" @close="closeAddForm">
-      <TransactionForm mode="add" @close="closeAddForm" />
-    </Modal>
+
+    <TransactionForm v-if="dialogVisible" @close="closeAddForm" mode="add" dialogVisible />
 
     <!-- <section class="flex gap-2 xs:gap-4">
       <DataBlock>
@@ -71,7 +71,7 @@ function closeAddForm() {
       </div>
       <div class="flex gap-1 xs:gap-2">
         <div id="merge"></div>
-        <button class="btn-primary" @click="showAddTransaction = true">Add Transaction</button>
+        <button class="btn-primary" @click="dialogVisible = true">Add Transaction</button>
       </div>
     </section>
     <TransactionList />

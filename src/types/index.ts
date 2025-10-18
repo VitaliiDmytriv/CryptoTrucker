@@ -3,7 +3,7 @@ export interface Transaction {
   name: string;
   id: string;
   image: string;
-  quantity: number | null;
+  quantity: number;
   pricePerCoinBought: number | null;
   fees: number | null;
   totalSpent: number | null;
@@ -49,20 +49,28 @@ export interface AddProps {
   mode: "add";
   transaction?: never;
   mergeSet?: Set<string>;
+  dialogVisible: boolean;
 }
 
 export interface EditProps {
   mode: "edit";
   transaction: Transaction;
   mergeSet?: Set<string>;
+  dialogVisible: boolean;
 }
 export interface MergeProps {
   mode: "merge";
   transaction: Transaction;
   mergeSet: Set<string>;
+  dialogVisible: boolean;
 }
 
 export type TransactionFormProps = AddProps | EditProps | MergeProps;
+
+export interface TransactionCalculations {
+  mode: FormMode;
+  transaction?: Transaction;
+}
 
 export interface CoinGecko {
   id: string;

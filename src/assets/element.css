@@ -1,0 +1,4 @@
+.coin-select .el-autocomplete-suggestion li {
+  @apply p-[0.375rem] text-xs sm:p-2 
+}
+

@@ -27,6 +27,8 @@ const colspan = computed(() => (width.value > 480 ? 6 : 4));
 const iconSize = computed(() => (width.value > 480 ? 20 : 15));
 const merge = useMerge(route.params.coin as string);
 
+const dialogVisible = ref(false);
+
 const canShowModal = computed(() => {
   if (formMode.value === "merge") return true;
   if (activeTransaction.value && !merge.isMerging.value) return true;
@@ -54,6 +56,7 @@ function closeForm(afterSuccses = false) {
   }
   formMode.value = "edit";
   activeTransaction.value = undefined;
+  dialogVisible.value = false;
 }
 
 function handleClickOnTransaction(id: string) {
@@ -63,6 +66,7 @@ function handleClickOnTransaction(id: string) {
 
   if (!merge.isMerging.value) {
     activeTransaction.value = transaction;
+    dialogVisible.value = true;
   } else {
     if (transaction) {
       merge.toggleTransactionToMerge(transaction);
@@ -77,18 +81,14 @@ function handleMerge() {
 </script>
 
 <template>
-  <Modal v-if="canShowModal" @close="closeForm">
-    <TransactionForm
-      :mode="formMode"
-      :mergeSet="merge.mergeSet.value"
-      @close="closeForm"
-      :transaction="activeTransaction as Transaction"
-    />
-  </Modal>
-
-  <Modal v-if="transactionsError">
-    <Error @resetError="transactionsService.resetError" :error="transactionsError" />
-  </Modal>
+  <TransactionForm
+    v-if="dialogVisible && activeTransaction"
+    :mode="formMode"
+    :mergeSet="merge.mergeSet.value"
+    @close="closeForm"
+    :transaction="activeTransaction"
+    dialogVisible
+  />
 
   <Teleport to="#merge">
     <button

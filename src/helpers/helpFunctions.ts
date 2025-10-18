@@ -1,4 +1,5 @@
 import { Transaction } from "@/types";
+import { ElMessageBox } from "element-plus";
 import { nanoid } from "nanoid";
 
 export function getTodayDate() {
@@ -43,4 +44,14 @@ export function isTransactionValid(transaction: Transaction): boolean {
   if (Number(pricePerCoinSold) < 0) return false;
 
   return true;
+}
+
+export function handleDeleteTransaction(callback: Function) {
+  ElMessageBox.confirm("Are you sure you want to remove this transaction?", "Warning", {
+    confirmButtonText: "Remove",
+    cancelButtonText: "Cancel",
+    center: true,
+  }).then(() => {
+    callback();
+  });
 }

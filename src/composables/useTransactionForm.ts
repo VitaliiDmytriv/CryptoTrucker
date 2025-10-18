@@ -15,9 +15,10 @@ export function useTransactionForm(
   props: TransactionFormProps,
   emit: (e: "close", afterSuccses?: boolean) => void
 ) {
-  const isConfirmModalOpen = ref(false);
-
-  const { localTransaction } = useTransactionCalculations(props);
+  const { localTransaction } = useTransactionCalculations({
+    mode: props.mode,
+    transaction: props.transaction,
+  });
 
   const {
     success: submitSuccess,
@@ -80,15 +81,7 @@ export function useTransactionForm(
     localTransaction.value.name = coin.name;
   }
 
-  function openConfirmModal() {
-    isConfirmModalOpen.value = true;
-  }
-  function closeConfirmModal() {
-    isConfirmModalOpen.value = false;
-  }
-
   async function handleDelete() {
-    closeConfirmModal();
     await transactionService.removeTransaction(
       localTransaction.value.id,
       localTransaction.value.symbol
@@ -117,19 +110,16 @@ export function useTransactionForm(
   return {
     split,
     editType,
-    setEditType,
     localTransaction,
-    closeConfirmModal,
-    selectNewCoin,
-    handleSubmit,
-    openConfirmModal,
-    handleDelete,
     headerTxt,
     buttonTxt,
     isSubmitDisabled,
     submitSuccess,
     submitLoading,
     submitError,
-    isConfirmModalOpen,
+    setEditType,
+    selectNewCoin,
+    handleSubmit,
+    handleDelete,
   };
 }

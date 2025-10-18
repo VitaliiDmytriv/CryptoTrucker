@@ -86,10 +86,6 @@ input {
     padding: .2rem;
 }
 
-output {
-  width: 100%;
-}
-
 .btn-primary{
   @apply card-border container-border select-none text-center min-w-[2.25rem] sm:min-w-[3rem]
 }
@@ -126,10 +122,3 @@ output {
 }
 
 
-/* .dark body {
-  background-color: gray;
-} */
-
-label {
-  display: block;
-}

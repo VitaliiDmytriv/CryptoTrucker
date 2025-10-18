@@ -1,12 +1,13 @@
 import { computed, ref, watch, toRaw } from "vue";
-import type { Transaction, TransactionFormProps } from "../types/index";
+import type { Transaction, TransactionCalculations } from "../types/index";
 import { getDefaultTransaction } from "@/helpers/helpFunctions";
 import { toNumber, calcTotalSpent, calcProfit } from "@/helpers/transactionCalculations";
 
-export function useTransactionCalculations(props: TransactionFormProps) {
+export function useTransactionCalculations(props: TransactionCalculations) {
   const defaultTransaction = getDefaultTransaction();
   // перевірка на тип моду, якщо add то дефолтний обєкт для нової транзакціїї, якщо ні, то транзакція з пропсу для змін
-  const source = props.mode === "add" ? defaultTransaction : props.transaction;
+  const source =
+    props.mode === "add" ? defaultTransaction : props.transaction ?? defaultTransaction;
 
   // створення локального реф обєкту для роботи з формою
   const localTransaction = ref<Transaction>(structuredClone(toRaw(source)));

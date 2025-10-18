@@ -1,6 +1,6 @@
 import { FormInstance } from "element-plus";
 
-export const rules = {
+export const mainFormRules = {
   quantity: [
     {
       required: true,
@@ -36,6 +36,46 @@ export const rules = {
     },
   ],
 };
+
+export function getSplitFormRules(maxQuantity: number) {
+  return {
+    quantity: [
+      {
+        required: true,
+        trigger: "blur",
+        message: "This field can't be empty",
+      },
+      {
+        validator: validateMaxQuantity(maxQuantity),
+        trigger: "blur",
+      },
+    ],
+  };
+}
+
+function validateMaxQuantity(maxQuantity: number) {
+  return (rule: any, value: any, callback: any) => {
+    if (value === "" || value == null || String(value).trim() === "") {
+      return callback(); // пусте поле — валідно
+    }
+
+    const num = Number(value);
+
+    if (Number.isNaN(num) || num <= 0) {
+      return callback(new Error("Number must be positive"));
+    }
+
+    if (num == maxQuantity) {
+      return callback(new Error(`Cannot be equal to ${maxQuantity}`));
+    }
+
+    if (num > maxQuantity) {
+      return callback(new Error(`Cannot be greater than ${maxQuantity}`));
+    }
+
+    callback(); // якщо все ок
+  };
+}
 
 function validatePositive(rule: any, value: any, callback: any) {
   if (value === "" || value == null || String(value).trim() === "") {
