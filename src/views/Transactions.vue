@@ -27,11 +27,6 @@ const merge = useMerge(route.params.coin as string);
 
 const dialogVisible = ref(false);
 
-const canShowModal = computed(() => {
-  if (formMode.value === "merge") return true;
-  if (activeTransaction.value && !merge.isMerging.value) return true;
-});
-
 watch(
   () => route.params.coin,
   async (newSymbol) => {
@@ -39,8 +34,8 @@ watch(
     coin.value = null;
 
     if (symbol) {
-      merge.reset(symbol);
       coin.value = await transactionsService.fetchCoin(symbol);
+      merge.reset(symbol);
       merge.setCoinImage(coin.value?.transactions[0].image || "");
       merge.setCoinName(coin.value?.transactions[0].name || "");
     }
@@ -58,8 +53,9 @@ function closeForm(afterSuccses = false) {
   dialogVisible.value = false;
 }
 
-function handleClickOnTransaction(id: string) {
+function handleClickOnTransaction(row: Transaction) {
   // якщо мерджування то блокуємо відкриття форми і toggle транзакцію в масиві, якщо ні то відкриваємо форму
+  const id = row.id;
 
   const transaction = coin.value?.transactions.find((el) => el.id === id);
 
@@ -132,7 +128,46 @@ function handleMerge() {
   </template>
 
   <div>
-    <table>
+    <div v-if="coin">
+      <el-table
+        :data="coin.transactions"
+        :cell-style="{ textAlign: 'center' }"
+        :header-cell-style="{ textAlign: 'center' }"
+        @row-click="handleClickOnTransaction"
+        stripe
+        border
+      >
+        <el-table-column v-if="width > 480" prop="symbol" label="Name" />
+        <el-table-column prop="quantity" label="Coins">
+          <template #default="{ row }">
+            {{ formatCryptoValue(row.quantity, "quantity") }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="pricePerCoinBought" label="Bought">
+          <template #default="{ row }">
+            {{ formatCryptoValue(row.pricePerCoinBought, "money") }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="pricePerCoinSold" label="Sold">
+          <template #default="{ row }">
+            {{ formatCryptoValue(row.pricePerCoinSold, "money") }}
+          </template>
+        </el-table-column>
+        <el-table-column v-if="width > 480" prop="fees" label="Fee">
+          <template #default="{ row }">
+            {{ formatCryptoValue(row.fees, "money") }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="profit" label="Profit" fixed="right">
+          <template #default="{ row }">
+            {{ formatCryptoValue(row.profit, "money") }}
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <!-- <table>
       <thead>
         <tr>
           <th class="hidden sm:table-cell">Name</th>
@@ -154,7 +189,6 @@ function handleMerge() {
 
       <tbody v-if="coin">
         <tr
-          @click="handleClickOnTransaction(transaction.id)"
           v-for="transaction in coin.transactions"
           :class="{
             active: merge.isMerging.value && merge.mergeSet.value.has(transaction.id),
@@ -176,36 +210,29 @@ function handleMerge() {
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </template>
 
 <style scoped>
-table {
-  width: 100%;
-  table-layout: fixed;
+:deep(.el-table) {
+  @apply text-xs sm:text-sm md:text-base;
+  color: #000;
+}
+:deep(.el-table thead) {
+  color: #000;
 }
 
-tbody tr.active {
-  background-color: var(--transactionHover);
+:deep(.el-table .cell) {
+  @apply py-1 px-0;
 }
 
-th,
-td {
-  text-align: center;
-  padding-block: 0.3rem;
+:deep(.el-table .el-table__cell) {
+  @apply p-0;
 }
 
-tr {
-  border-bottom: 1px solid var(--borderColor);
-}
-
-tbody tr:hover {
-  background-color: var(--transactionHover);
-}
-
-td {
-  padding: 0.25rem;
+.el-table__row {
+  cursor: pointer;
 }
 
 .sceletForFetch tr {

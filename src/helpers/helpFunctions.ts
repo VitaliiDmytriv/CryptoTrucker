@@ -76,7 +76,7 @@ export function formatCryptoValue(
   }
 
   if (type === "money") {
-    return num.toFixed(2); // профіт, totalSpent тощо — завжди 2 знаки після коми
+    return `$${num.toFixed(2)}`; // профіт, totalSpent тощо — завжди 2 знаки після коми
   }
 
   return num.toString();
