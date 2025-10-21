@@ -1,3 +1,33 @@
 .coin-select .el-autocomplete-suggestion li {
   @apply p-[0.375rem] text-xs sm:p-2 
 }
+
+.el-table {
+  @apply text-xs sm:text-sm md:text-base;
+  color: #000;
+}
+.el-table thead {
+  color: #000;
+}
+
+.el-table .cell{
+  @apply py-1 px-0;
+}
+
+.el-table .el-table__cell {
+  @apply p-0;
+}
+
+.el-skeleton__p.is-last {
+  width: 100%;
+}
+.el-skeleton__p.is-first {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+.el-skeleton__item {
+  height: 1.5rem;
+}
+.el-skeleton__paragraph {
+  margin-top: 0.5rem;
+}

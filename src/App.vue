@@ -1,11 +1,7 @@
-<script setup lang="ts">
-import Header from "@/components/layout/Header.vue";
-import PortfolioView from "@/components/layout/PortfolioView.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <Header />
-  <PortfolioView />
+  <router-view />
 </template>
 
 <style scoped></style>

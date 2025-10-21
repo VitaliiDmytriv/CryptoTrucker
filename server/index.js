@@ -21,7 +21,7 @@ const coinsListAdapter = new JSONFile("db/coinsList.json");
 const coinsListDB = new Low(coinsListAdapter, { coins: [] });
 
 function sendError(res, code, message, status = 400) {
-  return res.status(status).json({ message, code });
+  return res.status(status).json({ success: false, message, code });
 }
 
 async function authMiddleware(req, res, next) {
@@ -36,9 +36,7 @@ async function authMiddleware(req, res, next) {
     }
 
     await sessionsDB.read();
-    const session = sessionsDB.data.sessions.find(
-      (s) => s.sessionId === sessionId
-    );
+    const session = sessionsDB.data.sessions.find((s) => s.sessionId === sessionId);
 
     if (!session) {
       return sendError(res, "missing-session", "Session not found", 401);
@@ -71,9 +69,14 @@ app.get("/", async (req, res) => {
     const coins = Object.keys(user.coins);
 
     res.json({
-      coins,
-      totalProfit: user.totalProfit,
-      activeInvestment: user.activeInvestment,
+      success: true,
+      data: {
+        coins,
+        stats: {
+          totalProfit: user.totalProfit,
+          activeInvestment: user.activeInvestment,
+        },
+      },
     });
   } catch (error) {
     sendError(res, "server-error", "Failed to read database", 500);
@@ -98,7 +101,7 @@ app.get("/:coin", async (req, res) => {
     if (!coinData) {
       return sendError(res, "not-found", `Coin '${coin}' not found`, 404);
     }
-    res.json(coinData);
+    res.json({ success: true, data: coinData });
   } catch (error) {
     return sendError(res, "server-error", "Failed to get data", 500);
   }
@@ -118,12 +121,7 @@ app.put(
       const user = usersDB.data.users.find((u) => u.id === userId);
 
       if (!user) {
-        return sendError(
-          res,
-          "server-error",
-          "Something went wrong on the server",
-          500
-        );
+        return sendError(res, "server-error", "Something went wrong on the server", 500);
       }
 
       const transactions = user.coins[coin]?.transactions || [];
@@ -142,12 +140,7 @@ app.put(
 
       res.json({ success: true, transaction });
     } catch (err) {
-      sendError(
-        res,
-        "server-error",
-        err.message || "Internal Server Error",
-        404
-      );
+      sendError(res, "server-error", err.message || "Internal Server Error", 404);
     }
   }
 );
@@ -187,28 +180,16 @@ app.delete("/:coin/transactions/:id", async (req, res) => {
     const user = usersDB.data.users.find((u) => u.id === userId);
 
     if (!user) {
-      return sendError(
-        res,
-        "server-error",
-        "Something went wrong on the server",
-        500
-      );
+      return sendError(res, "server-error", "Something went wrong on the server", 500);
     }
 
     const coin = user.coins[coinSymbol];
 
     if (!coin) {
-      return sendError(
-        res,
-        "server-error",
-        `We couln't find ${coinSymbol} coin`,
-        404
-      );
+      return sendError(res, "server-error", `We couln't find ${coinSymbol} coin`, 404);
     }
 
-    const foundIndex = coin.transactions.findIndex(
-      (transaction) => transaction.id === id
-    );
+    const foundIndex = coin.transactions.findIndex((transaction) => transaction.id === id);
 
     if (foundIndex < 0) {
       return sendError(
@@ -245,37 +226,23 @@ app.patch("/:coin/transactions/merge", async (req, res) => {
     const user = usersDB.data.users.find((u) => u.id === userId);
 
     if (!user) {
-      return sendError(
-        res,
-        "server-error",
-        "Something went wrong on the server",
-        500
-      );
+      return sendError(res, "server-error", "Something went wrong on the server", 500);
     }
 
     const coin = user.coins[coinSymbol];
 
     if (!coin) {
-      return sendError(
-        res,
-        "server-error",
-        `We couln't find ${coinSymbol} coin`,
-        404
-      );
+      return sendError(res, "server-error", `We couln't find ${coinSymbol} coin`, 404);
     }
 
-    const deleteIds = new Set(
-      Array.isArray(req.body.delete) ? req.body.delete : []
-    );
+    const deleteIds = new Set(Array.isArray(req.body.delete) ? req.body.delete : []);
     const newTransaction = req.body.add ?? null;
 
     if (!newTransaction) {
       return sendError(res, "server-error", "No new transaction provided", 400);
     }
 
-    const filteredTransactions = coin.transactions.filter(
-      (t) => !deleteIds.has(t.id)
-    );
+    const filteredTransactions = coin.transactions.filter((t) => !deleteIds.has(t.id));
 
     filteredTransactions.push(newTransaction);
 
@@ -300,30 +267,18 @@ app.patch("/:coin/transactions/split", async (req, res) => {
     const user = usersDB.data.users.find((u) => u.id === userId);
 
     if (!user) {
-      return sendError(
-        res,
-        "server-error",
-        "Something went wrong on the server",
-        500
-      );
+      return sendError(res, "server-error", "Something went wrong on the server", 500);
     }
 
     const coin = user.coins[coinSymbol];
 
     if (!coin) {
-      return sendError(
-        res,
-        "server-error",
-        `We couln't find ${coinSymbol} coin`,
-        404
-      );
+      return sendError(res, "server-error", `We couln't find ${coinSymbol} coin`, 404);
     }
 
     const { updatedTransaction, splitedTransaction } = req.body;
 
-    const index = coin.transactions.findIndex(
-      (t) => t.id === updatedTransaction.id
-    );
+    const index = coin.transactions.findIndex((t) => t.id === updatedTransaction.id);
 
     if (index === -1) {
       return sendError(res, "not-found", `Transaction is not found`, 404);
@@ -385,8 +340,7 @@ app.get("/coinslist/market", async (req, res) => {
     if (search) {
       slicedCoins = coinsListDB.data.coins.filter((coin) => {
         return (
-          coin.name.toLowerCase().includes(search) ||
-          coin.symbol.toLowerCase().includes(search)
+          coin.name.toLowerCase().includes(search) || coin.symbol.toLowerCase().includes(search)
         );
       });
     } else {

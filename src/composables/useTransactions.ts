@@ -1,4 +1,4 @@
-import { ErrorResponse, Transaction } from "@/types/index";
+import { ErrorResponse, PortfolioData, Transaction } from "@/types/index";
 import { mapError } from "../helpers/mapError";
 import { ref } from "vue";
 import * as coinsApi from "../api/coinsApi";
@@ -19,8 +19,10 @@ export function useTransaction() {
     loading.value = true;
     resetError();
     try {
-      const res = await coinsApi.getCoinList();
-      portfolio.setCoinList(res.coins);
+      const { data } = await coinsApi.getCoinList();
+      portfolio.setCoinList(data.coins);
+      portfolio.setStats(data.stats);
+      console.log(data.stats);
     } catch (err) {
       error.value = mapError(err);
     } finally {
@@ -38,11 +40,12 @@ export function useTransaction() {
     error.value = null;
 
     try {
-      const coinData = await coinsApi.getCoin(symbol);
-      portfolio.addCoin(symbol, coinData);
-      return coinData;
+      const { data } = await coinsApi.getCoin(symbol);
+      portfolio.addCoin(symbol, data);
+      return data;
     } catch (err) {
       error.value = mapError(err);
+      return null;
     } finally {
       loading.value = false;
     }
@@ -102,7 +105,7 @@ export function useTransaction() {
         if (data.coins.length !== portfolio.coinsList.length) {
           portfolio.setCoinList(data.coins);
           portfolio.removeTransaction(symbol);
-          router.push("/");
+          setTimeout(() => router.push("/"), 1300);
         } else {
           fetchCoin(symbol, true);
         }

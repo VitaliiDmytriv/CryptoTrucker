@@ -1,14 +1,19 @@
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
-import type { CoinsRecord, CoinData, Transaction } from "../types/index";
+import { ref } from "vue";
+import type { CoinsRecord, CoinData, Transaction, GlobalStats } from "../types/index";
 
 // Мутаціїї на рівні pinia стору
 export const usePortfolioStore = defineStore("portfolio", () => {
   const coinsList = ref<string[]>([]); // ['UNI','ETH'...]
+  const stats = ref<GlobalStats | {}>({}); // {"totalProfit": number, "activeInvestment": number}
   const coins = ref<CoinsRecord>({}); // {'UNI': {transactions: [],...}, 'ETH': {transactions: [],...}}=
 
   function setCoinList(coins: string[]) {
     coinsList.value = coins;
+  }
+
+  function setStats(updStats: GlobalStats) {
+    stats.value = updStats;
   }
 
   function addCoin(symbol: string, coin: CoinData) {
@@ -22,6 +27,8 @@ export const usePortfolioStore = defineStore("portfolio", () => {
   function getCoin(symbol: string): CoinData | undefined {
     return coins.value[symbol];
   }
+
+  // Transactions ======
 
   function updateTransaction(updTransaction: Transaction) {
     const transactions = coins.value[updTransaction.symbol].transactions;
@@ -64,11 +71,13 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     removeTransaction,
     setCoinList,
     coinsList,
+    coins,
+    stats,
     getCoin,
     addCoin,
-    coins,
     addTransaction,
     updateTransaction,
     setNewTransactions,
+    setStats,
   };
 });

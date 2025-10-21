@@ -1,11 +1,31 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Transactions from "../views/Transactions.vue";
+// Layouts
+import DefaultLayout from "@/layout/DefaultLayout.vue";
+import AuthLayout from "@/layout/AuthLayout.vue";
+
+// Views
 import NotFound from "@/views/NotFound.vue";
-import Home from "@/views/Home.vue";
+import PortfolioView from "@/views/PortfolioView.vue";
+import TransactionsView from "@/views/TransactionsView.vue";
+import Assets from "@/views/Assets.vue";
 
 const routes = [
-  { path: "/", component: Transactions },
-  { name: "coin", path: "/:coin", component: Transactions },
+  {
+    path: "/",
+    component: DefaultLayout,
+
+    children: [
+      {
+        path: "",
+        component: PortfolioView,
+        children: [
+          { path: "", component: Assets },
+          { path: ":coin", name: "coin", component: TransactionsView },
+        ],
+      },
+    ],
+  },
+  { path: "/login", component: AuthLayout },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
 ];
 

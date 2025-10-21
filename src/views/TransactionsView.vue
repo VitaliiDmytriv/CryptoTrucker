@@ -21,7 +21,6 @@ const {
 const coin = ref<null | CoinData>(null);
 const activeTransaction = ref<undefined | Transaction>(undefined);
 const { width } = useWindowSize();
-const colspan = computed(() => (width.value > 480 ? 6 : 4));
 const iconSize = computed(() => (width.value > 480 ? 20 : 15));
 const merge = useMerge(route.params.coin as string);
 
@@ -86,7 +85,7 @@ function handleMerge() {
     dialogVisible
   />
 
-  <Teleport to="#merge">
+  <!-- <Teleport to="#merge">
     <button
       class="btn-primary flex justify-center h-full"
       :class="{ btnActive: merge.isMerging.value }"
@@ -95,7 +94,7 @@ function handleMerge() {
     >
       <Merge :size="iconSize" :stroke-width="1.5" />
     </button>
-  </Teleport>
+  </Teleport> -->
 
   <div class="bottom-decoration"></div>
 
@@ -128,6 +127,9 @@ function handleMerge() {
   </template>
 
   <div>
+    <div v-if="transactionsLoading">
+      <el-skeleton :rows="4" animated />
+    </div>
     <div v-if="coin">
       <el-table
         :data="coin.transactions"
@@ -215,26 +217,6 @@ function handleMerge() {
 </template>
 
 <style scoped>
-:deep(.el-table) {
-  @apply text-xs sm:text-sm md:text-base;
-  color: #000;
-}
-:deep(.el-table thead) {
-  color: #000;
-}
-
-:deep(.el-table .cell) {
-  @apply py-1 px-0;
-}
-
-:deep(.el-table .el-table__cell) {
-  @apply p-0;
-}
-
-.el-table__row {
-  cursor: pointer;
-}
-
 .sceletForFetch tr {
   border-bottom: initial;
 }

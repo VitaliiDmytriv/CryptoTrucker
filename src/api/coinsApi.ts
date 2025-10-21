@@ -1,25 +1,33 @@
+import { handleApiError } from "@/helpers/helpFunctions";
+import { ApiResponse, ApiSuccess, CoinData, PortfolioData } from "@/types";
+
 export async function getCoin(symbol: string) {
   const response = await fetch(`api/${symbol}`);
-  const data = await response.json();
+  const data: ApiResponse<CoinData> = await response.json();
+  handleApiError(data);
+
   if (!response.ok) {
     throw {
-      message: data.message ?? "Unknown server error",
-      code: data.code ?? "server-error",
+      message: "Unexpected server response",
+      code: "server-error",
     };
   }
+
   return data;
 }
 
 export async function getCoinList() {
-  // console.log("here");
-
   const response = await fetch(`api/`);
-  const data = await response.json();
+  const data: ApiResponse<PortfolioData> = await response.json();
+
+  handleApiError(data);
+
   if (!response.ok) {
     throw {
-      message: data.message ?? "Unknown server error",
-      code: data.code ?? "server-error",
+      message: "Unexpected server response",
+      code: "server-error",
     };
   }
+
   return data;
 }

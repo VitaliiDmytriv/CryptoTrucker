@@ -1,3 +1,4 @@
+import { Transaction } from "@/types";
 import { FormInstance } from "element-plus";
 
 export const mainFormRules = {
@@ -107,4 +108,16 @@ export function submitForm(formEl: FormInstance | undefined, submitFn: Function)
     }
     return;
   });
+}
+
+export function isTransactionValid(transaction: Transaction): boolean {
+  const { quantity, pricePerCoinBought, pricePerCoinSold, fees } = transaction;
+  if (!quantity) return false;
+  if (quantity < 0) return false;
+  if (!pricePerCoinBought) return false;
+  if (pricePerCoinBought < 0) return false;
+  if (Number(fees) < 0) return false;
+  if (Number(pricePerCoinSold) < 0) return false;
+
+  return true;
 }

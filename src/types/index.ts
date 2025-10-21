@@ -18,9 +18,7 @@ export interface CoinData {
   transactions: Transaction[];
 }
 
-export interface CoinsRecord {
-  [coinSymbol: string]: CoinData;
-}
+export type CoinsRecord = Record<string, CoinData>;
 
 export type FormMode = "add" | "edit" | "merge";
 
@@ -28,12 +26,6 @@ export interface ErrorResponse {
   message: string;
   code: "not-found" | "server-error" | "network" | "unexpected" | "unknown";
   status?: number;
-}
-
-export interface Portfolio {
-  totalProfit: number;
-  activeInvestment: number;
-  coins: string[];
 }
 
 export interface CoinsCacheStore {
@@ -79,3 +71,26 @@ export interface CoinGecko {
   image: string;
   current_price: number;
 }
+
+export interface GlobalStats {
+  totalProfit: number;
+  activeInvestment: number;
+}
+
+export interface PortfolioData {
+  coins: string[];
+  stats: GlobalStats;
+}
+
+export interface ApiSuccess<T> {
+  success: true;
+  data: T;
+}
+
+export interface ApiError {
+  success: false;
+  message: string;
+  code?: number;
+}
+
+export type ApiResponse<T> = ApiSuccess<T> | ApiError;

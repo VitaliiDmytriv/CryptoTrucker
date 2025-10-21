@@ -3,7 +3,6 @@ import { useDebounceFn } from "@vueuse/core";
 import { ref, watch } from "vue";
 import { useTransactionCalculations } from "./useTransactionCalculations";
 import { cloneTransaction, cloneTransactionWithDefaults } from "@/helpers/transactionCalculations";
-import { formatter } from "@/helpers/helpFunctions";
 
 type EditType = "edit" | "split";
 const message = "It can't be more or equal";
@@ -57,7 +56,7 @@ export function useSplit(transaction: Transaction) {
     }
 
     errorMessage.value = null;
-    sourceTransaction.value.quantity = +formatter.format(baseQuantity - inputQuantity);
+    sourceTransaction.value.quantity = baseQuantity - inputQuantity;
     canSplit.value = true;
   }
 
