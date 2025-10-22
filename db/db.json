@@ -28,44 +28,30 @@
             {
               "symbol": "ETH",
               "name": "Ethereum",
-              "id": "LDxxtXsvR_",
+              "id": "UOiYmHO3nF",
               "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
-              "quantity": "50",
-              "pricePerCoinBought": "2.5",
+              "quantity": 0.1,
+              "pricePerCoinBought": 3854,
               "fees": null,
-              "totalSpent": 125,
-              "pricePerCoinSold": "2.8",
-              "profit": 15,
-              "isActive": false,
-              "date": "2025-09-07"
-            },
-            {
-              "symbol": "ETH",
-              "name": "Ethereum",
-              "id": "ZTB0VmPQ5O",
-              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
-              "quantity": 91.77,
-              "pricePerCoinBought": "2.5",
-              "fees": "2",
-              "totalSpent": 229.42499999999998,
-              "pricePerCoinSold": "3.24",
-              "profit": 65.90980000000005,
-              "isActive": false,
-              "date": "2025-09-07"
-            },
-            {
-              "symbol": "ETH",
-              "name": "Ethereum",
-              "id": "9j9LemQOEg",
-              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
-              "quantity": 21.23,
-              "pricePerCoinBought": 2.5,
-              "fees": null,
-              "totalSpent": 53.075,
+              "totalSpent": 385.40000000000003,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-10-18"
+              "date": "2025-10-22"
+            },
+            {
+              "symbol": "ETH",
+              "name": "Ethereum",
+              "id": "aaZUyIzAD8",
+              "image": "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628",
+              "quantity": 0.1,
+              "pricePerCoinBought": 3854,
+              "fees": null,
+              "totalSpent": 385.40000000000003,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-10-22"
             }
           ]
         },
@@ -99,39 +85,6 @@
               "profit": null,
               "isActive": false,
               "date": "2025-09-09"
-            }
-          ]
-        },
-        "BNB": {
-          "coinFullName": "BNB",
-          "transactions": [
-            {
-              "symbol": "BNB",
-              "name": "BNB",
-              "id": "2eK3VjEyLO",
-              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
-              "quantity": "1",
-              "pricePerCoinBought": 964.59,
-              "fees": null,
-              "totalSpent": 964.59,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-09-17"
-            },
-            {
-              "symbol": "BNB",
-              "name": "BNB",
-              "id": "I_p7Kuy9zn",
-              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
-              "quantity": "0.5",
-              "pricePerCoinBought": 964.59,
-              "fees": "",
-              "totalSpent": 482.3,
-              "pricePerCoinSold": "1000",
-              "profit": 17.7,
-              "isActive": false,
-              "date": "2025-09-17"
             }
           ]
         },

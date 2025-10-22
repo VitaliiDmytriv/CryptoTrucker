@@ -20,7 +20,9 @@ export function useTransaction() {
     resetError();
     try {
       const { data } = await coinsApi.getCoinList();
-      portfolio.setCoinList(data.coins);
+      console.log(data);
+
+      portfolio.setCoinList(Object.keys(data.coins));
       portfolio.setStats(data.stats);
       console.log(data.stats);
     } catch (err) {
@@ -76,10 +78,11 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const data = await transactionApi.createTransaction(transaction);
+      const res = await transactionApi.createTransaction(transaction);
+      console.log(res);
 
-      if (data.success) {
-        portfolio.addTransaction(data.transaction);
+      if (res.success) {
+        portfolio.addTransaction(res.data.transaction);
         success.value = true;
         router.push(`/${transaction.symbol}`);
       }
@@ -96,11 +99,11 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const data = await transactionApi.deleteTransaction(id, symbol);
+      const { data, success: apiSuccess } = await transactionApi.deleteTransaction(id, symbol);
 
       console.log(data);
 
-      if (data.success) {
+      if (apiSuccess) {
         // якщо coinList без змін, то рефетчимо дані по цій монеі, якщо зі змінами, то оновлюємо coinList, без нової монети
         if (data.coins.length !== portfolio.coinsList.length) {
           portfolio.setCoinList(data.coins);
@@ -110,7 +113,6 @@ export function useTransaction() {
           fetchCoin(symbol, true);
         }
         success.value = true;
-        console.log(data.coins);
 
         return { success: true };
       }
@@ -151,7 +153,7 @@ export function useTransaction() {
       const data = await transactionApi.splitTransaction(soureTransaction, targetTransaction);
 
       if (data.success) {
-        portfolio.setNewTransactions(soureTransaction.symbol, data.transactions);
+        portfolio.setNewTransactions(soureTransaction.symbol, data.data.transactions);
         success.value = true;
       }
     } catch (err) {

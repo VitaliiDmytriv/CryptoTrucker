@@ -12,7 +12,7 @@ function closeForm() {
 </script>
 
 <template>
-  <section class="p-2 flex flex-col gap-2 min-h-screen max-w-7xl m-auto">
+  <section class="p-2 flex flex-col gap-2 min-h-screen">
     <TransactionForm v-if="dialogVisible" @close="closeForm" mode="add" dialogVisible />
 
     <section class="flex justify-end items-center">
