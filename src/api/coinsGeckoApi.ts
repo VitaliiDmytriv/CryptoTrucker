@@ -1,16 +1,20 @@
+import { handleApiError } from "@/helpers/helpFunctions";
+import { ApiResponse, CoinListData } from "@/types";
+
 export async function getCoinsList(search = "") {
   const params = new URLSearchParams({ search });
-  const response = await fetch(
-    `api/coinslist/market?${params.toString().toLowerCase()}`
-  );
-  const data = await response.json();
+  const response = await fetch(`api/coinslist/market?${params.toString().toLowerCase()}`);
+  const data: ApiResponse<CoinListData> = await response.json();
+  console.log(data);
+  handleApiError(data);
+
   if (!response.ok) {
     throw {
-      message: data.message ?? "Failed to fetch coins",
-      code: data.code ?? "server-error",
+      message: "Unexpected server response",
+      code: "server-error",
     };
   }
-  return data.coins;
+  return data;
 }
 
 export async function updateCoinsList() {

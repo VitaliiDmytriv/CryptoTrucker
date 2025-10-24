@@ -1,22 +1,23 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { CoinsRecord, CoinData, Transaction, GlobalStats } from "../types/index";
+import type { CoinsRecord, Coin, Transaction, GlobalStats } from "../types/index";
 
 // Мутаціїї на рівні pinia стору
 export const usePortfolioStore = defineStore("portfolio", () => {
-  const coinsList = ref<string[]>([]); // ['UNI','ETH'...]
   const stats = ref<GlobalStats | {}>({}); // {"totalProfit": number, "activeInvestment": number}
   const coins = ref<CoinsRecord>({}); // {'UNI': {transactions: [],...}, 'ETH': {transactions: [],...}}=
+  const isPortfolioLoaded = ref(false);
 
-  function setCoinList(coins: string[]) {
-    coinsList.value = coins;
+  function setCoinList(coinList: CoinsRecord) {
+    Object.assign(coins.value, coinList);
   }
 
   function setStats(updStats: GlobalStats) {
     stats.value = updStats;
   }
 
-  function addCoin(symbol: string, coin: CoinData) {
+  function addCoin(coin: Coin) {
+    const symbol = coin.symbol;
     if (coins.value[symbol]) {
       Object.assign(coins.value[symbol], coin);
     } else {
@@ -24,8 +25,15 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     }
   }
 
-  function getCoin(symbol: string): CoinData | undefined {
+  function getCoin(symbol: string): Coin | undefined {
     return coins.value[symbol];
+  }
+
+  function removeCoin(symbol: string) {
+    console.log("before delete", coins.value);
+
+    delete coins.value[symbol];
+    nextTick(() => console.log("after delete", coins.value));
   }
 
   // Transactions ======
@@ -41,43 +49,38 @@ export const usePortfolioStore = defineStore("portfolio", () => {
   }
 
   function addTransaction(transaction: Transaction) {
-    console.log(coins.value);
+    coins.value[transaction.symbol].transactions.push(transaction);
+  }
 
-    // якщо монета є у коінлисті, то дивимось ми вже загружали її, якщо так то додаємо транзакцію
-    if (coinsList.value.includes(transaction.symbol)) {
-      const coin = coins.value[transaction.symbol];
-      if (coin) {
-        coin.transactions.push(transaction);
-      }
-    } else {
-      coins.value[transaction.symbol] = {
-        coinFullName: transaction.name,
-        transactions: [transaction],
-      };
-      coinsList.value.push(transaction.symbol);
+  function removeTransaction(symbol: string, id: string) {
+    const coin = coins.value[symbol];
+    if (!coin) return;
+    const index = coin.transactions.findIndex((t) => t.id === id);
+    if (index !== -1) {
+      coin.transactions.splice(index, 1); // реактивно
     }
   }
 
-  function removeTransaction(symbol: string) {
-    delete coins.value[symbol];
-    console.log(coins.value);
-  }
-
-  function setNewTransactions(symbol: string, transactions: Transaction[]) {
-    coins.value[symbol].transactions = transactions;
+  function splitTransaction(updTransaction: Transaction, splitedTransaction: Transaction) {
+    const symbol = updTransaction.symbol;
+    const index = coins.value[symbol].transactions.findIndex((t) => t.id === updTransaction.id);
+    if (index !== -1) {
+      coins.value[symbol].transactions.splice(index, 1, updTransaction, splitedTransaction);
+    }
   }
 
   return {
     removeTransaction,
     setCoinList,
-    coinsList,
+    isPortfolioLoaded,
     coins,
     stats,
     getCoin,
     addCoin,
     addTransaction,
     updateTransaction,
-    setNewTransactions,
+    splitTransaction,
     setStats,
+    removeCoin,
   };
 });

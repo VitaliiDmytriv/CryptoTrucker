@@ -13,12 +13,18 @@ export interface Transaction {
   date: string;
 }
 
-export interface CoinData {
-  coinFullName: string;
+export interface Coin {
+  name: string;
+  symbol: string;
+  image: string;
+  totalProfit: number;
+  activeInvestment: number;
+  holdings: number;
+  avgPrice: number;
   transactions: Transaction[];
 }
 
-export type CoinsRecord = Record<string, CoinData>;
+export type CoinsRecord = Record<string, Coin>;
 
 export type FormMode = "add" | "edit" | "merge";
 
@@ -26,15 +32,6 @@ export interface ErrorResponse {
   message: string;
   code: "not-found" | "server-error" | "network" | "unexpected" | "unknown";
   status?: number;
-}
-
-export interface CoinsCacheStore {
-  coinsCache: CoinsRecord;
-  loading: boolean;
-  error: ErrorResponse | null;
-  fetchCoinData(symbol: string): Promise<any | null>;
-  resetError(): void;
-  updateTransaction(coin: string, updatedTransaction: Transaction): void;
 }
 
 export interface AddProps {
@@ -66,20 +63,44 @@ export interface TransactionCalculations {
 
 export interface CoinGecko {
   id: string;
-  name: string;
   symbol: string;
+  name: string;
   image: string;
   current_price: number;
+  market_cap: number;
+  market_cap_rank: number;
+  fully_diluted_valuation: number;
+  total_volume: number;
+  high_24h: number;
+  low_24h: number;
+  price_change_percentage_24h: number;
+  price_change_24h: number;
+  market_cap_change_24h: number;
+  market_cap_change_percentage_24h: number;
+  circulating_supply: number;
+  total_supply: number;
+  max_supply: number;
+  ath: number;
+  ath_change_percentage: number;
+  ath_date: string;
+  atl: number;
+  atl_change_percentage: number;
+  atl_date: string;
+  roi: null;
+  last_updated: string;
+}
+
+export interface CoinListData {
+  coins: CoinGecko[];
+}
+
+export interface UserPortfolio extends GlobalStats {
+  coins: Record<string, Coin>;
 }
 
 export interface GlobalStats {
   totalProfit: number;
   activeInvestment: number;
-}
-
-export interface PortfolioData {
-  coins: string[];
-  stats: GlobalStats;
 }
 
 export interface ApiSuccess<T> {
@@ -94,3 +115,18 @@ export interface ApiError {
 }
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiError;
+
+export type createTransaction =
+  | {
+      isNewCoin: true;
+      coin: Coin;
+    }
+  | {
+      isNewCoin: false;
+      transaction: Transaction;
+    };
+
+export interface SplitTransaction {
+  updatedTransaction: Transaction;
+  splitedTransaction: Transaction;
+}

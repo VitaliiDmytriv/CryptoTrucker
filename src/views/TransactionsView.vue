@@ -2,14 +2,14 @@
 import { computed, ref, watch, Teleport, nextTick } from "vue";
 import { useWindowSize } from "@vueuse/core";
 import { useRoute } from "vue-router";
-import type { CoinData, FormMode, Transaction } from "../types/index";
+import type { Coin, FormMode, Transaction } from "../types/index";
 import TransactionForm from "../components/TransactionForm.vue";
 import { useTransaction } from "../composables/useTransactions";
-import Sceleton from "@/components/Sceleton.vue";
 import { useMerge } from "@/composables/useMerge";
 import { Merge } from "lucide-vue-next";
 import { formatCryptoValue } from "@/helpers/helpFunctions";
 
+const portfolio = usePortfolioStore();
 const formMode = ref<"edit" | "merge">("edit");
 const route = useRoute();
 const {
@@ -18,7 +18,7 @@ const {
   ...transactionsService
 } = useTransaction();
 
-const coin = ref<null | CoinData>(null);
+// const coin = ref<null | Coin>(null);
 const activeTransaction = ref<undefined | Transaction>(undefined);
 const { width } = useWindowSize();
 const iconSize = computed(() => (width.value > 480 ? 20 : 15));
@@ -26,17 +26,21 @@ const merge = useMerge(route.params.coin as string);
 
 const dialogVisible = ref(false);
 
+const coin = computed(() => {
+  const symbol = Array.isArray(route.params.coin) ? route.params.coin[0] : route.params.coin;
+  return symbol ? portfolio.getCoin(symbol) : null;
+});
+
 watch(
   () => route.params.coin,
   async (newSymbol) => {
     const symbol = Array.isArray(newSymbol) ? newSymbol[0] : newSymbol;
-    coin.value = null;
 
     if (symbol) {
-      coin.value = await transactionsService.fetchCoin(symbol);
-      merge.reset(symbol);
-      merge.setCoinImage(coin.value?.transactions[0].image || "");
-      merge.setCoinName(coin.value?.transactions[0].name || "");
+      await transactionsService.fetchCoin(symbol);
+      // merge.reset(symbol);
+      // merge.setCoinImage(coin.value?.transactions[0].image || "");
+      // merge.setCoinName(coin.value?.transactions[0].name || "");
     }
   },
   { immediate: true }
@@ -130,7 +134,7 @@ function handleMerge() {
     <div v-if="transactionsLoading">
       <el-skeleton :rows="4" animated />
     </div>
-    <div v-if="coin">
+    <div v-if="coin && !transactionsLoading">
       <el-table
         :data="coin.transactions"
         :cell-style="{ textAlign: 'center' }"
@@ -168,51 +172,6 @@ function handleMerge() {
         </el-table-column>
       </el-table>
     </div>
-
-    <!-- <table>
-      <thead>
-        <tr>
-          <th class="hidden sm:table-cell">Name</th>
-          <th>Coins</th>
-          <th>Bought</th>
-          <th>Sold</th>
-          <th class="hidden sm:table-cell">Fee</th>
-          <th>Profit</th>
-        </tr>
-      </thead>
-
-      <tbody v-if="transactionsLoading" class="sceletForFetch">
-        <tr v-for="scelet in 5" :key="scelet">
-          <td :colspan="colspan">
-            <Sceleton>asd</Sceleton>
-          </td>
-        </tr>
-      </tbody>
-
-      <tbody v-if="coin">
-        <tr
-          v-for="transaction in coin.transactions"
-          :class="{
-            active: merge.isMerging.value && merge.mergeSet.value.has(transaction.id),
-          }"
-        >
-          <td class="hidden sm:table-cell">{{ transaction.symbol }}</td>
-          <td>
-            {{ formatCryptoValue(transaction.quantity, "quantity") }}
-          </td>
-          <td>${{ formatCryptoValue(transaction.pricePerCoinBought, "currency") }}</td>
-          <td>
-            {{ formatCryptoValue(transaction.pricePerCoinSold, "currency") }}
-          </td>
-          <td class="hidden sm:table-cell">
-            {{ formatCryptoValue(transaction.fees, "money") }}
-          </td>
-          <td>
-            {{ formatCryptoValue(transaction.profit, "money") }}
-          </td>
-        </tr>
-      </tbody>
-    </table> -->
   </div>
 </template>
 

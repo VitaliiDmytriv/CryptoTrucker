@@ -1,9 +1,9 @@
 import { handleApiError } from "@/helpers/helpFunctions";
-import { ApiResponse, ApiSuccess, CoinData, PortfolioData } from "@/types";
+import { ApiResponse, ApiSuccess, Coin, UserPortfolio } from "@/types";
 
 export async function getCoin(symbol: string) {
   const response = await fetch(`api/${symbol}`);
-  const data: ApiResponse<CoinData> = await response.json();
+  const data: ApiResponse<Coin> = await response.json();
   handleApiError(data);
 
   if (!response.ok) {
@@ -16,9 +16,9 @@ export async function getCoin(symbol: string) {
   return data;
 }
 
-export async function getCoinList() {
+export async function getUserPortfolio() {
   const response = await fetch(`api/`);
-  const data: ApiResponse<PortfolioData> = await response.json();
+  const data: ApiResponse<UserPortfolio> = await response.json();
 
   handleApiError(data);
 

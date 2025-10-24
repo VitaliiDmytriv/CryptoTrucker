@@ -1,24 +1,30 @@
-import type { Transaction } from "../types/index";
+import { handleApiError } from "@/helpers/helpFunctions";
+import type {
+  createTransaction,
+  ApiResponse,
+  Coin,
+  Transaction,
+  SplitTransaction,
+} from "../types/index";
 
 //  api запити
 export async function editTransaction(transaction: Transaction) {
-  const response = await fetch(
-    `api/${transaction.symbol}/transactions/${transaction.id}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(transaction),
-    }
-  );
+  const response = await fetch(`api/${transaction.symbol}/transactions/${transaction.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(transaction),
+  });
 
-  const data = await response.json();
+  const data: ApiResponse<Transaction> = await response.json();
+  handleApiError(data);
+  console.log(data);
 
   if (!response.ok) {
     throw {
-      message: data.message ?? "Unknown server error",
-      code: data.code ?? "server-error",
+      message: "Unexpected server response",
+      code: "server-error",
     };
   }
 
@@ -26,23 +32,20 @@ export async function editTransaction(transaction: Transaction) {
 }
 
 export async function createTransaction(transaction: Transaction) {
-  const response = await fetch(
-    `api/${transaction.symbol.toUpperCase()}/transactions`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(transaction),
-    }
-  );
+  const response = await fetch(`api/${transaction.symbol}/transactions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(transaction),
+  });
 
-  const data = await response.json();
-
+  const data: ApiResponse<createTransaction> = await response.json();
+  handleApiError(data);
   if (!response.ok) {
     throw {
-      message: data.message ?? "Unknown server error",
-      code: data.code ?? "server-error",
+      message: "Unexpected server response",
+      code: "server-error",
     };
   }
 
@@ -57,22 +60,21 @@ export async function deleteTransaction(id: string, symbol: string) {
     },
   });
 
-  const data = await response.json();
+  const data: ApiResponse<boolean> = await response.json();
+
+  handleApiError(data);
 
   if (!response.ok) {
     throw {
-      message: data.message ?? "Unknown server error",
-      code: data.code ?? "server-error",
+      message: "Unexpected server response",
+      code: "server-error",
     };
   }
 
   return data;
 }
 
-export async function mergeTransactions(
-  transaction: Transaction,
-  mergeSet: Set<string>
-) {
+export async function mergeTransactions(transaction: Transaction, mergeSet: Set<string>) {
   const body = { add: transaction, delete: Array.from(mergeSet) };
   const response = await fetch(`api/${transaction.symbol}/transactions/merge`, {
     method: "PATCH",
@@ -100,23 +102,20 @@ export async function splitTransaction(
 ) {
   const body = { updatedTransaction, splitedTransaction };
 
-  const response = await fetch(
-    `api/${updatedTransaction.symbol}/transactions/split`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    }
-  );
+  const response = await fetch(`api/${updatedTransaction.symbol}/transactions/split`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
 
-  const data = await response.json();
-
+  const data: ApiResponse<SplitTransaction> = await response.json();
+  handleApiError(data);
   if (!response.ok) {
     throw {
-      message: data.message ?? "Unknown server error",
-      code: data.code ?? "server-error",
+      message: "Unexpected server response",
+      code: "server-error",
     };
   }
 

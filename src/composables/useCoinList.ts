@@ -17,11 +17,14 @@ export function useCoinList() {
         coinList.value = defaultCoinList.value;
         return;
       }
-      const coins = await getCoinsList(search);
-      if (search === "") {
-        defaultCoinList.value = coins;
+      const { data } = await getCoinsList(search);
+
+      if (search === "" && !defaultCoinList.value.length) {
+        console.log("defaultCoinList resigned");
+
+        defaultCoinList.value = data.coins;
       }
-      coinList.value = coins;
+      coinList.value = data.coins;
     } catch (err) {
       error.value = mapError(err);
     } finally {

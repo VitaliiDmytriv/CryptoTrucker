@@ -62,11 +62,9 @@ app.get("/", async (req, res) => {
     const user = getUserOrThrow(usersDB.data, userId);
     const data = getDefaultData(user);
 
-    res.json({
-      success: true,
-      data,
-    });
+    res.json({ success: true, data });
   } catch (error) {
+    console.error("🔥 Error in GET /:", error);
     handleError(error, res);
   }
 });
@@ -116,18 +114,30 @@ app.post("/:coin/transactions", async (req, res) => {
 
     const { coin: coinSymbol } = req.params;
     const transaction: Transaction = normalizeTransaction(req.body);
+    let isNewCoin = false;
 
     const user = getUserOrThrow(usersDB.data, userId);
-
-    const coin = user.coins[coinSymbol];
+    let coin = user.coins[coinSymbol];
 
     if (coin) {
       coin.transactions.push(transaction);
     } else {
-      const coin = createCoinRecord(transaction);
+      coin = createCoinRecord(transaction);
       user.coins[coinSymbol] = coin;
+      isNewCoin = true;
     }
-    res.json({ success: true, data: { transaction } });
+
+    if (isNewCoin) {
+      res.json({
+        success: true,
+        data: { isNewCoin, coin },
+      });
+    } else {
+      res.json({
+        success: true,
+        data: { isNewCoin, transaction },
+      });
+    }
 
     // зберігаємо у базу
     await usersDB.write();
@@ -139,7 +149,6 @@ app.post("/:coin/transactions", async (req, res) => {
 app.delete("/:coin/transactions/:id", async (req, res) => {
   try {
     await usersDB.read();
-
     const { coin: coinSymbol, id: transactionId } = req.params;
 
     const user = getUserOrThrow(usersDB.data, userId);
@@ -148,15 +157,17 @@ app.delete("/:coin/transactions/:id", async (req, res) => {
 
     coin.transactions.splice(index, 1);
 
-    // якщо немає траназкцій, видаляємо монету
+    let isCoinRemoved = false;
     if (!coin.transactions.length) {
       delete user.coins[coinSymbol];
+      isCoinRemoved = true;
     }
 
-    res.json({ success: true, data: { coins: Object.keys(user.coins) } });
-
     await usersDB.write();
+
+    res.json({ success: true, data: isCoinRemoved });
   } catch (error) {
+    console.error("🔥 Error in DELETE /:coin/transactions/:id:", error);
     handleError(error, res);
   }
 });
@@ -201,7 +212,7 @@ app.patch("/:coin/transactions/split", async (req, res) => {
 
     coin.transactions.splice(index, 1, updatedTransaction, splitedTransaction);
 
-    res.json({ success: true, data: { transactions: coin.transactions } });
+    res.json({ success: true, data: { updatedTransaction, splitedTransaction } });
 
     await usersDB.write();
   } catch (error) {
@@ -296,7 +307,14 @@ function handleError(error: unknown, res: Response) {
   if (error instanceof HttpError) {
     return sendError(res, error.code, error.message, error.status);
   }
-  sendError(res, "server-error", "Internal server error", 500);
+
+  // логування помилки на сервері
+  console.error("🔥 Unhandled error:", error);
+
+  // повертаємо реальне повідомлення помилки
+  const message = error instanceof Error ? error.message : String(error);
+
+  sendError(res, "server-error", message, 500);
 }
 // ==============================================
 

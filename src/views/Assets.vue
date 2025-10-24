@@ -2,17 +2,17 @@
 //
 const store = usePortfolioStore();
 const router = useRouter();
-const { fetchCoinList, loading: coinListLoading, error: coinListError } = useTransaction();
+const { fetchUserPortfolio, loading: coinListLoading, error: coinListError } = useTransaction();
 
 const coins = computed(() =>
-  store.coinsList.map((coin) => ({
+  Object.keys(store.coins).map((coin) => ({
     name: coin,
   }))
 );
 
 onMounted(async () => {
-  if (coins.value.length) return;
-  await fetchCoinList();
+  if (store.isPortfolioLoaded) return;
+  await fetchUserPortfolio();
 });
 
 function handleClick(row: { name: string }) {
@@ -26,7 +26,7 @@ function handleClick(row: { name: string }) {
   <div v-if="coinListLoading">
     <el-skeleton :rows="4" animated />
   </div>
-  <template v-if="store.coinsList.length">
+  <template v-if="store.isPortfolioLoaded">
     <el-table
       :cell-style="{ textAlign: 'center' }"
       :header-cell-style="{ textAlign: 'center' }"

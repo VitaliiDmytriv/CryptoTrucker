@@ -1,4 +1,4 @@
-import { ErrorResponse, PortfolioData, Transaction } from "@/types/index";
+import { ErrorResponse, Transaction } from "@/types/index";
 import { mapError } from "../helpers/mapError";
 import { ref } from "vue";
 import * as coinsApi from "../api/coinsApi";
@@ -15,16 +15,16 @@ export function useTransaction() {
   const error = ref<null | ErrorResponse>(null);
   const success = ref(false);
 
-  async function fetchCoinList() {
+  async function fetchUserPortfolio() {
     loading.value = true;
     resetError();
     try {
-      const { data } = await coinsApi.getCoinList();
-      console.log(data);
+      const { data } = await coinsApi.getUserPortfolio();
+      const { coins, ...stats } = data;
 
-      portfolio.setCoinList(Object.keys(data.coins));
-      portfolio.setStats(data.stats);
-      console.log(data.stats);
+      portfolio.setCoinList(coins);
+      portfolio.setStats(stats);
+      portfolio.isPortfolioLoaded = true;
     } catch (err) {
       error.value = mapError(err);
     } finally {
@@ -33,7 +33,8 @@ export function useTransaction() {
   }
 
   async function fetchCoin(symbol: string, refetch = false) {
-    if (!refetch) {
+    const length = portfolio.coins[symbol]?.transactions?.length;
+    if (!refetch && length) {
       const inCacheCoin = portfolio.getCoin(symbol);
       if (inCacheCoin) return inCacheCoin;
     }
@@ -43,7 +44,7 @@ export function useTransaction() {
 
     try {
       const { data } = await coinsApi.getCoin(symbol);
-      portfolio.addCoin(symbol, data);
+      portfolio.addCoin(data);
       return data;
     } catch (err) {
       error.value = mapError(err);
@@ -59,12 +60,10 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const data = await transactionApi.editTransaction(updTransaction);
+      const { data: transaction } = await transactionApi.editTransaction(updTransaction);
 
-      if (data.success) {
-        portfolio.updateTransaction(updTransaction);
-        success.value = true;
-      }
+      portfolio.updateTransaction(transaction);
+      success.value = true;
     } catch (err) {
       error.value = mapError(err);
     } finally {
@@ -78,14 +77,35 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const res = await transactionApi.createTransaction(transaction);
-      console.log(res);
+      const { data } = await transactionApi.createTransaction(transaction);
+      let symbol: string;
 
-      if (res.success) {
-        portfolio.addTransaction(res.data.transaction);
-        success.value = true;
-        router.push(`/${transaction.symbol}`);
+      // якщо нова монета, то додаю повністю, якщо не нова то тоді треба
+      // перевіряти чи загружав вже транзакції, тому перевірка на length
+      // якщо не 0 то додаю транзакцію, а ні то просто переходжу на монету
+      // і там вже fetchCoin підтягне транзакції
+
+      console.log(data);
+
+      if (data.isNewCoin) {
+        portfolio.addCoin(data.coin);
+        symbol = data.coin.symbol;
+      } else {
+        symbol = data.transaction.symbol;
+
+        const length = portfolio.coins[symbol].transactions.length;
+
+        if (!length) {
+          router.push({ name: "coin", params: { coin: symbol } });
+          success.value = true;
+          return;
+        }
+
+        portfolio.addTransaction(data.transaction);
       }
+
+      success.value = true;
+      router.push({ name: "coin", params: { coin: symbol } });
     } catch (err) {
       error.value = mapError(err);
     } finally {
@@ -99,23 +119,18 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const { data, success: apiSuccess } = await transactionApi.deleteTransaction(id, symbol);
+      const { data: isCoinRemoved } = await transactionApi.deleteTransaction(id, symbol);
 
-      console.log(data);
-
-      if (apiSuccess) {
-        // якщо coinList без змін, то рефетчимо дані по цій монеі, якщо зі змінами, то оновлюємо coinList, без нової монети
-        if (data.coins.length !== portfolio.coinsList.length) {
-          portfolio.setCoinList(data.coins);
-          portfolio.removeTransaction(symbol);
-          setTimeout(() => router.push("/"), 1300);
-        } else {
-          fetchCoin(symbol, true);
-        }
-        success.value = true;
-
-        return { success: true };
+      // якщо coinList без змін, то рефетчимо дані по цій монеі, якщо зі змінами, то оновлюємо coinList, без нової монети
+      if (isCoinRemoved) {
+        portfolio.removeCoin(symbol);
+        setTimeout(() => router.push("/"), 1300);
+      } else {
+        portfolio.removeTransaction(symbol, id);
       }
+      success.value = true;
+
+      return { success: true };
     } catch (err) {
       error.value = mapError(err);
     } finally {
@@ -124,24 +139,21 @@ export function useTransaction() {
   }
 
   async function mergeTransactions(transaction: Transaction, mergeSet: Set<string>) {
-    try {
-      loading.value = true;
-      error.value = null;
-      success.value = false;
-
-      const data = await transactionApi.mergeTransactions(transaction, mergeSet);
-
-      console.log(data);
-
-      if (data.success) {
-        portfolio.setNewTransactions(transaction.symbol, data.transactions);
-        success.value = true;
-      }
-    } catch (err) {
-      error.value = mapError(err);
-    } finally {
-      loading.value = false;
-    }
+    // try {
+    //   loading.value = true;
+    //   error.value = null;
+    //   success.value = false;
+    //   const data = await transactionApi.mergeTransactions(transaction, mergeSet);
+    //   console.log(data);
+    //   if (data.success) {
+    //     portfolio.setNewTransactions(transaction.symbol, data.transactions);
+    //     success.value = true;
+    //   }
+    // } catch (err) {
+    //   error.value = mapError(err);
+    // } finally {
+    //   loading.value = false;
+    // }
   }
 
   async function splitTransaction(soureTransaction: Transaction, targetTransaction: Transaction) {
@@ -150,12 +162,10 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const data = await transactionApi.splitTransaction(soureTransaction, targetTransaction);
+      const { data } = await transactionApi.splitTransaction(soureTransaction, targetTransaction);
 
-      if (data.success) {
-        portfolio.setNewTransactions(soureTransaction.symbol, data.data.transactions);
-        success.value = true;
-      }
+      portfolio.splitTransaction(data.updatedTransaction, data.splitedTransaction);
+      success.value = true;
     } catch (err) {
       error.value = mapError(err);
     } finally {
@@ -183,7 +193,7 @@ export function useTransaction() {
     updateTransaction,
     removeTransaction,
     addTransaction,
-    fetchCoinList,
+    fetchUserPortfolio,
     mergeTransactions,
     splitTransaction,
   };
