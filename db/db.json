@@ -8,31 +8,6 @@
       "totalProfit": 19.11,
       "activeInvestment": 222.76,
       "coins": {
-        "BTC": {
-          "symbol": "BTC",
-          "name": "Bitcoin",
-          "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
-          "activeInvestment": 218988,
-          "avgPrice": 109494,
-          "holdings": 2,
-          "totalProfit": 0,
-          "transactions": [
-            {
-              "symbol": "BTC",
-              "name": "Bitcoin",
-              "id": "Req4OtEQQV",
-              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
-              "quantity": 2,
-              "pricePerCoinBought": 109494,
-              "fees": null,
-              "totalSpent": 218988,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-10-23"
-            }
-          ]
-        },
         "BNB": {
           "symbol": "BNB",
           "name": "BNB",
@@ -136,6 +111,34 @@
               "profit": null,
               "isActive": false,
               "date": "2025-10-15"
+            },
+            {
+              "symbol": "XRP",
+              "name": "XRP",
+              "id": "GsqWvXsMqN",
+              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
+              "quantity": 20,
+              "pricePerCoinBought": 2.12,
+              "fees": null,
+              "totalSpent": 42.400000000000006,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-10-24"
+            },
+            {
+              "symbol": "XRP",
+              "name": "XRP",
+              "id": "6SdpUUMaQt",
+              "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
+              "quantity": 10,
+              "pricePerCoinBought": 2.32,
+              "fees": null,
+              "totalSpent": 23.2,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-10-08"
             }
           ]
         },
@@ -161,6 +164,123 @@
               "profit": null,
               "isActive": false,
               "date": "2025-10-24"
+            },
+            {
+              "symbol": "UNI",
+              "name": "Uniswap",
+              "id": "_itlcupNsD",
+              "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
+              "quantity": 3,
+              "pricePerCoinBought": 6.5,
+              "fees": null,
+              "totalSpent": 19.5,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-10-25"
+            },
+            {
+              "symbol": "UNI",
+              "name": "Uniswap",
+              "id": "_kC8IWwF0R",
+              "image": "https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669",
+              "quantity": 2,
+              "pricePerCoinBought": 6.5,
+              "fees": null,
+              "totalSpent": 13,
+              "pricePerCoinSold": 8,
+              "profit": 3,
+              "isActive": false,
+              "date": "2025-10-25"
+            }
+          ]
+        },
+        "USTB": {
+          "symbol": "USTB",
+          "name": "Superstate Short Duration U.S. Government Securities Fund (USTB)",
+          "image": "https://coin-images.coingecko.com/coins/images/35012/large/ustb.jpeg?1707102680",
+          "activeInvestment": 21.68,
+          "avgPrice": 10.84,
+          "holdings": 2,
+          "totalProfit": 0,
+          "transactions": [
+            {
+              "symbol": "USTB",
+              "name": "Superstate Short Duration U.S. Government Securities Fund (USTB)",
+              "id": "XNeWdNkd_x",
+              "image": "https://coin-images.coingecko.com/coins/images/35012/large/ustb.jpeg?1707102680",
+              "quantity": 2,
+              "pricePerCoinBought": 10.84,
+              "fees": null,
+              "totalSpent": 21.68,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-10-24"
+            }
+          ]
+        },
+        "BTC": {
+          "symbol": "BTC",
+          "name": "Bitcoin",
+          "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+          "activeInvestment": 218.988,
+          "avgPrice": 109494,
+          "holdings": 0.002,
+          "totalProfit": 0,
+          "transactions": [
+            {
+              "symbol": "BTC",
+              "name": "Bitcoin",
+              "id": "PmsT7a_B7j",
+              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+              "quantity": 0.002,
+              "pricePerCoinBought": 109494,
+              "fees": null,
+              "totalSpent": 218.988,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-10-24"
+            }
+          ]
+        },
+        "SOL": {
+          "symbol": "SOL",
+          "name": "Solana",
+          "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
+          "activeInvestment": 184,
+          "avgPrice": 184,
+          "holdings": 1,
+          "totalProfit": 11,
+          "transactions": [
+            {
+              "symbol": "SOL",
+              "name": "Solana",
+              "id": "IQl9eC4P94",
+              "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
+              "quantity": 1,
+              "pricePerCoinBought": 184,
+              "fees": null,
+              "totalSpent": 184,
+              "pricePerCoinSold": 195,
+              "profit": 11,
+              "isActive": false,
+              "date": "2025-10-24"
+            },
+            {
+              "symbol": "SOL",
+              "name": "Solana",
+              "id": "wAa84BRAQM",
+              "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
+              "quantity": 0.2,
+              "pricePerCoinBought": 190.32,
+              "fees": null,
+              "totalSpent": 38.064,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-10-25"
             }
           ]
         }

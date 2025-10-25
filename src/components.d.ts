@@ -12,6 +12,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CoinBlock: typeof import('./components/CoinBlock.vue')['default']
+    CoinItem: typeof import('./components/CoinItem.vue')['default']
     CoinSelect: typeof import('./components/CoinSelect.vue')['default']
     ConfirmModal: typeof import('./components/ConfirmModal.vue')['default']
     DataBlock: typeof import('./components/DataBlock.vue')['default']

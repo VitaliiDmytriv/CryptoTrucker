@@ -19,8 +19,13 @@ const routes = [
         path: "",
         component: PortfolioView,
         children: [
-          { path: "", component: Assets },
-          { path: ":coin", name: "coin", component: TransactionsView },
+          { path: "", component: Assets, meta: { currentTab: "Assets" } },
+          {
+            path: ":coin",
+            name: "coin",
+            component: TransactionsView,
+            meta: { currentTab: "Transactions" },
+          },
         ],
       },
     ],

@@ -11,8 +11,9 @@
 }
 
 .el-table .cell{
-  @apply py-1 px-0;
+  @apply py-1 sm:py-2 px-0 lg:py-3;
 }
+
 
 .el-table .el-table__cell {
   @apply p-0;
@@ -30,4 +31,20 @@
 }
 .el-skeleton__paragraph {
   margin-top: 0.5rem;
+}
+
+.crypto_icon {
+  @apply w-3 xs:w-4;
+  @apply sm:w-5;
+}
+thead tr th {
+  border-top: var(--el-table-border)
+}
+
+thead tr th .cell {
+  @apply text-xs md:text-sm
+}
+
+.el-card__body {
+  @apply p-4
 }

@@ -100,8 +100,6 @@ function handleMerge() {
     </button>
   </Teleport> -->
 
-  <div class="bottom-decoration"></div>
-
   <template v-if="merge.isMerging.value">
     <div class="mergeBlock card-border">
       <div class="flex items-center gap-5">
@@ -130,49 +128,60 @@ function handleMerge() {
     </div>
   </template>
 
-  <div>
-    <div v-if="transactionsLoading">
-      <el-skeleton :rows="4" animated />
-    </div>
-    <div v-if="coin && !transactionsLoading">
-      <el-table
-        :data="coin.transactions"
-        :cell-style="{ textAlign: 'center' }"
-        :header-cell-style="{ textAlign: 'center' }"
-        @row-click="handleClickOnTransaction"
-        stripe
-        border
-      >
-        <el-table-column v-if="width > 480" prop="symbol" label="Name" />
-        <el-table-column prop="quantity" label="Coins">
-          <template #default="{ row }">
-            {{ formatCryptoValue(row.quantity, "quantity") }}
-          </template>
-        </el-table-column>
+  <el-card>
+    <div class="min-h-screen">
+      <div v-if="transactionsLoading">
+        <el-skeleton :rows="4" animated />
+      </div>
+      <div v-if="coin && !transactionsLoading">
+        <el-table
+          :data="coin.transactions"
+          :cell-style="{ textAlign: 'center' }"
+          :header-cell-style="{ textAlign: 'center' }"
+          @row-click="handleClickOnTransaction"
+        >
+          <el-table-column v-if="width > 480" prop="symbol" label="Name">
+            <template #default="{ row }">
+              <div class="flex gap-1 sm:gap-2 items-center justify-center">
+                <div class="crypto_icon shrink-0">
+                  <img :src="row.image" alt="" />
+                </div>
+                <p class="uppercase truncate text-[#808a9d] shrink-0">
+                  {{ row.symbol }}
+                </p>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="quantity" label="Coins">
+            <template #default="{ row }">
+              {{ formatCryptoValue(row.quantity, "quantity") }}
+            </template>
+          </el-table-column>
 
-        <el-table-column prop="pricePerCoinBought" label="Bought">
-          <template #default="{ row }">
-            {{ formatCryptoValue(row.pricePerCoinBought, "money") }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="pricePerCoinSold" label="Sold">
-          <template #default="{ row }">
-            {{ formatCryptoValue(row.pricePerCoinSold, "money") }}
-          </template>
-        </el-table-column>
-        <el-table-column v-if="width > 480" prop="fees" label="Fee">
-          <template #default="{ row }">
-            {{ formatCryptoValue(row.fees, "money") }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="profit" label="Profit" fixed="right">
-          <template #default="{ row }">
-            {{ formatCryptoValue(row.profit, "money") }}
-          </template>
-        </el-table-column>
-      </el-table>
+          <el-table-column prop="pricePerCoinBought" label="Bought">
+            <template #default="{ row }">
+              {{ formatCryptoValue(row.pricePerCoinBought, "money") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="pricePerCoinSold" label="Sold">
+            <template #default="{ row }">
+              {{ formatCryptoValue(row.pricePerCoinSold, "money") }}
+            </template>
+          </el-table-column>
+          <el-table-column v-if="width > 480" prop="fees" label="Fee">
+            <template #default="{ row }">
+              {{ formatCryptoValue(row.fees, "money") }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="profit" label="Profit" fixed="right">
+            <template #default="{ row }">
+              {{ formatCryptoValue(row.profit, "money") }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
-  </div>
+  </el-card>
 </template>
 
 <style scoped>

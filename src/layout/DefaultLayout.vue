@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import Header from "@/components/Header.vue";
-import PortfolioView from "@/views/PortfolioView.vue";
 </script>
 
 <template>
-  <section>
+  <section class="p-3 max-w-7xl m-auto">
     <Header />
     <main>
       <router-view />
