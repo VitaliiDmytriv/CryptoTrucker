@@ -1,7 +1,4 @@
-import { getDefaultTransaction } from "@/helpers/helpFunctions";
-import { calculateMergedTransaction } from "@/helpers/transactionCalculations";
 import { Transaction } from "@/types";
-import { computed, ref, watch } from "vue";
 
 export function useMerge(symbol: string) {
   const isMerging = ref(false);

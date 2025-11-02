@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import type { CoinsRecord, Coin, Transaction, GlobalStats } from "../types/index";
 
 // Мутаціїї на рівні pinia стору

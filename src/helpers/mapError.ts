@@ -1,36 +1,32 @@
 import { ErrorResponse } from "../types/index";
 
-function isErrorResponse(err: any): err is ErrorResponse {
+function isStructuredError(err: any): err is ErrorResponse {
   return (
     typeof err === "object" &&
     err !== null &&
     "message" in err &&
     typeof err.message === "string" &&
-    ("code" in err ? typeof err.code === "string" : true)
+    "code" in err &&
+    typeof err.code === "string"
   );
 }
 
 export function mapError(err: unknown): ErrorResponse {
-  if (isErrorResponse(err)) {
+  if (isStructuredError(err)) {
     return err;
-  }
-
-  if (err instanceof TypeError) {
-    return {
-      message: "No internet conection",
-      code: "network",
-    };
   }
 
   if (err instanceof Error) {
     return {
       message: err.message,
-      code: "unexpected",
+      code: "server-error",
+      status: 0,
     };
   }
 
   return {
-    message: "Unknown error occurred",
+    message: "An unknown application error occurred.",
     code: "unknown",
+    status: 0,
   };
 }

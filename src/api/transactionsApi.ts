@@ -1,6 +1,5 @@
-import { handleApiError } from "@/helpers/helpFunctions";
 import type {
-  createTransaction,
+  CreateTransaction,
   ApiResponse,
   Coin,
   Transaction,
@@ -8,70 +7,39 @@ import type {
   RemoveTransaction,
   EditTransaction,
 } from "../types/index";
+import type { AxiosResponse } from "axios";
+import api from "@/api/api";
 
 //  api запити
 export async function editTransaction(transaction: Transaction) {
-  const response = await fetch(`api/${transaction.symbol}/transactions/${transaction.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(transaction),
-  });
+  const { symbol, id } = transaction;
+  const { data }: AxiosResponse<ApiResponse<EditTransaction>> = await api.put(
+    `/${symbol}/transactions/${id}`,
+    transaction
+  );
 
-  const data: ApiResponse<EditTransaction> = await response.json();
   handleApiError(data);
-
-  if (!response.ok) {
-    throw {
-      message: "Unexpected server response",
-      code: "server-error",
-    };
-  }
 
   return data;
 }
 
 export async function createTransaction(transaction: Transaction) {
-  const response = await fetch(`api/${transaction.symbol}/transactions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(transaction),
-  });
+  const { symbol } = transaction;
+  const { data }: AxiosResponse<ApiResponse<CreateTransaction>> = await api.post(
+    `/${symbol}/transactions`,
+    transaction
+  );
 
-  const data: ApiResponse<createTransaction> = await response.json();
   handleApiError(data);
-  if (!response.ok) {
-    throw {
-      message: "Unexpected server response",
-      code: "server-error",
-    };
-  }
 
   return data;
 }
 
 export async function deleteTransaction(id: string, symbol: string) {
-  const response = await fetch(`api/${symbol}/transactions/${id}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data: ApiResponse<RemoveTransaction> = await response.json();
-
+  const { data }: AxiosResponse<ApiResponse<RemoveTransaction>> = await api.delete(
+    `/${symbol}/transactions/${id}`
+  );
   handleApiError(data);
-
-  if (!response.ok) {
-    throw {
-      message: "Unexpected server response",
-      code: "server-error",
-    };
-  }
-
   return data;
 }
 
@@ -101,24 +69,15 @@ export async function splitTransaction(
   updatedTransaction: Transaction,
   splitedTransaction: Transaction
 ) {
+  const { symbol } = updatedTransaction;
   const body = { updatedTransaction, splitedTransaction };
 
-  const response = await fetch(`api/${updatedTransaction.symbol}/transactions/split`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+  const { data }: AxiosResponse<ApiResponse<SplitTransaction>> = await api.patch(
+    `/${symbol}/transactions/split`,
+    body
+  );
 
-  const data: ApiResponse<SplitTransaction> = await response.json();
   handleApiError(data);
-  if (!response.ok) {
-    throw {
-      message: "Unexpected server response",
-      code: "server-error",
-    };
-  }
 
   return data;
 }

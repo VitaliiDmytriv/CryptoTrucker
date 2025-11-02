@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import type { CoinGecko, TransactionFormProps } from "../types/index";
-import { computed, defineEmits, ref, toRefs } from "vue";
-import SubmitStatus from "@/components/SubmitStatus.vue";
-import CoinSelect from "@/components/CoinSelect.vue";
 import { Trash } from "lucide-vue-next";
-import { useTransactionForm } from "@/composables/useTransactionForm";
-import { mainFormRules, getSplitFormRules, submitForm } from "@/helpers/formValidation";
 import { FormInstance } from "element-plus";
-import { handleDeleteTransaction, formatCryptoValue } from "@/helpers/helpFunctions";
 
 const emit = defineEmits<{
   (event: "close", afterSuccses?: boolean): void;

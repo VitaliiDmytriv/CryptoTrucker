@@ -5,6 +5,7 @@ import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,17 +15,18 @@ export default defineConfig({
     AutoImport({
       imports: ["vue", "vue-router"],
       dts: "src/auto-imports.d.ts",
-      dirs: ["src/composables", "src/stores"],
+      dirs: ["src/composables", "src/stores", "src/helpers"],
       vueTemplate: true,
       eslintrc: {
         enabled: true,
       },
     }),
     Components({
-      dirs: ["src/components"],
+      dirs: ["src/components", "src/layout", "src/views"],
       extensions: ["vue"],
       deep: true,
       dts: "src/components.d.ts",
+      resolvers: [ElementPlusResolver()],
     }),
   ],
   resolve: {

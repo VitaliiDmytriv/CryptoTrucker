@@ -1,8 +1,5 @@
 import { Transaction } from "@/types";
 import { useDebounceFn } from "@vueuse/core";
-import { ref, watch } from "vue";
-import { useTransactionCalculations } from "./useTransactionCalculations";
-import { cloneTransaction, cloneTransactionWithDefaults } from "@/helpers/transactionCalculations";
 
 type EditType = "edit" | "split";
 const message = "It can't be more or equal";

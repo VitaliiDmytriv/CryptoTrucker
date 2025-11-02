@@ -1,10 +1,6 @@
 import { ErrorResponse, Transaction } from "@/types/index";
-import { mapError } from "../helpers/mapError";
-import { ref } from "vue";
 import * as coinsApi from "../api/coinsApi";
 import * as transactionApi from "../api/transactionsApi";
-import { usePortfolioStore } from "../stores/portfolioStore";
-import { useRouter } from "vue-router";
 
 // клей між стором, api запитами, обробокю помилок, loading, відправкою даних на UI
 export function useTransaction() {

@@ -120,7 +120,7 @@ export interface ApiError {
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiError;
 
-export type createTransaction =
+export type CreateTransaction =
   | {
       isNewCoin: true;
       coin: Coin;

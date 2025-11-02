@@ -1,4 +1,3 @@
-import { handleApiError } from "@/helpers/helpFunctions";
 import { ApiResponse, CoinListData } from "@/types";
 
 export async function getCoinsList(search = "") {

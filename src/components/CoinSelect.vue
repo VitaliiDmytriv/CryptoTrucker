@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
 import type { Transaction, CoinGecko } from "@/types/index";
-import { useCoinList } from "@/composables/useCoinList";
 import type { ElAutocomplete } from "element-plus";
 import { Search, ChevronDown } from "lucide-vue-next";
 
@@ -18,12 +16,15 @@ const inputRef = ref<InstanceType<typeof ElAutocomplete> | null>(null);
 const { coinList, fetchCoinList, error: coinListErro, loading: coinListLoading } = useCoinList();
 const placeholderText = computed(() => (props.transaction.name ? "" : "Select Coin"));
 
-async function handleSearch(query: string, cb: (results: CoinGecko[]) => void) {
+async function handleSearch(query: string) {
   await fetchCoinList(query);
-  cb(coinList.value.map((coin) => ({ ...coin, value: coin.name })));
+  return coinList.value.map((coin) => ({ ...coin, value: coin.name }));
 }
 
-function selectCoin(coin: CoinGecko) {
+function selectCoin(item: Record<string, any>) {
+  console.log(item);
+
+  const coin = item as CoinGecko;
   searchQuery.value = "";
   emit("handleSelect", coin);
 

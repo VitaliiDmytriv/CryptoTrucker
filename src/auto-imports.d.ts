@@ -7,22 +7,36 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const calcProfit: typeof import('./helpers/transactionCalculations').calcProfit
+  const calcTotalSpent: typeof import('./helpers/transactionCalculations').calcTotalSpent
+  const calculateMergedTransaction: typeof import('./helpers/transactionCalculations').calculateMergedTransaction
+  const cloneTransaction: typeof import('./helpers/transactionCalculations').cloneTransaction
+  const cloneTransactionWithDefaults: typeof import('./helpers/transactionCalculations').cloneTransactionWithDefaults
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const customRef: typeof import('vue').customRef
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const effectScope: typeof import('vue').effectScope
+  const formatCryptoValue: typeof import('./helpers/helpFunctions').formatCryptoValue
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getDefaultTransaction: typeof import('./helpers/helpFunctions').getDefaultTransaction
+  const getSplitFormRules: typeof import('./helpers/formValidation').getSplitFormRules
+  const getTodayDate: typeof import('./helpers/helpFunctions').getTodayDate
   const h: typeof import('vue').h
+  const handleApiError: typeof import('./helpers/helpFunctions').handleApiError
+  const handleDeleteTransaction: typeof import('./helpers/helpFunctions').handleDeleteTransaction
   const inject: typeof import('vue').inject
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
+  const isTransactionValid: typeof import('./helpers/formValidation').isTransactionValid
+  const mainFormRules: typeof import('./helpers/formValidation').mainFormRules
+  const mapError: typeof import('./helpers/mapError').mapError
   const markRaw: typeof import('vue').markRaw
   const nextTick: typeof import('vue').nextTick
   const onActivated: typeof import('vue').onActivated
@@ -49,6 +63,8 @@ declare global {
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
+  const submitForm: typeof import('./helpers/formValidation').submitForm
+  const toNumber: typeof import('./helpers/transactionCalculations').toNumber
   const toRaw: typeof import('vue').toRaw
   const toRef: typeof import('vue').toRef
   const toRefs: typeof import('vue').toRefs
@@ -90,22 +106,36 @@ declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly calcProfit: UnwrapRef<typeof import('./helpers/transactionCalculations')['calcProfit']>
+    readonly calcTotalSpent: UnwrapRef<typeof import('./helpers/transactionCalculations')['calcTotalSpent']>
+    readonly calculateMergedTransaction: UnwrapRef<typeof import('./helpers/transactionCalculations')['calculateMergedTransaction']>
+    readonly cloneTransaction: UnwrapRef<typeof import('./helpers/transactionCalculations')['cloneTransaction']>
+    readonly cloneTransactionWithDefaults: UnwrapRef<typeof import('./helpers/transactionCalculations')['cloneTransactionWithDefaults']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
+    readonly formatCryptoValue: UnwrapRef<typeof import('./helpers/helpFunctions')['formatCryptoValue']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
+    readonly getDefaultTransaction: UnwrapRef<typeof import('./helpers/helpFunctions')['getDefaultTransaction']>
+    readonly getSplitFormRules: UnwrapRef<typeof import('./helpers/formValidation')['getSplitFormRules']>
+    readonly getTodayDate: UnwrapRef<typeof import('./helpers/helpFunctions')['getTodayDate']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
+    readonly handleApiError: UnwrapRef<typeof import('./helpers/helpFunctions')['handleApiError']>
+    readonly handleDeleteTransaction: UnwrapRef<typeof import('./helpers/helpFunctions')['handleDeleteTransaction']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
+    readonly isTransactionValid: UnwrapRef<typeof import('./helpers/formValidation')['isTransactionValid']>
+    readonly mainFormRules: UnwrapRef<typeof import('./helpers/formValidation')['mainFormRules']>
+    readonly mapError: UnwrapRef<typeof import('./helpers/mapError')['mapError']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
@@ -132,6 +162,8 @@ declare module 'vue' {
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
+    readonly submitForm: UnwrapRef<typeof import('./helpers/formValidation')['submitForm']>
+    readonly toNumber: UnwrapRef<typeof import('./helpers/transactionCalculations')['toNumber']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>

@@ -1,7 +1,4 @@
-import { computed, ref, watch, toRaw } from "vue";
 import type { Transaction, TransactionCalculations } from "../types/index";
-import { getDefaultTransaction } from "@/helpers/helpFunctions";
-import { toNumber, calcTotalSpent, calcProfit } from "@/helpers/transactionCalculations";
 
 export function useTransactionCalculations(props: TransactionCalculations) {
   const defaultTransaction = getDefaultTransaction();

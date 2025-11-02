@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { formatCryptoValue } from "@/helpers/helpFunctions";
 import { Coin } from "@/types";
 
 //

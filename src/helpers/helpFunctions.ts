@@ -67,6 +67,7 @@ export function formatCryptoValue(
 
 export function handleApiError<T>(data: ApiResponse<T>): asserts data is ApiSuccess<T> {
   if (!data.success) {
+    console.log("EError");
     throw {
       message: data.message ?? "Unknown server error",
       code: data.code ?? "server-error",

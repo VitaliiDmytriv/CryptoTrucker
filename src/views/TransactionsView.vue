@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch, Teleport, nextTick } from "vue";
 import { useWindowSize } from "@vueuse/core";
-import { useRoute } from "vue-router";
 import type { Coin, FormMode, Transaction } from "../types/index";
-import TransactionForm from "../components/TransactionForm.vue";
-import { useTransaction } from "../composables/useTransactions";
-import { useMerge } from "@/composables/useMerge";
 import { Merge } from "lucide-vue-next";
-import { formatCryptoValue } from "@/helpers/helpFunctions";
 
 const portfolio = usePortfolioStore();
 const formMode = ref<"edit" | "merge">("edit");

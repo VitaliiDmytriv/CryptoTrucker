@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ChevronLeft } from "lucide-vue-next";
-import { formatCryptoValue } from "@/helpers/helpFunctions";
 import { Coin, GlobalStats } from "@/types";
+
 const route = useRoute();
 const router = useRouter();
 const dialogVisible = ref(false);
