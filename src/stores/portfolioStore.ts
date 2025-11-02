@@ -12,8 +12,12 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     Object.assign(coins.value, coinList);
   }
 
-  function setStats(updStats: GlobalStats) {
-    stats.value = updStats;
+  function updateStats(updStats: GlobalStats) {
+    Object.assign(stats.value, updStats);
+  }
+
+  function updateCoinStats(symbol: string, updStats: Partial<Coin>) {
+    Object.assign(coins.value[symbol], updStats);
   }
 
   function addCoin(coin: Coin) {
@@ -80,7 +84,8 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     addTransaction,
     updateTransaction,
     splitTransaction,
-    setStats,
+    updateStats,
     removeCoin,
+    updateCoinStats,
   };
 });

@@ -106,7 +106,7 @@ const transaction = computed(() =>
                   'profit-minus': (localTransaction.profit || 0) < 0,
                   'profit-plus': (localTransaction.profit || 0) > 0,
                 }"
-                :value="`${formatCryptoValue(localTransaction.profit, 'money')}$`"
+                :value="`${formatCryptoValue(localTransaction.profit, 'money')}`"
                 readonly
               />
             </el-form-item>
@@ -136,7 +136,7 @@ const transaction = computed(() =>
                 :value="`${formatCryptoValue(
                   formService.split.sourceTransaction.value.totalSpent,
                   'money'
-                )}$`"
+                )}`"
                 readonly
               />
             </el-form-item>
@@ -146,7 +146,7 @@ const transaction = computed(() =>
               :value="`${formatCryptoValue(
                 formService.split.targetTransaction.value.totalSpent,
                 'money'
-              )}$`"
+              )}`"
               readonly
             />
           </el-form-item>
@@ -167,7 +167,9 @@ const transaction = computed(() =>
                   'profit-minus': (formService.split.targetTransaction.value.profit || 0) < 0,
                   'profit-plus': (formService.split.targetTransaction.value.profit || 0) > 0,
                 }"
-                :value="`${formService.split.targetTransaction.value.profit || ''}$`"
+                :value="
+                  formatCryptoValue(formService.split.targetTransaction.value.profit, 'money')
+                "
                 readonly
               />
             </el-form-item>

@@ -23,7 +23,7 @@ export function useTransaction() {
       const { coins, ...stats } = data;
 
       portfolio.setCoinList(coins);
-      portfolio.setStats(stats);
+      portfolio.updateStats(stats);
       portfolio.isPortfolioLoaded = true;
     } catch (err) {
       error.value = mapError(err);
@@ -60,9 +60,13 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const { data: transaction } = await transactionApi.editTransaction(updTransaction);
-
-      portfolio.updateTransaction(transaction);
+      const { data } = await transactionApi.editTransaction(updTransaction);
+      const symbol = data.transaction.symbol;
+      if (data.shoudlRecalc) {
+        portfolio.updateCoinStats(symbol, data.coinStats);
+        portfolio.updateStats(data.globalStats);
+      }
+      portfolio.updateTransaction(data.transaction);
       success.value = true;
     } catch (err) {
       error.value = mapError(err);
@@ -100,10 +104,11 @@ export function useTransaction() {
           success.value = true;
           return;
         }
-
+        portfolio.updateCoinStats(symbol, data.coinStats);
         portfolio.addTransaction(data.transaction);
       }
 
+      portfolio.updateStats(data.globalStats);
       success.value = true;
       router.push({ name: "coin", params: { coin: symbol } });
     } catch (err) {
@@ -119,15 +124,18 @@ export function useTransaction() {
       error.value = null;
       success.value = false;
 
-      const { data: isCoinRemoved } = await transactionApi.deleteTransaction(id, symbol);
+      const { data } = await transactionApi.deleteTransaction(id, symbol);
 
       // якщо coinList без змін, то рефетчимо дані по цій монеі, якщо зі змінами, то оновлюємо coinList, без нової монети
-      if (isCoinRemoved) {
+      if (data.isCoinRemoved) {
         portfolio.removeCoin(symbol);
         setTimeout(() => router.push("/"), 1300);
       } else {
+        portfolio.updateCoinStats(symbol, data.coinStats);
         portfolio.removeTransaction(symbol, id);
       }
+
+      portfolio.updateStats(data.globalStats);
       success.value = true;
 
       return { success: true };
@@ -163,8 +171,11 @@ export function useTransaction() {
       success.value = false;
 
       const { data } = await transactionApi.splitTransaction(soureTransaction, targetTransaction);
-
+      const symbol = data.updatedTransaction.symbol;
       portfolio.splitTransaction(data.updatedTransaction, data.splitedTransaction);
+      portfolio.updateCoinStats(symbol, data.coinStats);
+      portfolio.updateStats(data.globalStats);
+
       success.value = true;
     } catch (err) {
       error.value = mapError(err);

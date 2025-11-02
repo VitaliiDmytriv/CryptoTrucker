@@ -103,6 +103,10 @@ export interface GlobalStats {
   activeInvestment: number;
 }
 
+export type CoinStats = Partial<Coin>;
+
+// ServerSide ======================
+
 export interface ApiSuccess<T> {
   success: true;
   data: T;
@@ -120,13 +124,41 @@ export type createTransaction =
   | {
       isNewCoin: true;
       coin: Coin;
+      globalStats: GlobalStats;
     }
   | {
+      globalStats: GlobalStats;
       isNewCoin: false;
       transaction: Transaction;
+      coinStats: CoinStats;
     };
 
 export interface SplitTransaction {
   updatedTransaction: Transaction;
   splitedTransaction: Transaction;
+  globalStats: GlobalStats;
+  coinStats: CoinStats;
 }
+
+export type RemoveTransaction =
+  | {
+      isCoinRemoved: true;
+      globalStats: GlobalStats;
+    }
+  | {
+      isCoinRemoved: false;
+      globalStats: GlobalStats;
+      coinStats: CoinStats;
+    };
+
+export type EditTransaction =
+  | {
+      shoudlRecalc: true;
+      transaction: Transaction;
+      globalStats: GlobalStats;
+      coinStats: CoinStats;
+    }
+  | {
+      shoudlRecalc: false;
+      transaction: Transaction;
+    };

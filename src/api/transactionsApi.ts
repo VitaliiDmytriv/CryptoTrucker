@@ -5,6 +5,8 @@ import type {
   Coin,
   Transaction,
   SplitTransaction,
+  RemoveTransaction,
+  EditTransaction,
 } from "../types/index";
 
 //  api запити
@@ -17,9 +19,8 @@ export async function editTransaction(transaction: Transaction) {
     body: JSON.stringify(transaction),
   });
 
-  const data: ApiResponse<Transaction> = await response.json();
+  const data: ApiResponse<EditTransaction> = await response.json();
   handleApiError(data);
-  console.log(data);
 
   if (!response.ok) {
     throw {
@@ -60,7 +61,7 @@ export async function deleteTransaction(id: string, symbol: string) {
     },
   });
 
-  const data: ApiResponse<boolean> = await response.json();
+  const data: ApiResponse<RemoveTransaction> = await response.json();
 
   handleApiError(data);
 

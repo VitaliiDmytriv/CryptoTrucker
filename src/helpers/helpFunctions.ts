@@ -19,7 +19,7 @@ export function getDefaultTransaction(symbol: string = "") {
     id: nanoid(10).toString(),
     image: "",
     quantity: null,
-    pricePerCoinBought: 100,
+    pricePerCoinBought: null,
     fees: null,
     totalSpent: null,
     pricePerCoinSold: null,

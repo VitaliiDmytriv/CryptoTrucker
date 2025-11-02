@@ -4,7 +4,16 @@ import cors from "cors";
 import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
 import cookieParser from "cookie-parser";
-import type { SessionsData, User, UsersData, Transaction, Coin, CoinListData } from "server/types";
+import type {
+  SessionsData,
+  User,
+  UsersData,
+  Transaction,
+  Coin,
+  CoinListData,
+  CoinStats,
+  GlobalStats,
+} from "server/types";
 
 const app = express();
 const PORT = 3001;
@@ -97,10 +106,25 @@ app.put("/:coin/transactions/:transactionId", async (req, res) => {
     const coin = getCoinOrThrow(user, coinSymbol);
     const transaction = getTransactionOrThrow(coin, transactionId);
 
+    const shoudlRecalc = shouldRecalculate(transaction, updTransaction);
+
     // upd transaction
     Object.assign(transaction, updTransaction);
 
-    res.json({ success: true, data: transaction });
+    let coinStats;
+    let globalStats;
+
+    if (shoudlRecalc) {
+      updateCoinStats(coin);
+      updateGlobalStats(user);
+      coinStats = getCoinStats(coin);
+      globalStats = getGlobalStats(user);
+    }
+
+    res.json({
+      success: true,
+      data: { transaction, shoudlRecalc, ...(shoudlRecalc && { coinStats, globalStats }) },
+    });
 
     await usersDB.write();
   } catch (error) {
@@ -127,17 +151,15 @@ app.post("/:coin/transactions", async (req, res) => {
       isNewCoin = true;
     }
 
-    if (isNewCoin) {
-      res.json({
-        success: true,
-        data: { isNewCoin, coin },
-      });
-    } else {
-      res.json({
-        success: true,
-        data: { isNewCoin, transaction },
-      });
-    }
+    updateCoinStats(coin);
+    updateGlobalStats(user);
+    const globalStats = getGlobalStats(user);
+    const coinStats = getCoinStats(coin);
+
+    res.json({
+      success: true,
+      data: { isNewCoin, globalStats, ...(isNewCoin ? { coin } : { transaction, coinStats }) },
+    });
 
     // зберігаємо у базу
     await usersDB.write();
@@ -157,15 +179,28 @@ app.delete("/:coin/transactions/:id", async (req, res) => {
 
     coin.transactions.splice(index, 1);
 
-    let isCoinRemoved = false;
+    let isCoinRemoved: boolean;
+    let coinStats;
+
     if (!coin.transactions.length) {
       delete user.coins[coinSymbol];
       isCoinRemoved = true;
+    } else {
+      isCoinRemoved = false;
+      updateCoinStats(coin);
+      coinStats = getCoinStats(coin);
+    }
+
+    updateGlobalStats(user);
+    const globalStats = getGlobalStats(user);
+
+    if (isCoinRemoved) {
+      res.json({ success: true, data: { isCoinRemoved, globalStats } });
+    } else {
+      res.json({ success: true, data: { isCoinRemoved, globalStats, coinStats } });
     }
 
     await usersDB.write();
-
-    res.json({ success: true, data: isCoinRemoved });
   } catch (error) {
     console.error("🔥 Error in DELETE /:coin/transactions/:id:", error);
     handleError(error, res);
@@ -212,7 +247,15 @@ app.patch("/:coin/transactions/split", async (req, res) => {
 
     coin.transactions.splice(index, 1, updatedTransaction, splitedTransaction);
 
-    res.json({ success: true, data: { updatedTransaction, splitedTransaction } });
+    updateCoinStats(coin);
+    updateGlobalStats(user);
+    const globalStats = getGlobalStats(user);
+    const coinStats = getCoinStats(coin);
+
+    res.json({
+      success: true,
+      data: { updatedTransaction, splitedTransaction, globalStats, coinStats },
+    });
 
     await usersDB.write();
   } catch (error) {
@@ -373,6 +416,38 @@ function getDefaultData(user: User) {
   return data;
 }
 
+function getCoinStats(coin: Coin): CoinStats {
+  const { activeInvestment, avgPrice, holdings, totalProfit } = coin;
+  return { activeInvestment, avgPrice, holdings, totalProfit };
+}
+
+function getGlobalStats(user: User): GlobalStats {
+  const { activeInvestment, totalProfit } = user;
+  return { activeInvestment, totalProfit };
+}
+
+function getAvgPrice(totalInvest: number, totalQuantity: number) {
+  return totalInvest / totalQuantity;
+}
+
+function getHoldings(coin: Coin) {
+  return coin.transactions.reduce((acc, t) => (t.pricePerCoinSold ? acc : acc + t.quantity), 0);
+}
+
+function getActiveInvest(coin: Coin) {
+  return coin.transactions.reduce((acc, t) => (t.pricePerCoinSold ? acc : acc + t.totalSpent), 0);
+}
+function getTotalProfit(coin: Coin) {
+  return coin.transactions.reduce((acc, t) => acc + (t.profit || 0), 0);
+}
+
+function updateCoinStats(coin: Coin) {
+  coin.activeInvestment = getActiveInvest(coin);
+  coin.holdings = getHoldings(coin);
+  coin.totalProfit = getTotalProfit(coin);
+  coin.avgPrice = getAvgPrice(coin.activeInvestment, coin.holdings);
+}
+
 // Mutation =====================================
 
 function createCoinRecord(transaction: Transaction): Coin {
@@ -380,19 +455,36 @@ function createCoinRecord(transaction: Transaction): Coin {
     symbol: transaction.symbol,
     name: transaction.name,
     image: transaction.image,
-    activeInvestment: transaction.totalSpent,
-    avgPrice: transaction.pricePerCoinBought,
-    holdings: transaction.quantity,
-    totalProfit: transaction.profit || 0,
+    activeInvestment: 0,
+    avgPrice: 0,
+    holdings: 0,
+    totalProfit: 0,
     transactions: [transaction],
   };
 
   return coin;
 }
 
+function updateGlobalStats(user: User) {
+  user.totalProfit = Object.values(user.coins).reduce((acc, curr) => acc + curr.totalProfit, 0);
+  user.activeInvestment = Object.values(user.coins).reduce(
+    (acc, curr) => acc + curr.activeInvestment,
+    0
+  );
+}
+
 // ==============================================
 
 // Other ========================================
+
+function shouldRecalculate(trn: Transaction, updTrn: Transaction) {
+  return (
+    trn.quantity !== updTrn.quantity ||
+    trn.pricePerCoinBought !== updTrn.pricePerCoinBought ||
+    trn.pricePerCoinSold !== updTrn.pricePerCoinSold ||
+    trn.fees !== updTrn.fees
+  );
+}
 
 function normalizeTransaction(transaction: Transaction) {
   return {

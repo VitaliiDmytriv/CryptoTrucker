@@ -34,6 +34,18 @@ export interface Coin {
   transactions: Transaction[];
 }
 
+export interface CoinStats {
+  totalProfit: number;
+  activeInvestment: number;
+  holdings: number;
+  avgPrice: number;
+}
+
+export interface GlobalStats {
+  totalProfit: number;
+  activeInvestment: number;
+}
+
 export interface Transaction {
   symbol: string;
   name: string;
