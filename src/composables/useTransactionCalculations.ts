@@ -1,13 +1,12 @@
 import type { Transaction, TransactionCalculations } from "../types/index";
 
 export function useTransactionCalculations(props: TransactionCalculations) {
-  const defaultTransaction = getDefaultTransaction();
+  const defaultTx = getDefaultTransaction();
   // перевірка на тип моду, якщо add то дефолтний обєкт для нової транзакціїї, якщо ні, то транзакція з пропсу для змін
-  const source =
-    props.mode === "add" ? defaultTransaction : props.transaction ?? defaultTransaction;
+  const initialTx = props.mode === "add" ? defaultTx : props.transaction ?? defaultTx;
 
   // створення локального реф обєкту для роботи з формою
-  const localTransaction = ref<Transaction>(structuredClone(toRaw(source)));
+  const localTransaction = ref<Transaction>(structuredClone(toRaw(initialTx)));
 
   const quantity = computed(() => toNumber(localTransaction.value.quantity));
   const priceBought = computed(() => toNumber(localTransaction.value.pricePerCoinBought));

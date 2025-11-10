@@ -51,7 +51,7 @@ function closeForm() {
         <el-card>
           <div class="text-[#808a9d] mb-1">Cost Basis</div>
           <div v-if="statsData">
-            <b>{{ formatCryptoValue(statsData.activeInvestment, "money") }}</b>
+            <b>{{ formatMoney(statsData.activeInvestment) }}</b>
           </div>
         </el-card>
       </div>
@@ -59,7 +59,7 @@ function closeForm() {
         <el-card>
           <div class="text-[#808a9d] mb-1">All-time profit</div>
           <div v-if="statsData">
-            <b>{{ formatCryptoValue(statsData.totalProfit, "money") }}</b>
+            <b>{{ formatMoney(statsData.totalProfit) }}</b>
           </div>
         </el-card>
       </div>

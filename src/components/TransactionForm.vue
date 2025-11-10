@@ -2,6 +2,7 @@
 import type { CoinGecko, TransactionFormProps } from "../types/index";
 import { Trash } from "lucide-vue-next";
 import { FormInstance } from "element-plus";
+import { Transaction } from "server/types";
 
 const emit = defineEmits<{
   (event: "close", afterSuccses?: boolean): void;
@@ -11,12 +12,12 @@ const formRef = ref<FormInstance>();
 const { localTransaction, ...formService } = useTransactionForm(props, emit);
 
 const rules = computed(() =>
-  formService.editType.value === "edit"
+  formService.split.editType.value === "edit"
     ? mainFormRules
     : getSplitFormRules(localTransaction.value.quantity || 0)
 );
 const transaction = computed(() =>
-  formService.editType.value === "edit"
+  formService.split.editType.value === "edit"
     ? localTransaction.value
     : formService.split.targetTransaction.value
 );
@@ -40,11 +41,11 @@ const transaction = computed(() =>
 
       <div v-if="props.mode === 'edit'" class="togleContainer mb-2">
         <div
-          :class="{ right: formService.editType.value === 'split' }"
+          :class="{ right: formService.split.editType.value === 'split' }"
           class="togleHighlight"
         ></div>
-        <span @click="formService.setEditType('edit')" class="togleItem">Edit</span>
-        <span @click="formService.setEditType('split')" class="togleItem">Split</span>
+        <span @click="formService.split.setEditType('edit')" class="togleItem">Edit</span>
+        <span @click="formService.split.setEditType('split')" class="togleItem">Split</span>
       </div>
 
       <el-form
@@ -58,9 +59,9 @@ const transaction = computed(() =>
           <CoinSelect @handleSelect="formService.selectNewCoin" :transaction="localTransaction" />
         </el-form-item>
 
-        <template v-if="formService.editType.value === 'edit'">
+        <template v-if="formService.split.editType.value === 'edit'">
           <el-form-item prop="quantity" label="Quantity">
-            <el-input v-model="localTransaction.quantity" type="number" name="quantity" />
+            <el-input v-model.lazy="localTransaction.quantity" type="number" name="quantity" />
           </el-form-item>
 
           <el-form-item prop="pricePerCoinBought" label="Price Per Coin">
@@ -89,10 +90,7 @@ const transaction = computed(() =>
 
           <div class="no-focus xs:col-span-2 flex xs:gap-2 gap-1">
             <el-form-item class="flex-1" label="Total Spent">
-              <el-input
-                :value="`${formatCryptoValue(localTransaction.totalSpent, 'money')}$`"
-                readonly
-              />
+              <el-input :value="`${formatMoney(localTransaction.totalSpent || 0)}`" readonly />
             </el-form-item>
             <el-form-item class="flex-1" label="Profit">
               <el-input
@@ -100,7 +98,7 @@ const transaction = computed(() =>
                   'profit-minus': (localTransaction.profit || 0) < 0,
                   'profit-plus': (localTransaction.profit || 0) > 0,
                 }"
-                :value="`${formatCryptoValue(localTransaction.profit, 'money')}`"
+                :value="`${formatMoney(localTransaction.profit || 0)}`"
                 readonly
               />
             </el-form-item>
@@ -127,20 +125,14 @@ const transaction = computed(() =>
           <div class="row-start-2">
             <el-form-item class="no-focus" label="Total Spent">
               <el-input
-                :value="`${formatCryptoValue(
-                  formService.split.sourceTransaction.value.totalSpent,
-                  'money'
-                )}`"
+                :value="`${formatMoney(formService.split.sourceTransaction.value.totalSpent || 0)}`"
                 readonly
               />
             </el-form-item>
           </div>
           <el-form-item class="no-focus" label="Total Spent">
             <el-input
-              :value="`${formatCryptoValue(
-                formService.split.targetTransaction.value.totalSpent,
-                'money'
-              )}`"
+              :value="`${formatMoney(formService.split.targetTransaction.value.totalSpent || 0)}`"
               readonly
             />
           </el-form-item>
@@ -161,9 +153,7 @@ const transaction = computed(() =>
                   'profit-minus': (formService.split.targetTransaction.value.profit || 0) < 0,
                   'profit-plus': (formService.split.targetTransaction.value.profit || 0) > 0,
                 }"
-                :value="
-                  formatCryptoValue(formService.split.targetTransaction.value.profit, 'money')
-                "
+                :value="formatMoney(formService.split.targetTransaction.value.profit || 0)"
                 readonly
               />
             </el-form-item>

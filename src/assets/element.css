@@ -48,3 +48,10 @@ thead tr th .cell {
 .el-card__body {
   @apply p-4
 }
+
+.profit-minus {
+  color: var(--el-color-danger) !important;
+}
+.profit-plus  {
+  color: var(--el-color-success) !important;
+}

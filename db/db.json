@@ -5,17 +5,17 @@
       "userName": "vitaliq",
       "email": "vitaliqq.dmutriv@gmail.com",
       "password": "$2a$10$HMcyOVRnrzZoyjFGSWprOuojbXRvJeba3kOUUPN0Kwo2RCwsx1yeW",
-      "totalProfit": 62.66000000000001,
-      "activeInvestment": 194.04000000000002,
+      "totalProfit": 58.40000000000001,
+      "activeInvestment": 2994.1992400000004,
       "coins": {
         "XRP": {
           "symbol": "XRP",
           "name": "XRP",
           "image": "https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442",
-          "activeInvestment": 16.74,
-          "avgPrice": 2.7899999999999996,
-          "holdings": 6,
-          "totalProfit": 1.3599999999999994,
+          "activeInvestment": 33.480000000000004,
+          "avgPrice": 2.7900000000000005,
+          "holdings": 12,
+          "totalProfit": -2.8999999999999986,
           "transactions": [
             {
               "symbol": "XRP",
@@ -54,8 +54,8 @@
               "pricePerCoinBought": 2.79,
               "fees": null,
               "totalSpent": 16.740000000000002,
-              "pricePerCoinSold": 3.5,
-              "profit": 4.259999999999998,
+              "pricePerCoinSold": 0,
+              "profit": null,
               "isActive": false,
               "date": "2025-10-26"
             },
@@ -93,9 +93,9 @@
           "symbol": "SOL",
           "name": "Solana",
           "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-          "activeInvestment": 177.3,
-          "avgPrice": 197.00000000000003,
-          "holdings": 0.8999999999999999,
+          "activeInvestment": 177.69400000000002,
+          "avgPrice": 197,
+          "holdings": 0.902,
           "totalProfit": 61.30000000000001,
           "transactions": [
             {
@@ -145,10 +145,10 @@
               "name": "Solana",
               "id": "XCJ5YQPA98",
               "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-              "quantity": 0.3,
+              "quantity": 0.302,
               "pricePerCoinBought": 197,
               "fees": null,
-              "totalSpent": 59.099999999999994,
+              "totalSpent": 59.494,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
@@ -195,6 +195,123 @@
               "profit": 13.199999999999989,
               "isActive": false,
               "date": "2025-10-27"
+            }
+          ]
+        },
+        "BNB": {
+          "symbol": "BNB",
+          "name": "BNB",
+          "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+          "activeInvestment": 2677.1200000000003,
+          "avgPrice": 2107.9685039370083,
+          "holdings": 1.27,
+          "totalProfit": 0,
+          "transactions": [
+            {
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "J60Ecs-Iwl",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 0.06766000000000001,
+              "pricePerCoinBought": 659,
+              "fees": null,
+              "totalSpent": 44.58794000000001,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-11-03"
+            },
+            {
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "ACKZah_MhW",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 0.00234,
+              "pricePerCoinBought": 659,
+              "fees": null,
+              "totalSpent": 1.54206,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-11-03"
+            },
+            {
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "PrM0uYRbRn",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 0.2,
+              "pricePerCoinBought": 8332,
+              "fees": null,
+              "totalSpent": 1666.4,
+              "pricePerCoinSold": 0,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-11-03"
+            },
+            {
+              "symbol": "BNB",
+              "name": "BNB",
+              "id": "fXqrJutWqN",
+              "image": "https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970",
+              "quantity": 1,
+              "pricePerCoinBought": 964.59,
+              "fees": null,
+              "totalSpent": 964.59,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-11-03"
+            }
+          ]
+        },
+        "DOGE": {
+          "symbol": "DOGE",
+          "name": "Dogecoin",
+          "image": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409",
+          "activeInvestment": 22.689799999999998,
+          "avgPrice": 0.226898,
+          "holdings": 100,
+          "totalProfit": 0,
+          "transactions": [
+            {
+              "symbol": "DOGE",
+              "name": "Dogecoin",
+              "id": "g2hZV98TxF",
+              "image": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409",
+              "quantity": 100,
+              "pricePerCoinBought": 0.226898,
+              "fees": null,
+              "totalSpent": 22.689799999999998,
+              "pricePerCoinSold": 0,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-11-03"
+            }
+          ]
+        },
+        "BTC": {
+          "symbol": "BTC",
+          "name": "Bitcoin",
+          "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+          "activeInvestment": 83.21544,
+          "avgPrice": 109494,
+          "holdings": 0.00076,
+          "totalProfit": 0,
+          "transactions": [
+            {
+              "symbol": "BTC",
+              "name": "Bitcoin",
+              "id": "l7rb298YJg",
+              "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+              "quantity": 0.00076,
+              "pricePerCoinBought": 109494,
+              "fees": null,
+              "totalSpent": 83.21544,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-11-03"
             }
           ]
         }

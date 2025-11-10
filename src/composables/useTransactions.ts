@@ -185,8 +185,6 @@ export function useTransaction() {
   }
 
   function resetError() {
-    console.log("in resetError");
-
     error.value = null;
   }
 

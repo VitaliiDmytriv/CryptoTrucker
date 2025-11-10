@@ -9,7 +9,6 @@ export interface Transaction {
   totalSpent: number | null;
   pricePerCoinSold: null | number;
   profit: null | number;
-  isActive: boolean;
   date: string;
 }
 

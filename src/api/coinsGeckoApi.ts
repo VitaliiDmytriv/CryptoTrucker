@@ -1,4 +1,4 @@
-import { ApiResponse, CoinListData } from "@/types";
+import { ApiResponse, CoinListData, Transaction } from "@/types";
 
 export async function getCoinsList(search = "") {
   const params = new URLSearchParams({ search });

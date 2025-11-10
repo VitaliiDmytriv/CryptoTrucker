@@ -1,4 +1,4 @@
-import { ApiResponse, ApiSuccess } from "@/types";
+import { ApiResponse, ApiSuccess, Transaction } from "@/types";
 import { ElMessageBox } from "element-plus";
 import { nanoid } from "nanoid";
 
@@ -39,32 +39,6 @@ export function handleDeleteTransaction(callback: Function) {
   });
 }
 
-export function formatCryptoValue(
-  value: any,
-  type: "currency" | "quantity" | "money" = "currency"
-): string {
-  const num = Number(value);
-  if (isNaN(num) || num === 0) return "-";
-
-  if (type === "currency") {
-    if (num < 0.01) return num.toFixed(6); // дуже дрібні ціни, типу DOGE
-    if (num < 1) return num.toFixed(4); // дрібні ціни
-    return num.toFixed(2); // звичайні ціни
-  }
-
-  if (type === "quantity") {
-    if (num < 0.01) return num.toFixed(6); // дуже дрібні кількості
-    if (num < 1) return num.toFixed(4); // дрібні кількості
-    return num.toFixed(2); // великі кількості
-  }
-
-  if (type === "money") {
-    return `$${num.toFixed(2)}`; // профіт, totalSpent тощо — завжди 2 знаки після коми
-  }
-
-  return num.toString();
-}
-
 export function handleApiError<T>(data: ApiResponse<T>): asserts data is ApiSuccess<T> {
   if (!data.success) {
     console.log("EError");
@@ -72,5 +46,11 @@ export function handleApiError<T>(data: ApiResponse<T>): asserts data is ApiSucc
       message: data.message ?? "Unknown server error",
       code: data.code ?? "server-error",
     };
+  }
+}
+
+export function runAfterSuccess(condition: Ref<boolean>, callback: () => void) {
+  if (condition.value) {
+    setTimeout(() => callback(), 1300);
   }
 }

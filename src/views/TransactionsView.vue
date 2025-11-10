@@ -105,12 +105,12 @@ function handleMerge() {
         </div>
         <div class="text-center">
           <div>Coins</div>
-          <div>{{ formatCryptoValue(merge.defaultTransaction.value.quantity, "quantity") }}</div>
+          <div>{{ formatQuantity(merge.defaultTransaction.value.quantity || 0) }}</div>
         </div>
         <div class="text-center">
           <div>Average price</div>
           <div>
-            {{ formatCryptoValue(merge.defaultTransaction.value.pricePerCoinBought, "currency") }}
+            {{ formatPrice(merge.defaultTransaction.value.pricePerCoinBought || 0) }}
           </div>
         </div>
         <div class="ml-auto">
@@ -148,28 +148,35 @@ function handleMerge() {
           </el-table-column>
           <el-table-column prop="quantity" label="Coins">
             <template #default="{ row }">
-              {{ formatCryptoValue(row.quantity, "quantity") }}
+              {{ formatQuantity(row.quantity) }}
             </template>
           </el-table-column>
 
           <el-table-column prop="pricePerCoinBought" label="Bought">
             <template #default="{ row }">
-              {{ formatCryptoValue(row.pricePerCoinBought, "money") }}
+              {{ formatPrice(row.pricePerCoinBought) }}
             </template>
           </el-table-column>
           <el-table-column prop="pricePerCoinSold" label="Sold">
             <template #default="{ row }">
-              {{ formatCryptoValue(row.pricePerCoinSold, "money") }}
+              {{ formatPrice(row.pricePerCoinSold) }}
             </template>
           </el-table-column>
           <el-table-column v-if="width > 480" prop="fees" label="Fee">
             <template #default="{ row }">
-              {{ formatCryptoValue(row.fees, "money") }}
+              {{ formatMoney(row.fees) }}
             </template>
           </el-table-column>
           <el-table-column prop="profit" label="Profit" fixed="right">
             <template #default="{ row }">
-              {{ formatCryptoValue(row.profit, "money") }}
+              <span
+                :class="{
+                  'profit-minus': (row.profit || 0) < 0,
+                  'profit-plus': (row.profit || 0) > 0,
+                }"
+              >
+                {{ formatMoney(row.profit) }}
+              </span>
             </template>
           </el-table-column>
         </el-table>

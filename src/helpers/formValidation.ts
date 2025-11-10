@@ -1,7 +1,23 @@
-import { Transaction } from "@/types";
 import { FormInstance } from "element-plus";
+import type { FormRules } from "element-plus";
 
-export const mainFormRules = {
+const validatePositive = makeValidator((value) => {
+  if (value === "" || value == null || String(value).trim() === "") return;
+  const num = Number(value);
+  if (Number.isNaN(num) || num <= 0) return "Number must be positive";
+});
+
+function validateMaxQuantity(maxQuantity: number) {
+  return makeValidator((value) => {
+    if (value === "" || value == null || String(value).trim() === "") return;
+    const num = Number(value);
+    if (Number.isNaN(num) || num <= 0) return "Number must be positive";
+    if (num == maxQuantity) return `Cannot be equal to ${maxQuantity}`;
+    if (num > maxQuantity) return `Cannot be greater than ${maxQuantity}`;
+  });
+}
+
+export const mainFormRules: FormRules = {
   quantity: [
     {
       required: true,
@@ -54,52 +70,26 @@ export function getSplitFormRules(maxQuantity: number) {
   };
 }
 
-function validateMaxQuantity(maxQuantity: number) {
-  return (rule: any, value: any, callback: any) => {
-    if (value === "" || value == null || String(value).trim() === "") {
-      return callback(); // пусте поле — валідно
+// Функція фабрика, яка робить коректний валідатор для ElementPlus
+// аргумент(функція) цієї функції повинен повертати string якщо помилка, якщо ок то undefined
+function makeValidator(fn: (value: any) => string | undefined) {
+  return (rule: unknown, value: any, callback: (error?: string | Error | undefined) => void) => {
+    const result = fn(value);
+    if (result) {
+      callback(result);
+    } else {
+      callback();
     }
-
-    const num = Number(value);
-
-    if (Number.isNaN(num) || num <= 0) {
-      return callback(new Error("Number must be positive"));
-    }
-
-    if (num == maxQuantity) {
-      return callback(new Error(`Cannot be equal to ${maxQuantity}`));
-    }
-
-    if (num > maxQuantity) {
-      return callback(new Error(`Cannot be greater than ${maxQuantity}`));
-    }
-
-    callback(); // якщо все ок
   };
 }
 
-function validatePositive(rule: any, value: any, callback: any) {
-  if (value === "" || value == null || String(value).trim() === "") {
-    return callback();
-  }
-  const num = Number(value);
-  if (Number.isNaN(num) || num <= 0) {
-    return callback(new Error("Number must be positive"));
-  } else {
-    callback();
-  }
-}
-
-export function submitForm(formEl: FormInstance | undefined, submitFn: Function) {
+export function submitForm(formEl: FormInstance | undefined, submitFn: () => void) {
   if (!formEl) return;
 
   formEl.validate((valid, fields) => {
     if (!valid && fields) {
       const firstErrorField = Object.keys(fields)[0];
-      const input = document.querySelector(`[name="${firstErrorField}"]`) as HTMLInputElement;
-      console.log(input);
-
-      input?.focus();
+      formEl.scrollToField(firstErrorField);
       return;
     }
     if (valid) {
@@ -108,16 +98,4 @@ export function submitForm(formEl: FormInstance | undefined, submitFn: Function)
     }
     return;
   });
-}
-
-export function isTransactionValid(transaction: Transaction): boolean {
-  const { quantity, pricePerCoinBought, pricePerCoinSold, fees } = transaction;
-  if (!quantity) return false;
-  if (quantity < 0) return false;
-  if (!pricePerCoinBought) return false;
-  if (pricePerCoinBought < 0) return false;
-  if (Number(fees) < 0) return false;
-  if (Number(pricePerCoinSold) < 0) return false;
-
-  return true;
 }

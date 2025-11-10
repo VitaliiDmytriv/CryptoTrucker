@@ -2,18 +2,32 @@
 import { ErrorResponse } from "@/types/index";
 import { Vue3Lottie } from "vue3-lottie";
 import successAnim from "@/assets/animation/Success.json";
+import errorAnim from "@/assets/animation/Tomato Error.json";
+import { ElMessage } from "element-plus";
 
-defineProps<{
+const props = defineProps<{
   submitLoading: boolean;
   submitError: ErrorResponse | null;
   submitSuccess: boolean;
 }>();
+
+watch(
+  () => props.submitError,
+  (newError) => {
+    if (newError) {
+      ElMessage({
+        type: "error",
+        message: newError.message,
+      });
+    }
+  }
+);
 </script>
 
 <template>
   <div
     v-if="submitLoading || submitError || submitSuccess"
-    class="absolute left-0 top-0 right-0 bottom-0 bg-[var(--opacityColor)] flex justify-center items-center z-20"
+    class="submitStatus absolute left-0 top-0 right-0 bottom-0 bg-[var(--opacityColor)] flex justify-center items-center z-20"
   >
     <!-- Loading -->
     <div v-if="submitLoading">
@@ -21,9 +35,7 @@ defineProps<{
     </div>
     <!-- Error -->
     <div v-else-if="submitError">
-      <object data="" type="">
-        {{ submitError }}
-      </object>
+      <Vue3Lottie :animation-data="errorAnim" :loop="false" style="width: 80px; height: 80px" />
     </div>
     <!-- Success -->
     <div v-else-if="submitSuccess">

@@ -54,22 +54,27 @@ function handleClick(row: Coin) {
           <el-table-column header-align="center" label="Invested">
             <template #default="{ row }: { row: Coin }">
               <div class="">
-                {{ formatCryptoValue(row.activeInvestment, "money") }}
+                {{ formatMoney(row.activeInvestment) }}
               </div>
             </template>
           </el-table-column>
           <el-table-column header-align="center" label="Holdings">
             <template #default="{ row }: { row: Coin }">
               <div class="">
-                {{ formatCryptoValue(row.holdings, "quantity") }}
+                {{ formatQuantity(row.holdings) }}
                 <div class="text-xs text-[#808a9d] inline-block">{{ row.symbol }}</div>
               </div>
             </template>
           </el-table-column>
           <el-table-column header-align="center" label="Profit/Loss">
             <template #default="{ row }: { row: Coin }">
-              <div class="">
-                {{ formatCryptoValue(row.totalProfit, "money") }}
+              <div
+                :class="{
+                  'profit-minus': (row.totalProfit || 0) < 0,
+                  'profit-plus': (row.totalProfit || 0) > 0,
+                }"
+              >
+                {{ formatMoney(row.totalProfit) }}
               </div>
             </template>
           </el-table-column>

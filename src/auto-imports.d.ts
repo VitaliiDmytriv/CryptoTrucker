@@ -7,6 +7,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const areTransactionsEqual: typeof import('./helpers/transactionsUtils').areTransactionsEqual
   const calcProfit: typeof import('./helpers/transactionCalculations').calcProfit
   const calcTotalSpent: typeof import('./helpers/transactionCalculations').calcTotalSpent
   const calculateMergedTransaction: typeof import('./helpers/transactionCalculations').calculateMergedTransaction
@@ -19,6 +20,9 @@ declare global {
   const defineComponent: typeof import('vue').defineComponent
   const effectScope: typeof import('vue').effectScope
   const formatCryptoValue: typeof import('./helpers/helpFunctions').formatCryptoValue
+  const formatMoney: typeof import('./helpers/formatter').formatMoney
+  const formatPrice: typeof import('./helpers/formatter').formatPrice
+  const formatQuantity: typeof import('./helpers/formatter').formatQuantity
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
@@ -60,6 +64,7 @@ declare global {
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
+  const runAfterSuccess: typeof import('./helpers/helpFunctions').runAfterSuccess
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
@@ -79,6 +84,7 @@ declare global {
   const useLink: typeof import('vue-router').useLink
   const useMerge: typeof import('./composables/useMerge').useMerge
   const useModel: typeof import('vue').useModel
+  const useNumericModel: typeof import('./composables/useNumericModel').useNumericModel
   const usePortfolioStore: typeof import('./stores/portfolioStore').usePortfolioStore
   const useRoute: typeof import('vue-router').useRoute
   const useRouter: typeof import('vue-router').useRouter
@@ -106,6 +112,7 @@ declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly areTransactionsEqual: UnwrapRef<typeof import('./helpers/transactionsUtils')['areTransactionsEqual']>
     readonly calcProfit: UnwrapRef<typeof import('./helpers/transactionCalculations')['calcProfit']>
     readonly calcTotalSpent: UnwrapRef<typeof import('./helpers/transactionCalculations')['calcTotalSpent']>
     readonly calculateMergedTransaction: UnwrapRef<typeof import('./helpers/transactionCalculations')['calculateMergedTransaction']>
@@ -117,7 +124,9 @@ declare module 'vue' {
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
-    readonly formatCryptoValue: UnwrapRef<typeof import('./helpers/helpFunctions')['formatCryptoValue']>
+    readonly formatMoney: UnwrapRef<typeof import('./helpers/formatter')['formatMoney']>
+    readonly formatPrice: UnwrapRef<typeof import('./helpers/formatter')['formatPrice']>
+    readonly formatQuantity: UnwrapRef<typeof import('./helpers/formatter')['formatQuantity']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
@@ -133,7 +142,6 @@ declare module 'vue' {
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
-    readonly isTransactionValid: UnwrapRef<typeof import('./helpers/formValidation')['isTransactionValid']>
     readonly mainFormRules: UnwrapRef<typeof import('./helpers/formValidation')['mainFormRules']>
     readonly mapError: UnwrapRef<typeof import('./helpers/mapError')['mapError']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
@@ -159,6 +167,7 @@ declare module 'vue' {
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly runAfterSuccess: UnwrapRef<typeof import('./helpers/helpFunctions')['runAfterSuccess']>
     readonly shallowReactive: UnwrapRef<typeof import('vue')['shallowReactive']>
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
@@ -178,6 +187,7 @@ declare module 'vue' {
     readonly useLink: UnwrapRef<typeof import('vue-router')['useLink']>
     readonly useMerge: UnwrapRef<typeof import('./composables/useMerge')['useMerge']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
+    readonly useNumericModel: UnwrapRef<typeof import('./composables/useNumericModel')['useNumericModel']>
     readonly usePortfolioStore: UnwrapRef<typeof import('./stores/portfolioStore')['usePortfolioStore']>
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
