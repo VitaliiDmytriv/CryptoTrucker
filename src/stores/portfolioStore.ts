@@ -19,6 +19,16 @@ export const usePortfolioStore = defineStore("portfolio", () => {
     Object.assign(coins.value[symbol], updStats);
   }
 
+  function setNewTransactions(symbol: string, updTransactions: Transaction[]) {
+    coins.value = {
+      ...coins.value,
+      [symbol]: {
+        ...coins.value[symbol],
+        transactions: updTransactions,
+      },
+    };
+  }
+
   function addCoin(coin: Coin) {
     const symbol = coin.symbol;
     if (coins.value[symbol]) {
@@ -73,6 +83,7 @@ export const usePortfolioStore = defineStore("portfolio", () => {
   }
 
   return {
+    setNewTransactions,
     removeTransaction,
     setCoinList,
     isPortfolioLoaded,

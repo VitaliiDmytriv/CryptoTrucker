@@ -5,8 +5,8 @@
       "userName": "vitaliq",
       "email": "vitaliqq.dmutriv@gmail.com",
       "password": "$2a$10$HMcyOVRnrzZoyjFGSWprOuojbXRvJeba3kOUUPN0Kwo2RCwsx1yeW",
-      "totalProfit": 58.40000000000001,
-      "activeInvestment": 2994.1992400000004,
+      "totalProfit": 29.1,
+      "activeInvestment": 3238.8076940000005,
       "coins": {
         "XRP": {
           "symbol": "XRP",
@@ -93,10 +93,10 @@
           "symbol": "SOL",
           "name": "Solana",
           "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-          "activeInvestment": 177.69400000000002,
-          "avgPrice": 197,
-          "holdings": 0.902,
-          "totalProfit": 61.30000000000001,
+          "activeInvestment": 394.394,
+          "avgPrice": 197.00000000000003,
+          "holdings": 2.002,
+          "totalProfit": 32,
           "transactions": [
             {
               "symbol": "SOL",
@@ -129,72 +129,16 @@
             {
               "symbol": "SOL",
               "name": "Solana",
-              "id": "Opjmk6YUw3",
+              "id": "HPrhVapRZ_",
               "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-              "quantity": 0.7,
-              "pricePerCoinBought": 197,
+              "quantity": 2.002,
+              "pricePerCoinBought": 197.00000000000003,
               "fees": null,
-              "totalSpent": 137.89999999999998,
-              "pricePerCoinSold": 220,
-              "profit": 16.100000000000023,
-              "isActive": false,
-              "date": "2025-10-27"
-            },
-            {
-              "symbol": "SOL",
-              "name": "Solana",
-              "id": "XCJ5YQPA98",
-              "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-              "quantity": 0.302,
-              "pricePerCoinBought": 197,
-              "fees": null,
-              "totalSpent": 59.494,
+              "totalSpent": 394.394,
               "pricePerCoinSold": null,
               "profit": null,
               "isActive": false,
-              "date": "2025-10-27"
-            },
-            {
-              "symbol": "SOL",
-              "name": "Solana",
-              "id": "sksgKNeSPe",
-              "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-              "quantity": 0.19999999999999996,
-              "pricePerCoinBought": 197,
-              "fees": null,
-              "totalSpent": 39.39999999999999,
-              "pricePerCoinSold": 0,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-10-27"
-            },
-            {
-              "symbol": "SOL",
-              "name": "Solana",
-              "id": "CYLtadnhv8",
-              "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-              "quantity": 0.4,
-              "pricePerCoinBought": 197,
-              "fees": null,
-              "totalSpent": 78.80000000000001,
-              "pricePerCoinSold": null,
-              "profit": null,
-              "isActive": false,
-              "date": "2025-10-27"
-            },
-            {
-              "symbol": "SOL",
-              "name": "Solana",
-              "id": "f90JQK29Kw",
-              "image": "https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756",
-              "quantity": 0.4,
-              "pricePerCoinBought": 197,
-              "fees": null,
-              "totalSpent": 78.80000000000001,
-              "pricePerCoinSold": 230,
-              "profit": 13.199999999999989,
-              "isActive": false,
-              "date": "2025-10-27"
+              "date": "2025-11-24"
             }
           ]
         },
@@ -269,9 +213,9 @@
           "symbol": "DOGE",
           "name": "Dogecoin",
           "image": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409",
-          "activeInvestment": 22.689799999999998,
+          "activeInvestment": 50.598254,
           "avgPrice": 0.226898,
-          "holdings": 100,
+          "holdings": 223,
           "totalProfit": 0,
           "transactions": [
             {
@@ -287,6 +231,20 @@
               "profit": null,
               "isActive": false,
               "date": "2025-11-03"
+            },
+            {
+              "symbol": "DOGE",
+              "name": "Dogecoin",
+              "id": "k-Vx18httX",
+              "image": "https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409",
+              "quantity": 123,
+              "pricePerCoinBought": 0.226898,
+              "fees": null,
+              "totalSpent": 27.908454,
+              "pricePerCoinSold": null,
+              "profit": null,
+              "isActive": false,
+              "date": "2025-11-24"
             }
           ]
         },

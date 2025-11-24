@@ -3,74 +3,71 @@ import { useWindowSize } from "@vueuse/core";
 import type { Coin, FormMode, Transaction } from "../types/index";
 import { Merge } from "lucide-vue-next";
 
-const portfolio = usePortfolioStore();
-const formMode = ref<"edit" | "merge">("edit");
 const route = useRoute();
+const merge = useMerge(route.params.coin as string);
+const portfolio = usePortfolioStore();
+const { width } = useWindowSize();
 const {
   loading: transactionsLoading,
   error: transactionsError,
   ...transactionsService
 } = useTransaction();
 
-// const coin = ref<null | Coin>(null);
+// Refs
+const formMode = ref<"edit" | "merge">("edit");
 const activeTransaction = ref<undefined | Transaction>(undefined);
-const { width } = useWindowSize();
-const iconSize = computed(() => (width.value > 480 ? 20 : 15));
-const merge = useMerge(route.params.coin as string);
-
+const isMounted = ref(false);
 const dialogVisible = ref(false);
 
-const coin = computed(() => {
-  const symbol = Array.isArray(route.params.coin) ? route.params.coin[0] : route.params.coin;
-  return symbol ? portfolio.getCoin(symbol) : null;
+// Computeds
+const iconSize = computed(() => (width.value > 480 ? 20 : 15));
+const symbol = computed(() => {
+  const param = route.params.coin;
+  return Array.isArray(param) ? param[0] : param;
 });
+const coin = computed(() => portfolio.getCoin(symbol.value) ?? null);
 
-watch(
-  () => route.params.coin,
-  async (newSymbol) => {
-    const symbol = Array.isArray(newSymbol) ? newSymbol[0] : newSymbol;
+async function initCoinData() {
+  await transactionsService.fetchCoin(symbol.value);
+  const transaction = coin.value?.transactions[0];
+  merge.setTransactionField("image", transaction?.image || "");
+  merge.setTransactionField("name", transaction?.name || "");
+}
 
-    if (symbol) {
-      await transactionsService.fetchCoin(symbol);
-      // merge.reset(symbol);
-      // merge.setCoinImage(coin.value?.transactions[0].image || "");
-      // merge.setCoinName(coin.value?.transactions[0].name || "");
-    }
-  },
-  { immediate: true }
-);
+function handleClickOnTransaction(row: Transaction) {
+  const id = row.id;
+  const transaction = coin.value?.transactions.find((el) => el.id === id);
+  if (!transaction) return;
 
-// Handle Edit Form ==
-function closeForm(afterSuccses = false) {
-  if (afterSuccses) {
-    merge.cancelMerging();
+  // якщо НЕ мерджування то відкриваємо форму для Edit
+  if (!merge.isMerging.value) {
+    activeTransaction.value = transaction;
+    dialogVisible.value = true;
+  } else {
+    // Якщо мерджування то додаємо в масив транзакцію
+    merge.toggleTransactionToMerge(transaction);
   }
+}
+
+function closeForm(resetMerge = false) {
+  if (resetMerge) merge.resetMerging();
   formMode.value = "edit";
   activeTransaction.value = undefined;
   dialogVisible.value = false;
 }
 
-function handleClickOnTransaction(row: Transaction) {
-  // якщо мерджування то блокуємо відкриття форми і toggle транзакцію в масиві, якщо ні то відкриваємо форму
-  const id = row.id;
-
-  const transaction = coin.value?.transactions.find((el) => el.id === id);
-
-  if (!merge.isMerging.value) {
-    activeTransaction.value = transaction;
-    dialogVisible.value = true;
-  } else {
-    if (transaction) {
-      merge.toggleTransactionToMerge(transaction);
-    }
-  }
-}
-
-function handleMerge() {
-  activeTransaction.value = merge.defaultTransaction.value;
+function openForm() {
+  activeTransaction.value = merge.mergedTransaction.value;
   dialogVisible.value = true;
   formMode.value = "merge";
 }
+
+function getRowClassName({ row }: { row: Transaction }) {
+  return merge.mergeSet.value.has(row.id) ? "selected-merge-row" : "";
+}
+
+onMounted(() => (isMounted.value = true));
+initCoinData();
 </script>
 
 <template>
@@ -83,46 +80,45 @@ function handleMerge() {
     dialogVisible
   />
 
-  <!-- <Teleport to="#merge">
-    <button
-      class="btn-primary flex justify-center h-full"
-      :class="{ btnActive: merge.isMerging.value }"
+  <Teleport v-if="isMounted" to="#merge">
+    <el-button
+      :class="{ mergeBtnActive: merge.isMerging.value }"
       :disabled="merge.canOpenMerge.value"
       @click="merge.toggleMerging"
     >
       <Merge :size="iconSize" :stroke-width="1.5" />
-    </button>
-  </Teleport> -->
+    </el-button>
+  </Teleport>
 
   <template v-if="merge.isMerging.value">
-    <div class="mergeBlock card-border">
+    <el-card class="mergeBlock">
       <div class="flex items-center gap-5">
         <div class="flex items-center">
           <span class="inline-block w-7">
-            <img :src="merge.defaultTransaction.value.image" alt="" />
+            <img :src="merge.mergedTransaction.value.image" alt="" />
           </span>
-          <span>{{ merge.defaultTransaction.value.symbol }}</span>
+          <span>{{ merge.mergedTransaction.value.symbol }}</span>
         </div>
         <div class="text-center">
           <div>Coins</div>
-          <div>{{ formatQuantity(merge.defaultTransaction.value.quantity || 0) }}</div>
+          <div>{{ formatQuantity(merge.mergedTransaction.value.quantity || 0) }}</div>
         </div>
         <div class="text-center">
           <div>Average price</div>
           <div>
-            {{ formatPrice(merge.defaultTransaction.value.pricePerCoinBought || 0) }}
+            {{ formatPrice(merge.mergedTransaction.value.pricePerCoinBought || 0) }}
           </div>
         </div>
         <div class="ml-auto">
-          <button :disabled="!merge.canMerge.value" @click="handleMerge" class="btn-primary">
+          <button :disabled="!merge.canMerge.value" @click="openForm" class="btn-primary">
             Merge
           </button>
         </div>
       </div>
-    </div>
+    </el-card>
   </template>
 
-  <el-card>
+  <el-card class="relative pb-20">
     <div class="min-h-screen">
       <div v-if="transactionsLoading">
         <el-skeleton :rows="4" animated />
@@ -133,6 +129,8 @@ function handleMerge() {
           :cell-style="{ textAlign: 'center' }"
           :header-cell-style="{ textAlign: 'center' }"
           @row-click="handleClickOnTransaction"
+          :row-class-name="getRowClassName"
+          :row-key="(row:Transaction) => row.id"
         >
           <el-table-column v-if="width > 480" prop="symbol" label="Name">
             <template #default="{ row }">
@@ -167,7 +165,7 @@ function handleMerge() {
               {{ formatMoney(row.fees) }}
             </template>
           </el-table-column>
-          <el-table-column prop="profit" label="Profit" fixed="right">
+          <el-table-column prop="profit" label="Profit">
             <template #default="{ row }">
               <span
                 :class="{
@@ -186,6 +184,12 @@ function handleMerge() {
 </template>
 
 <style scoped>
+.mergeBtnActive {
+  background-color: var(--el-button-hover-bg-color);
+  border-color: var(--el-button-hover-border-color);
+  color: var(--el-button-hover-text-color);
+  outline: none;
+}
 .sceletForFetch tr {
   border-bottom: initial;
 }
@@ -195,9 +199,7 @@ function handleMerge() {
 }
 
 .mergeBlock {
-  @apply fixed left-2 right-2 bottom-2 p-2 bg-white;
-  @apply 2xl:left-1/2 2xl:-translate-x-1/2 2xl:max-w-[79rem] 2xl:w-full;
-  border: 1px solid var(--borderColor);
+  @apply fixed z-10 left-3 right-3 bottom-0 max-w-[1256px] m-auto;
 }
 
 .bottom-decoration {
@@ -225,5 +227,11 @@ function handleMerge() {
   border-radius: var(--borderRadius);
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
+}
+
+:deep(.selected-merge-row),
+:deep(.selected-merge-row td),
+:deep(.selected-merge-row:hover td) {
+  background-color: var(--el-fill-color-light) !important;
 }
 </style>

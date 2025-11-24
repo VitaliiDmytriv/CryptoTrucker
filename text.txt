@@ -80,4 +80,6 @@ svg colections - https://www.svgrepo.com/collection/system-ui-line-icons/2
 Виправити useTransaction, через те що сервер тепер повертає {success: true, data:{}} !!! - done 
 
 Зробити вивід помилок на фронт 
-Виправити mergeTransactions як на сервері так і на фронті 
+
+виправити в сторі реактвне занчення coins під reactive
+також переглянути ререндери в сторі, мабуть є такі методи які не викликають його 

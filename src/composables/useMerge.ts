@@ -2,74 +2,61 @@ import { Transaction } from "@/types";
 
 export function useMerge(symbol: string) {
   const isMerging = ref(false);
-  const transactionsToMerge = ref<Transaction[]>([]);
-  const defaultTransaction = ref<Transaction>(getDefaultTransaction(symbol));
+  const selectedTransactions = ref<Transaction[]>([]);
+  const mergedTransaction = ref<Transaction>(getDefaultTransaction(symbol));
 
-  const canOpenMerge = computed(() => !defaultTransaction.value.symbol);
-  const canMerge = computed(() => transactionsToMerge.value.length >= 2);
+  const canOpenMerge = computed(() => !mergedTransaction.value.symbol);
+  const canMerge = computed(() => selectedTransactions.value.length >= 2);
   const mergeSet = computed(() => {
-    return new Set(transactionsToMerge.value.map((t) => t.id));
+    return new Set(selectedTransactions.value.map((t) => t.id));
   });
-
-  watch(
-    transactionsToMerge,
-    () => {
-      updateDefaultTransaction();
-    },
-    { deep: true, immediate: false }
-  );
 
   function startMerging() {
     isMerging.value = true;
   }
-  function cancelMerging() {
+
+  function resetMerging() {
     isMerging.value = false;
-    transactionsToMerge.value = [];
+    selectedTransactions.value = [];
+    setTransactionField("quantity", null);
+    setTransactionField("pricePerCoinBought", null);
   }
+
   function toggleMerging() {
     if (isMerging.value) {
-      cancelMerging();
+      resetMerging();
     } else {
       startMerging();
     }
   }
-  function setCoinImage(url: string) {
-    defaultTransaction.value.image = url;
-  }
-  function setCoinName(coinName: string) {
-    defaultTransaction.value.name = coinName;
-  }
-  function reset(newSymbol: string) {
-    cancelMerging();
-    defaultTransaction.value = getDefaultTransaction(newSymbol);
-  }
-  function toggleTransactionToMerge(transaction: Transaction) {
-    const foundIndex = transactionsToMerge.value.findIndex((t) => t.id === transaction.id);
-    if (foundIndex === -1) {
-      transactionsToMerge.value.push(transaction);
-    } else {
-      transactionsToMerge.value.splice(foundIndex, 1);
-    }
+
+  function setTransactionField<K extends keyof Transaction>(key: K, value: Transaction[K]) {
+    mergedTransaction.value[key] = value;
   }
 
-  function updateDefaultTransaction() {
-    const update = calculateMergedTransaction(transactionsToMerge.value);
-    Object.assign(defaultTransaction.value, update);
+  function toggleTransactionToMerge(transaction: Transaction) {
+    const index = selectedTransactions.value.findIndex((t) => t.id === transaction.id);
+    if (index === -1) selectedTransactions.value.push(transaction);
+    else selectedTransactions.value.splice(index, 1);
+
+    recalculateMergedTransaction();
+  }
+
+  function recalculateMergedTransaction() {
+    const update = calculateMergedTransaction(selectedTransactions.value);
+    Object.assign(mergedTransaction.value, update);
   }
 
   return {
     canOpenMerge,
     canMerge,
     mergeSet,
-    defaultTransaction,
+    mergedTransaction,
     isMerging,
-    transactionsToMerge,
-    cancelMerging,
+    setTransactionField,
+    resetMerging,
     startMerging,
-    setCoinName,
-    reset,
     toggleTransactionToMerge,
-    setCoinImage,
     toggleMerging,
   };
 }

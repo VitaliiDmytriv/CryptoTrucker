@@ -138,6 +138,11 @@ export interface SplitTransaction {
   globalStats: GlobalStats;
   coinStats: CoinStats;
 }
+export interface MergeTransactions {
+  updatedTransactions: Transaction[];
+  globalStats: GlobalStats;
+  coinStats: CoinStats;
+}
 
 export type RemoveTransaction =
   | {

@@ -218,14 +218,19 @@ app.patch("/:coin/transactions/merge", async (req, res) => {
 
     const deleteIds = new Set(Array.isArray(req.body.delete) ? req.body.delete : []);
 
-    const filteredTransactions = [
+    const updatedTransactions = [
       ...coin.transactions.filter((t) => !deleteIds.has(t.id)),
       updTransaction,
     ];
 
-    coin.transactions = filteredTransactions;
+    coin.transactions = updatedTransactions;
 
-    res.json({ success: true, data: { transactions: filteredTransactions } });
+    updateCoinStats(coin);
+    const coinStats = getCoinStats(coin);
+    updateGlobalStats(user);
+    const globalStats = getGlobalStats(user);
+
+    res.json({ success: true, data: { updatedTransactions, coinStats, globalStats } });
 
     await usersDB.write();
   } catch (error) {

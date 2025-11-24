@@ -21,6 +21,8 @@ const transaction = computed(() =>
     ? localTransaction.value
     : formService.split.targetTransaction.value
 );
+
+const isMerging = computed(() => props.mode === "merge");
 </script>
 
 <template>
@@ -61,7 +63,12 @@ const transaction = computed(() =>
 
         <template v-if="formService.split.editType.value === 'edit'">
           <el-form-item prop="quantity" label="Quantity">
-            <el-input v-model.lazy="localTransaction.quantity" type="number" name="quantity" />
+            <el-input
+              v-model.lazy="localTransaction.quantity"
+              type="number"
+              name="quantity"
+              :readonly="isMerging"
+            />
           </el-form-item>
 
           <el-form-item prop="pricePerCoinBought" label="Price Per Coin">
@@ -69,6 +76,7 @@ const transaction = computed(() =>
               v-model="localTransaction.pricePerCoinBought"
               type="number"
               name="pricePerCoinBought"
+              :readonly="isMerging"
             />
           </el-form-item>
 

@@ -143,21 +143,23 @@ export function useTransaction() {
   }
 
   async function mergeTransactions(transaction: Transaction, mergeSet: Set<string>) {
-    // try {
-    //   loading.value = true;
-    //   error.value = null;
-    //   success.value = false;
-    //   const data = await transactionApi.mergeTransactions(transaction, mergeSet);
-    //   console.log(data);
-    //   if (data.success) {
-    //     portfolio.setNewTransactions(transaction.symbol, data.transactions);
-    //     success.value = true;
-    //   }
-    // } catch (err) {
-    //   error.value = mapError(err);
-    // } finally {
-    //   loading.value = false;
-    // }
+    try {
+      loading.value = true;
+      error.value = null;
+      success.value = false;
+      const { symbol } = transaction;
+      const { data } = await transactionApi.mergeTransactions(transaction, mergeSet);
+
+      portfolio.setNewTransactions(symbol, data.updatedTransactions);
+      portfolio.updateCoinStats(symbol, data.coinStats);
+      portfolio.updateStats(data.globalStats);
+
+      success.value = true;
+    } catch (err) {
+      error.value = mapError(err);
+    } finally {
+      loading.value = false;
+    }
   }
 
   async function splitTransaction(soureTransaction: Transaction, targetTransaction: Transaction) {

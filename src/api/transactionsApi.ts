@@ -5,6 +5,7 @@ import type {
   SplitTransaction,
   RemoveTransaction,
   EditTransaction,
+  MergeTransactions,
 } from "../types/index";
 import type { AxiosResponse } from "axios";
 import api from "@/api/api";
@@ -43,22 +44,16 @@ export async function deleteTransaction(id: string, symbol: string) {
 }
 
 export async function mergeTransactions(transaction: Transaction, mergeSet: Set<string>) {
-  // const body = { add: transaction, delete: Array.from(mergeSet) };
-  // const response = await fetch(`api/${transaction.symbol}/transactions/merge`, {
-  //   method: "PATCH",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(body),
-  // });
-  // const data = await response.json();
-  // if (!response.ok) {
-  //   throw {
-  //     message: data.message ?? "Unknown server error",
-  //     code: data.code ?? "server-error",
-  //   };
-  // }
-  // return data;
+  const { symbol } = transaction;
+  const body = { add: transaction, delete: Array.from(mergeSet) };
+
+  const { data }: AxiosResponse<ApiResponse<MergeTransactions>> = await api.patch(
+    `/${symbol}/transactions/merge`,
+    body
+  );
+
+  handleApiError(data);
+  return data;
 }
 
 export async function splitTransaction(
